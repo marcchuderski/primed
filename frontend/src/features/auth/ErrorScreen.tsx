@@ -1,6 +1,6 @@
 import { Button } from '../../components/Button/Button.tsx';
 import { LogoMark } from '../../components/Logo/Logo.tsx';
-import styles from './LoadingScreen.module.css';
+import styles from './StatusScreen.module.css';
 
 export function ErrorScreen({ message, onRetry }: { message: string; onRetry: () => void }) {
   return (

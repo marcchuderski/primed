@@ -184,3 +184,5 @@ Neue Einträge unten anhängen. Getroffene Entscheidungen werden nicht gelöscht
 **D-094 · API-`.htaccess` per Rewrite statt `FilesMatch`** – existierende Dateien außer `index.php` → 403, alles andere → `index.php`. · `FilesMatch` sperrte auch virtuelle API-Pfade. · Claude · 2026-10-17
 
 **D-095 · Logo-Lockup „P“ + „rimed“** – in allen Screens ersetzt das Zeichen das „p“ der Wortmarke (wie Screen 18), statt Zeichen + „primed“ nebeneinander. Komponente `LogoLockup`. · Nutzer · 2026-10-17
+
+**D-096 · Kein Loading-Screen, Logo-Animation im Login** (ersetzt D-065) – Während der Session-Prüfung nur Hintergrund; ohne Session Login-Screen mit animiertem Lockup, danach blenden Text und Felder ein; mit Session direkt in die App. `prefers-reduced-motion`: alles sofort sichtbar (auch Animations-Verzögerungen werden aufgehoben). · Nutzer (Verhalten bei bestehender Session: Claude, ohne Wartezeit) · 2026-10-17

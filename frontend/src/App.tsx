@@ -1,7 +1,7 @@
 import { AuthProvider } from './features/auth/AuthContext.tsx';
 import { useAuth } from './features/auth/useAuth.ts';
 import { ErrorScreen } from './features/auth/ErrorScreen.tsx';
-import { LoadingScreen } from './features/auth/LoadingScreen.tsx';
+import { StartupScreen } from './features/auth/StartupScreen.tsx';
 import { LoginScreen } from './features/auth/LoginScreen.tsx';
 import { HomePlaceholder } from './features/home/HomePlaceholder.tsx';
 import styles from './App.module.css';
@@ -13,7 +13,7 @@ function Screens() {
   let screen;
   switch (state.status) {
     case 'loading':
-      screen = <LoadingScreen />;
+      screen = <StartupScreen />;
       break;
     case 'error':
       screen = <ErrorScreen message={state.message} onRetry={retry} />;
@@ -33,9 +33,9 @@ function Screens() {
   );
 }
 
-export function App({ minLoadingMs }: { minLoadingMs?: number }) {
+export function App() {
   return (
-    <AuthProvider {...(minLoadingMs === undefined ? {} : { minLoadingMs })}>
+    <AuthProvider>
       <Screens />
     </AuthProvider>
   );

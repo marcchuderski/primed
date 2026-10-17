@@ -8,10 +8,3 @@
   min-height: 100dvh;
   padding: var(--space-5);
 }
-
-.tagline {
-  position: absolute;
-  bottom: 56px;
-  font-size: 14px;
-  color: var(--text-muted);
-}

@@ -32,14 +32,19 @@ export function LoginScreen() {
 
   return (
     <main className={styles['screen']}>
-      <LogoLockup size={36} className={styles['brand']} />
+      {/* The logo plays its ring animation, then the content fades in (D-096). */}
+      <LogoLockup size={36} animated className={styles['brand']} />
 
-      <div className={styles['intro']}>
+      <div className={`${styles['intro'] ?? ''} ${styles['reveal'] ?? ''}`}>
         <h1 className={styles['title']}>Willkommen zurück.</h1>
         <p className={styles['lead']}>Melde dich an und mach da weiter, wo du aufgehört hast.</p>
       </div>
 
-      <form className={styles['form']} onSubmit={(e) => void handleSubmit(e)} noValidate>
+      <form
+        className={`${styles['form'] ?? ''} ${styles['reveal'] ?? ''}`}
+        onSubmit={(e) => void handleSubmit(e)}
+        noValidate
+      >
         <TextField
           label="Username"
           name="username"

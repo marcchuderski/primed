@@ -128,7 +128,7 @@ Bewertet wird nur die **kcal-Bilanz gegen das Tagessoll, Toleranz ±5 %**. Drei 
 
 ## 8. Bewegung
 
-- **Loading:** Ring im Logo füllt sich auf ¾, Wortmarke blendet ein (ca. 1,8 s).
+- **Login:** Ring im Logo-Lockup füllt sich auf ¾ (ca. 1,4 s), danach blenden Überschrift und Formular ein (ab ~0,9 s, 0,5 s). Kein separater Loading-Screen (D-096); während der Session-Prüfung nur Hintergrund.
 - **Sheets:** von unten einfahren, 250–300 ms, ease-out. Scrim blendet mit.
 - **Tabs/Screens:** kurzer Crossfade (~150 ms).
 - **Balken:** füllen sich animiert, wenn ein Eintrag hinzukommt.
@@ -152,7 +152,7 @@ Statische Referenz-Mockups mit Beispieldaten (keine echten Werte), je Light und 
 
 | Nr. | Screen | Zweck |
 |---|---|---|
-| 01 | Loading | Animiertes Logo |
+| 01 | Loading | ~~Animiertes Logo~~ entfällt (D-096), Animation jetzt im Login |
 | 02 | Login | Username, Passwort |
 | 03 | Heute | Tag, Tagesart, Balken, Einträge |
 | 04 | Hinzufügen | Suche, Scan, Vorrat, Shakes, Häufig |

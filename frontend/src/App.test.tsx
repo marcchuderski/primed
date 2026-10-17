@@ -25,13 +25,13 @@ describe('App auth flow', () => {
     vi.unstubAllGlobals();
   });
 
-  it('shows the loading screen, then the login screen without a forgot-password link', async () => {
+  it('shows a neutral startup screen, then the login screen without a forgot-password link', async () => {
     fetchMock.mockResolvedValueOnce(
       json(401, { error: { code: 'unauthenticated', message: 'Bitte melde dich an.' } }),
     );
-    render(<App minLoadingMs={0} />);
+    render(<App />);
 
-    expect(screen.getByRole('main', { name: 'Primed lädt' })).toBeInTheDocument();
+    expect(screen.getByRole('main', { name: 'Primed lädt' })).toHaveAttribute('aria-busy', 'true');
     expect(await screen.findByRole('heading', { name: 'Willkommen zurück.' })).toBeInTheDocument();
     expect(screen.queryByText(/Passwort vergessen/)).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Einloggen' })).toBeDisabled();
@@ -44,7 +44,7 @@ describe('App auth flow', () => {
       )
       .mockResolvedValueOnce(json(200, { user: marc, csrfToken: 'csrf-abc' }))
       .mockResolvedValueOnce(new Response(null, { status: 204 }));
-    render(<App minLoadingMs={0} />);
+    render(<App />);
 
     await userEvent.type(await screen.findByLabelText('Username'), 'marcch');
     await userEvent.type(screen.getByLabelText('Passwort'), 'Kaffee mit Hafermilch 2026');
@@ -78,7 +78,7 @@ describe('App auth flow', () => {
           { 'Retry-After': '840' },
         ),
       );
-    render(<App minLoadingMs={0} />);
+    render(<App />);
 
     const password = screen.getByLabelText.bind(screen, 'Passwort');
     await userEvent.type(await screen.findByLabelText('Username'), 'marcch');
@@ -97,7 +97,7 @@ describe('App auth flow', () => {
 
   it('restores an existing session', async () => {
     fetchMock.mockResolvedValueOnce(json(200, { user: marc, csrfToken: 'csrf-x' }));
-    render(<App minLoadingMs={0} />);
+    render(<App />);
 
     expect(await screen.findByRole('heading', { name: 'Hey, Marc.' })).toBeInTheDocument();
   });
@@ -106,7 +106,7 @@ describe('App auth flow', () => {
     fetchMock
       .mockRejectedValueOnce(new TypeError('Failed to fetch'))
       .mockResolvedValueOnce(json(200, { user: marc, csrfToken: 'csrf-y' }));
-    render(<App minLoadingMs={0} />);
+    render(<App />);
 
     expect(await screen.findByRole('alert')).toHaveTextContent('Keine Verbindung');
     await userEvent.click(screen.getByRole('button', { name: 'Erneut versuchen' }));

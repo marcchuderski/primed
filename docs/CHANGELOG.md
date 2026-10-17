@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-10-17 – Login statt Loading-Screen
+- Loading-Screen entfernt; Logo-Animation auf dem Login-Screen, Felder blenden danach ein; eingeloggte User ohne Wartezeit (D-096).
+
 ## 2026-10-17 – Logo-Lockup
 - Neues `LogoLockup` (Zeichen als „p“ + „rimed“, Screen 18) in Loading, Login und Footer; `Wordmark` entfernt.
 

@@ -19,7 +19,7 @@ Nach jedem Item: Tests, Security Audit (`agent-skills:security-and-hardening`), 
 | 1.1 | Migrationen: Users, Sessions, Login-Versuche, Settings | fertig |
 | 1.2 | Login, Logout, Überall abmelden, Passwort ändern, Rate-Limit | fertig (API + CLI; Oberfläche in 1.4/7.1) |
 | 1.3 | Security-Header, CSP, HSTS, CSRF, `.htaccess`, Fehlerbehandlung ohne Datenlecks | fertig (live in DDEV mit `scripts/check-headers.sh` geprüft) |
-| 1.4 | Loading-Screen, Login-Screen | fertig (lokal in DDEV + `npm run dev` geprüft) |
+| 1.4 | Loading-Screen, Login-Screen | fertig (Loading-Screen per D-096 durch Animation im Login ersetzt) |
 | 1.5 | Erstes Test-Deployment auf Plesk nach `DEPLOYMENT.md` | verworfen (Nutzer: lokal mit DDEV testen, D-092) |
 
 ## Phase 2 – Kern: Heute

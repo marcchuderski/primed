@@ -198,7 +198,7 @@ Aus Vorrat und Bibliothek die Optionen wählen, die die offenen Werte (bis Check
 - Passwort: mindestens 12 Zeichen, keine Zeichenregeln, Abgleich mit einer lokal mitgelieferten Liste häufiger Passwörter.
 - Login-Schutz: pro IP + Username 5 Fehlversuche in 15 min → 15 min Sperre; pro Username ab 10 Fehlversuchen (alle IPs) steigende Verzögerung statt harter Sperre; pro IP höchstens 30 Versuche pro Stunde.
 - Kein „Passwort vergessen?“ (Link aus dem Mockup entfällt). Reset und Anlage von Usern nur per CLI-Skript auf dem Server (`bin/user-create`).
-- Schöner Loading-Screen (Logo-Animation, ca. 1,4 s, läuft beim Start einmal komplett), sanfte Übergänge.
+- Kein eigener Loading-Screen (D-096): Die Logo-Animation (Ring füllt sich, ca. 1,4 s) läuft auf dem Login-Screen, danach blenden Text und Felder ein. Eingeloggte User landen ohne Wartezeit direkt in der App. Sanfte Übergänge.
 
 ## 14. Bewusst nicht enthalten
 
