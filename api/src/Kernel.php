@@ -21,6 +21,7 @@ use Primed\Controller\HealthController;
 use Primed\Controller\WeekTemplateController;
 use Primed\Controller\SettingsController;
 use Primed\Controller\DayTypeController;
+use Primed\Controller\EntryController;
 use Primed\Controller\DayController;
 use Primed\Database\ConnectionFactory;
 use Primed\Http\HttpException;
@@ -129,6 +130,12 @@ final class Kernel
         $router->add('GET', '/v1/days/today', $days->today(...));
         $router->add('GET', '/v1/days/{date}', $days->show(...));
         $router->add('PUT', '/v1/days/{date}', $days->update(...));
+
+        $entries = new EntryController($c);
+        $router->add('GET', '/v1/days/{date}/entries', $entries->index(...));
+        $router->add('POST', '/v1/entries', $entries->create(...));
+        $router->add('PATCH', '/v1/entries/{id}', $entries->update(...));
+        $router->add('DELETE', '/v1/entries/{id}', $entries->delete(...));
 
         return $router;
     }

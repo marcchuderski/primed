@@ -38,4 +38,37 @@ final class Row
 
         return $value;
     }
+
+    /**
+     * DECIMAL columns arrive as strings (native prepares); converted to float.
+     *
+     * @param array<mixed> $row
+     */
+    public static function float(array $row, string $column): float
+    {
+        $value = $row[$column] ?? null;
+        if (is_int($value) || is_float($value)) {
+            return (float) $value;
+        }
+        if (is_string($value) && is_numeric($value)) {
+            return (float) $value;
+        }
+        throw new UnexpectedValueException(sprintf('Column %s is not numeric', $column));
+    }
+
+    /**
+     * @param array<mixed> $row
+     */
+    public static function nullableFloat(array $row, string $column): ?float
+    {
+        return ($row[$column] ?? null) === null ? null : self::float($row, $column);
+    }
+
+    /**
+     * @param array<mixed> $row
+     */
+    public static function nullableString(array $row, string $column): ?string
+    {
+        return ($row[$column] ?? null) === null ? null : self::string($row, $column);
+    }
 }

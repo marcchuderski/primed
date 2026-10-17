@@ -1,0 +1,44 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Primed\Entry;
+
+final class Entry
+{
+    /**
+     * @param array{kcal: float, protein: float, carbs: float, sugar: float, fat: float} $nutrients
+     */
+    public function __construct(
+        public readonly int $id,
+        public readonly string $date,
+        public readonly int $timeMin,
+        public readonly ?int $foodId,
+        public readonly ?int $dishId,
+        public readonly string $name,
+        public readonly float $amount,
+        public readonly string $unit,
+        public readonly float $quantity,
+        public readonly array $nutrients,
+    ) {
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function toPublic(): array
+    {
+        return [
+            'id' => $this->id,
+            'date' => $this->date,
+            'timeMin' => $this->timeMin,
+            'foodId' => $this->foodId,
+            'dishId' => $this->dishId,
+            'name' => $this->name,
+            'amount' => $this->amount,
+            'unit' => $this->unit,
+            'quantity' => $this->quantity,
+            'nutrients' => $this->nutrients,
+        ];
+    }
+}

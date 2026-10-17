@@ -14,6 +14,10 @@ use Primed\Day\LogicalCalendar;
 use Primed\Day\SettingsRepository;
 use Primed\Day\UserSeeder;
 use Primed\Day\WeekTemplateRepository;
+use Primed\Entry\EntryRepository;
+use Primed\Entry\EntryService;
+use Primed\Food\FoodRepository;
+use Primed\Food\FoodSeeder;
 use Primed\Support\Clock;
 
 /**
@@ -24,6 +28,7 @@ final class Container
     private ?PDO $pdo = null;
     private ?AuthService $auth = null;
     private ?DayService $days = null;
+    private ?EntryService $entries = null;
 
     /**
      * @param \Closure(): PDO $connect
@@ -64,6 +69,17 @@ final class Container
         );
     }
 
+    public function entries(): EntryService
+    {
+        return $this->entries ??= new EntryService(
+            new EntryRepository($this->pdo()),
+            new FoodRepository($this->pdo()),
+            $this->days(),
+            $this->settings(),
+            $this->clock,
+        );
+    }
+
     public function settings(): SettingsRepository
     {
         return new SettingsRepository($this->pdo());
@@ -76,6 +92,10 @@ final class Container
 
     public function seeder(): UserSeeder
     {
-        return new UserSeeder(new DayTypeRepository($this->pdo()), new WeekTemplateRepository($this->pdo()));
+        return new UserSeeder(
+            new DayTypeRepository($this->pdo()),
+            new WeekTemplateRepository($this->pdo()),
+            new FoodSeeder(new FoodRepository($this->pdo())),
+        );
     }
 }

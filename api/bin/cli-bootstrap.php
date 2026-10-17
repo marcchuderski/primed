@@ -12,6 +12,8 @@ use Primed\Database\ConnectionFactory;
 use Primed\Day\DayTypeRepository;
 use Primed\Day\UserSeeder;
 use Primed\Day\WeekTemplateRepository;
+use Primed\Food\FoodRepository;
+use Primed\Food\FoodSeeder;
 use Primed\Support\SystemClock;
 
 if (PHP_SAPI !== 'cli') {
@@ -31,5 +33,9 @@ return new UserAdmin(
     new PasswordHasher(),
     new PasswordPolicy($appRoot . '/resources/common-passwords.txt'),
     new SystemClock(),
-    new UserSeeder(new DayTypeRepository($pdo), new WeekTemplateRepository($pdo)),
+    new UserSeeder(
+        new DayTypeRepository($pdo),
+        new WeekTemplateRepository($pdo),
+        new FoodSeeder(new FoodRepository($pdo)),
+    ),
 );

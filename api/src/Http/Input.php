@@ -36,6 +36,17 @@ final class Input
         return $value;
     }
 
+    /** Number (int or float) within bounds; JSON numbers only, no strings. */
+    public function number(string $field, float $min, float $max, string $label): float
+    {
+        $value = $this->data[$field] ?? null;
+        if ((!is_int($value) && !is_float($value)) || $value < $min || $value > $max) {
+            throw self::invalid(sprintf('%s ist ungültig.', $label));
+        }
+
+        return (float) $value;
+    }
+
     public function nullableInt(string $field, int $min, int $max, string $label): ?int
     {
         return ($this->data[$field] ?? null) === null ? null : $this->int($field, $min, $max, $label);

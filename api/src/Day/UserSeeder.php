@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Primed\Day;
 
 use DateTimeImmutable;
+use Primed\Food\FoodSeeder;
 
 /**
  * Start data for new users (docs/DEFAULTS.md, D-080).
@@ -25,11 +26,13 @@ final class UserSeeder
     public function __construct(
         private readonly DayTypeRepository $dayTypes,
         private readonly WeekTemplateRepository $template,
+        private readonly ?FoodSeeder $foods = null,
     ) {
     }
 
     public function seed(int $userId, bool $ownerDefaults, DateTimeImmutable $now): void
     {
+        $this->foods?->seed($userId, $ownerDefaults, $now);
         if ($this->dayTypes->all($userId) !== []) {
             return;
         }
