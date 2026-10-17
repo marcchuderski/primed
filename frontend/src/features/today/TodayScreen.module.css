@@ -1,0 +1,192 @@
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.intro {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.greeting {
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--text-muted);
+}
+
+.greeting strong {
+  font-weight: 700;
+  color: var(--text);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 38px;
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+}
+
+.chip {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 16px;
+  border-radius: var(--r-pill);
+  border: none;
+  background: var(--tonal);
+  color: var(--text);
+  font: 600 14px var(--font-text);
+  cursor: pointer;
+}
+
+.chipIcon {
+  color: var(--accent);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 22px 20px;
+  border-radius: 26px;
+  background: var(--surface);
+}
+
+.barWrap {
+  position: relative;
+}
+
+.popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: min(236px, 100%);
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: var(--tonal);
+  color: var(--text);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+  animation: pop 150ms ease-out both;
+}
+
+.popTitle {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.popMain {
+  font-size: 15px;
+}
+
+.popMain strong {
+  color: var(--accent-text);
+}
+
+.popSub {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.smallBars {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.legendMark {
+  width: 3px;
+  height: 12px;
+  border-radius: 2px;
+  background: var(--text);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sectionHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sectionTitle {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 24px;
+  letter-spacing: -0.02em;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.iconButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--touch);
+  height: var(--touch);
+  border-radius: var(--r-pill);
+  border: 1px solid var(--input-border);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.iconButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.add {
+  border: none;
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.empty {
+  padding: 14px 16px;
+  border-radius: var(--r-item);
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: 15px;
+}
+
+.status {
+  color: var(--text-muted);
+}

@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-17 – 2.3 Heute-Screen
+- Tabs Heute · Essen · Verlauf mit Menü; Heute mit situativer Begrüßung, Datum, Tagesart-Chip, Makro-Balken (Marker, Überschreitung, Fett-/Zucker-Richtwert) und Checkpoint-Pop-up.
+- Menü-Platzhalter mit Abmelden / Überall abmelden.
+
 ## 2026-10-17 – 2.2 Fachlogik
 - `frontend/src/domain/`: Fett-Richtwert, Offen-Werte, Checkpoints, kcal-Bewertung, Formatierung, logische Tageszeit, situative Begrüßung – mit 48 neuen Unit-Tests.
 

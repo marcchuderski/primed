@@ -3,7 +3,7 @@ import { useAuth } from './features/auth/useAuth.ts';
 import { ErrorScreen } from './features/auth/ErrorScreen.tsx';
 import { StartupScreen } from './features/auth/StartupScreen.tsx';
 import { LoginScreen } from './features/auth/LoginScreen.tsx';
-import { HomePlaceholder } from './features/home/HomePlaceholder.tsx';
+import { AppShell } from './features/shell/AppShell.tsx';
 import styles from './App.module.css';
 
 function Screens() {
@@ -22,7 +22,7 @@ function Screens() {
       screen = <LoginScreen />;
       break;
     case 'authenticated':
-      screen = <HomePlaceholder user={state.user} />;
+      screen = <AppShell user={state.user} />;
       break;
   }
 

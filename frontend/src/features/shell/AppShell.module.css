@@ -1,0 +1,27 @@
+.shell {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  width: 100%;
+  max-width: 480px;
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding: 44px 22px 0;
+}
+
+.panel {
+  animation: fade 150ms ease-out both;
+}
+
+.placeholder {
+  color: var(--text-muted);
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

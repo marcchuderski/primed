@@ -29,3 +29,50 @@ export function formatClock(minutes: number): string {
   const m = wrapped % 60;
   return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
 }
+
+const berlinParts = new Intl.DateTimeFormat('en-GB', {
+  timeZone: 'Europe/Berlin',
+  hour: '2-digit',
+  minute: '2-digit',
+  hourCycle: 'h23',
+});
+
+/** Wall-clock minutes since midnight in Europe/Berlin for an instant. */
+export function berlinWallMinute(instant: Date): number {
+  let hour = 0;
+  let minute = 0;
+  for (const part of berlinParts.formatToParts(instant)) {
+    if (part.type === 'hour') {
+      hour = Number(part.value);
+    } else if (part.type === 'minute') {
+      minute = Number(part.value);
+    }
+  }
+  return hour * 60 + minute;
+}
+
+const dateTitle = new Intl.DateTimeFormat('de-DE', {
+  weekday: 'long',
+  day: 'numeric',
+  month: 'short',
+  timeZone: 'UTC',
+});
+
+/** "Dienstag, 20. Okt." for a logical date (YYYY-MM-DD). */
+export function formatDayTitle(date: string): string {
+  const parts = dateTitle.formatToParts(new Date(`${date}T12:00:00Z`));
+  const get = (type: Intl.DateTimeFormatPartTypes) => parts.find((p) => p.type === type)?.value ?? '';
+  return `${get('weekday')}, ${get('day')}. ${get('month')}`;
+}
+
+const berlinDate = new Intl.DateTimeFormat('en-CA', {
+  timeZone: 'Europe/Berlin',
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+});
+
+/** Logical date (YYYY-MM-DD) of an instant: Berlin date, shifted back by the day boundary (D-048). */
+export function berlinLogicalDate(instant: Date, dayBoundaryMin: number): string {
+  return berlinDate.format(new Date(instant.getTime() - dayBoundaryMin * 60_000));
+}

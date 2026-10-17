@@ -3,10 +3,7 @@
   flex-direction: column;
   gap: var(--space-6);
   width: 100%;
-  max-width: 440px;
-  min-height: 100dvh;
-  margin: 0 auto;
-  padding: 56px 22px 0;
+  min-height: calc(100dvh - 44px);
 }
 
 .title {

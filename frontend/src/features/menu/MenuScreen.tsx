@@ -1,12 +1,10 @@
 import { useState } from 'react';
-import type { User } from '../../api/auth.ts';
 import { Button } from '../../components/Button/Button.tsx';
-import { Footer } from '../../components/Footer/Footer.tsx';
 import { useAuth } from '../auth/useAuth.ts';
-import styles from './HomePlaceholder.module.css';
+import styles from './MenuScreen.module.css';
 
-/** Temporary home until the Heute screen (Phase 2) exists. */
-export function HomePlaceholder({ user }: { user: User }) {
+/** Placeholder menu until roadmap 7.1: logout and "Überall abmelden" (D-064). */
+export function MenuScreen({ onClose }: { onClose: () => void }) {
   const { logout, logoutEverywhere } = useAuth();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -23,11 +21,14 @@ export function HomePlaceholder({ user }: { user: User }) {
   }
 
   return (
-    <main className={styles['screen']}>
-      <h1 className={styles['title']}>Hey, {user.displayName}.</h1>
-      <p className={styles['lead']}>Der Heute-Screen folgt in Phase 2.</p>
+    <div className={styles['screen']}>
+      <h1 className={styles['title']}>Menü</h1>
+      <p className={styles['lead']}>Einstellungen folgen in Phase 7.</p>
       {error !== null && <p role="alert">{error}</p>}
       <div className={styles['actions']}>
+        <Button variant="tonal" block onClick={onClose}>
+          Zurück
+        </Button>
         <Button variant="tonal" block busy={busy} onClick={() => void run(logout)}>
           Abmelden
         </Button>
@@ -39,8 +40,7 @@ export function HomePlaceholder({ user }: { user: User }) {
         >
           Überall abmelden
         </button>
-        <Footer />
       </div>
-    </main>
+    </div>
   );
 }

@@ -1,0 +1,105 @@
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 15px;
+}
+
+.label {
+  font-weight: 600;
+}
+
+.protein .label {
+  font-weight: 700;
+  color: var(--accent-text);
+}
+
+.value strong {
+  font-weight: 700;
+}
+
+.target {
+  color: var(--text-muted);
+}
+
+.track {
+  position: relative;
+  height: 12px;
+  border-radius: var(--r-pill);
+  background: var(--bar-track);
+}
+
+.fill {
+  height: 100%;
+  border-radius: var(--r-pill);
+  background: var(--bar-fill);
+  transition: width 400ms ease-out;
+}
+
+.over .fill {
+  background: var(--bar-over);
+}
+
+.protein .track {
+  background: var(--accent-track);
+}
+
+.protein .fill {
+  background: var(--accent-fill);
+}
+
+.marker {
+  position: absolute;
+  top: -5px;
+  width: 3px;
+  height: 22px;
+  margin-left: -1.5px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+
+.protein .marker {
+  background: var(--text);
+}
+
+.overLabel {
+  margin-left: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* Secondary bars (fat, sugar): 6 px, muted. */
+.small {
+  gap: 7px;
+}
+
+.small .head {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.small .label {
+  font-weight: 600;
+}
+
+.small .track {
+  height: 6px;
+}
+
+.small .fill {
+  opacity: 0.6;
+}
