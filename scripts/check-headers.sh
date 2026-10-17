@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+# Checks a running Primed instance for the security requirements in docs/SECURITY.md.
+# Usage: scripts/check-headers.sh https://primed.dev-pfeffermond.de [--insecure]
+set -euo pipefail
+
+BASE="${1:?Base URL required, e.g. https://primed.dev-pfeffermond.de}"
+CURL=(curl -sS --max-time 15)
+[[ "${2:-}" == "--insecure" ]] && CURL+=(-k)
+
+fail=0
+pass() { printf '  ok    %s\n' "$1"; }
+bad() { printf '  FAIL  %s\n' "$1"; fail=1; }
+
+check_header() { # url name expected-substring
+  local value
+  value=$("${CURL[@]}" -D - -o /dev/null "$1" | tr -d '\r' | grep -i "^$2:" | head -1 | cut -d' ' -f2- || true)
+  if [[ -n "$value" && "$value" == *"$3"* ]]; then pass "$2 on $1"; else bad "$2 on $1 (got: ${value:-none})"; fi
+}
+
+check_status() { # url expected-status [method]
+  local status
+  status=$("${CURL[@]}" -o /dev/null -w '%{http_code}' -X "${3:-GET}" "$1")
+  if [[ "$status" == "$2" ]]; then pass "$1 → $2"; else bad "$1 → expected $2, got $status"; fi
+}
+
+echo "Page headers"
+for h in "Strict-Transport-Security:max-age=31536000" "Content-Security-Policy:default-src 'none'" \
+  "X-Content-Type-Options:nosniff" "X-Frame-Options:DENY" "Referrer-Policy:no-referrer" \
+  "Permissions-Policy:camera=(self)" "Cross-Origin-Opener-Policy:same-origin" "Cache-Control:no-cache"; do
+  check_header "$BASE/" "${h%%:*}" "${h#*:}"
+done
+
+echo "API"
+check_status "$BASE/api/v1/health" 200
+check_header "$BASE/api/v1/health" "Cache-Control" "no-store"
+check_header "$BASE/api/v1/health" "Content-Type" "application/json"
+check_status "$BASE/api/v1/auth/me" 401
+check_status "$BASE/api/v1/auth/login" 403 POST   # no Origin → rejected
+check_status "$BASE/api/v1/nope" 404
+
+echo "Nothing private is reachable"
+for path in .env .htaccess api/.htaccess api/../.env .git/config primed-app/.env bootstrap.php api/bootstrap.php composer.json api/composer.json; do
+  status=$("${CURL[@]}" -o /dev/null -w '%{http_code}' "$BASE/$path")
+  body=$("${CURL[@]}" "$BASE/$path" | head -c 200)
+  if [[ "$status" == "403" || "$status" == "404" ]] || [[ "$body" == *'<div id="root">'* ]]; then
+    pass "/$path not exposed ($status)"
+  else
+    bad "/$path exposed ($status)"
+  fi
+done
+
+echo "HTTP → HTTPS"
+http_url="${BASE/https:/http:}"
+status=$("${CURL[@]}" -o /dev/null -w '%{http_code} %{redirect_url}' "$http_url/")
+if [[ "$status" == 30[18]\ https://* ]]; then pass "redirect ($status)"; else bad "no HTTPS redirect ($status)"; fi
+
+exit $fail

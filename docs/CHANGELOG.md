@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-17 – 1.3 Härtung
+- `frontend/public/.htaccess`: HTTPS-Weiterleitung, Dotfile-Sperre, SPA-Fallback, CSP, HSTS, Permissions-Policy, COOP/CORP, Caching.
+- Build ohne Inline-Assets; Regressionstest für Header; Live-Prüfskript `scripts/check-headers.sh`.
+
 ## 2026-10-17 – 1.2 Login & Sessions
 - Auth-API: Login, me, Logout, Überall abmelden, Passwort ändern; Rate-Limit nach D-061; gleitende Session 30/90 Tage; `__Host-`-Cookie; zustandslose CSRF-Tokens; Origin-/Content-Type-Prüfung.
 - Passwort-Regeln mit Liste häufiger Passwörter; Argon2id mit Rehash.

@@ -30,6 +30,8 @@ export default defineConfig({
   build: {
     target: 'es2022',
     sourcemap: false,
+    // No data: URIs in the bundle, so the CSP can stay at img-src/font-src 'self'.
+    assetsInlineLimit: 0,
   },
   test: {
     environment: 'jsdom',

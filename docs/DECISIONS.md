@@ -174,3 +174,5 @@ Neue Einträge unten anhängen. Getroffene Entscheidungen werden nicht gelöscht
 **D-089 · Liste häufiger Passwörter** – aus SecLists „100k-most-used-passwords-NCSC“ (MIT), nur Einträge ≥ 12 Zeichen, klein geschrieben (~1.200 Einträge, `api/resources/common-passwords.txt`); zusätzlich darf das Passwort den Username nicht enthalten. · lokal, kein externer Dienst (D-062). · HIBP-API. · Claude · 2026-10-17
 
 **D-090 · Startpasswörter** – 4 Gruppen à 5 Zeichen aus einem Alphabet ohne verwechselbare Zeichen (~114 Bit), einmalig in der CLI angezeigt. · sicher und abtippbar. · Claude · 2026-10-17
+
+**D-091 · Security-Header im Web-Root-`.htaccess`** – CSP `default-src 'none'` mit expliziten `'self'`-Quellen, HSTS 1 Jahr (`includeSubDomains`, ohne `preload`, betrifft nur `*.primed.dev-pfeffermond.de`), `Permissions-Policy` mit Kamera nur `self`, COOP/CORP `same-origin`, `index.html` `no-cache`, gehashte Assets `immutable`. Die API setzt zusätzlich eigene Header (`no-store`, CSP `default-src 'none'`). · strengste Konfiguration, die das App-Konzept zulässt. · Header nur in PHP. · Claude · 2026-10-17

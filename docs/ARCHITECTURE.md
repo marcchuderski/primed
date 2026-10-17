@@ -72,7 +72,7 @@ Stand: 17.10.2026 · Entwurf vor Implementierung. Wird von Claude Code laufend a
 ├── httpdocs/                 öffentlich
 │   ├── index.html, assets/   Frontend-Build
 │   ├── api/index.php         lädt nur ../../primed-app/bootstrap.php
-│   └── .htaccess             HTTPS, Security-Header, SPA-Fallback, /api-Routing
+│   └── .htaccess             aus frontend/public/: HTTPS, Security-Header, Dotfile-Sperre, SPA-Fallback, Caching
 └── primed-app/               NICHT öffentlich
     ├── src/, vendor/, bootstrap.php
     ├── var/log/              Logs (schreibbar für PHP)
