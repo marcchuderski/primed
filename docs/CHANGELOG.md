@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-10-17 – 3.7 Essen-Tab
+- Bibliothek mit Suche, Kategorie-Pills, Typ-Filter, Bearbeiten und Löschen; Lizenzhinweise.
+
 ## 2026-10-17 – 3.2/3.3/3.5/3.6 Hinzufügen
 - „+“ aktiv: Schnell-Eintrag mit Shakes und „Häufig um diese Zeit“, Suche über Bibliothek, Open Food Facts und BLS-Richtwerte (mit Quellenangaben).
 - Mengen-Sheet im Hinzufügen-Modus mit Nachtragen (Tagesauswahl).

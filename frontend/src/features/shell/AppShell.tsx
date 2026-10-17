@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { User } from '../../api/auth.ts';
 import { TopNav, type Tab } from '../../components/TopNav/TopNav.tsx';
+import { EssenScreen } from '../essen/EssenScreen.tsx';
 import { MenuScreen } from '../menu/MenuScreen.tsx';
 import { TodayScreen } from '../today/TodayScreen.tsx';
 import styles from './AppShell.module.css';
@@ -33,7 +34,7 @@ export function AppShell({ user }: { user: User }) {
       />
       <div key={tab} className={styles['panel']}>
         {tab === 'heute' && <TodayScreen displayName={user.displayName} />}
-        {tab === 'essen' && <p className={styles['placeholder']}>Essen folgt in Phase 3.</p>}
+        {tab === 'essen' && <EssenScreen />}
         {tab === 'verlauf' && <p className={styles['placeholder']}>Verlauf folgt in Phase 6.</p>}
       </div>
     </main>

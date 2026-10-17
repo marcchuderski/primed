@@ -42,7 +42,7 @@ Nach jedem Item: Tests, Security Audit (`agent-skills:security-and-hardening`), 
 | 3.4 | Open-Food-Facts-Proxy mit Cache (Barcode + Namenssuche) | fertig |
 | 3.5 | Barcode-Scan im Browser | fertig (ZXing, manuelle Eingabe als Alternative; auf dem iPhone noch real zu testen) |
 | 3.6 | Produkt anlegen (Stepper-Liste) | fertig |
-| 3.7 | Essen-Tab: Bibliothek mit Suche, Kategorie-Pills, Typ-Filter | geplant |
+| 3.7 | Essen-Tab: Bibliothek mit Suche, Kategorie-Pills, Typ-Filter | fertig (Vorrat-Segment folgt mit Phase 4) |
 
 ## Phase 4 – Meal Prep
 
