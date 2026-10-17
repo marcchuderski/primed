@@ -31,7 +31,7 @@ describe('App auth flow', () => {
     );
     render(<App minLoadingMs={0} />);
 
-    expect(screen.getByRole('img', { name: 'Primed lädt' })).toBeInTheDocument();
+    expect(screen.getByRole('main', { name: 'Primed lädt' })).toBeInTheDocument();
     expect(await screen.findByRole('heading', { name: 'Willkommen zurück.' })).toBeInTheDocument();
     expect(screen.queryByText(/Passwort vergessen/)).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Einloggen' })).toBeDisabled();

@@ -1,6 +1,6 @@
 import { useState, type SubmitEvent } from 'react';
 import { Button } from '../../components/Button/Button.tsx';
-import { LogoMark, Wordmark } from '../../components/Logo/Logo.tsx';
+import { LogoLockup } from '../../components/Logo/Logo.tsx';
 import { TextField } from '../../components/TextField/TextField.tsx';
 import { useAuth } from './useAuth.ts';
 import { loginErrorMessage } from './loginErrors.ts';
@@ -32,10 +32,7 @@ export function LoginScreen() {
 
   return (
     <main className={styles['screen']}>
-      <div className={styles['brand']}>
-        <LogoMark size={40} />
-        <Wordmark size={28} />
-      </div>
+      <LogoLockup size={36} className={styles['brand']} />
 
       <div className={styles['intro']}>
         <h1 className={styles['title']}>Willkommen zurück.</h1>

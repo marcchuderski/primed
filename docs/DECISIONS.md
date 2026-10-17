@@ -182,3 +182,5 @@ Neue Einträge unten anhängen. Getroffene Entscheidungen werden nicht gelöscht
 **D-093 · Frontend-Auth-Zustand** – Session nur im `HttpOnly`-Cookie, CSRF-Token nur im Speicher (nach Reload über `/auth/me`); Loading-Screen wartet auf `/auth/me` und mindestens 1,4 s (bei `prefers-reduced-motion` ohne Mindestzeit); Bildschirmwechsel mit 150-ms-Crossfade. · Claude · 2026-10-17
 
 **D-094 · API-`.htaccess` per Rewrite statt `FilesMatch`** – existierende Dateien außer `index.php` → 403, alles andere → `index.php`. · `FilesMatch` sperrte auch virtuelle API-Pfade. · Claude · 2026-10-17
+
+**D-095 · Logo-Lockup „P“ + „rimed“** – in allen Screens ersetzt das Zeichen das „p“ der Wortmarke (wie Screen 18), statt Zeichen + „primed“ nebeneinander. Komponente `LogoLockup`. · Nutzer · 2026-10-17

@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { LogoMark, Wordmark } from './Logo.tsx';
+import { LogoLockup, LogoMark } from './Logo.tsx';
 
 describe('LogoMark', () => {
   it('is decorative without a label', () => {
@@ -13,9 +13,10 @@ describe('LogoMark', () => {
   });
 });
 
-describe('Wordmark', () => {
-  it('reads as "primed"', () => {
-    const { container } = render(<Wordmark />);
-    expect(container).toHaveTextContent('primed');
+describe('LogoLockup', () => {
+  it('is announced as "Primed" while the visible text is "rimed"', () => {
+    render(<LogoLockup />);
+    const lockup = screen.getByRole('img', { name: 'Primed' });
+    expect(lockup).toHaveTextContent('rimed');
   });
 });

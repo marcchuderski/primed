@@ -21,6 +21,7 @@ Bei Abweichungen oder Lücken gilt die Arbeitsregel aus `CLAUDE.md`: Trade-offs 
 - **Name:** Primed (das P steht auch für Protein)
 - **Zeichen:** P, dessen Bauch ein zu ca. ¾ gefüllter Fortschrittsring ist. Stiel liegt **über** dem Ring.
 - **Wortmarke:** „primed“ kleingeschrieben in Bricolage Grotesque 800, das „p“ in Akzentfarbe.
+- **Logo-Lockup in der App (verbindlich, wie Screen 18):** Zeichen als „p“ + „rimed“ auf gemeinsamer Grundlinie; Zeichen ≈ 0,81 × Schriftgröße hoch (viewBox `26 13 75 90`), Abstand ≈ 0,06 em, „rimed“ mit Laufweite −0,05 em. Gilt für Loading, Login, Footer und alle weiteren Screens; „primed“ mit Text-„p“ nur in Fließtext.
 - **App-Icon:** Zeichen auf Sand (`#ECE3D6`). Dateien in [`brand/`](brand/):
   - `apple-touch-icon.png` (180 px, iOS rundet selbst)
   - `icon-192.png`, `icon-512.png` (PWA-Manifest)

@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-10-17 – Logo-Lockup
+- Neues `LogoLockup` (Zeichen als „p“ + „rimed“, Screen 18) in Loading, Login und Footer; `Wordmark` entfernt.
+
 ## 2026-10-17 – 1.4 Loading & Login
 - API-Client mit CSRF-Header und typisierten Fehlern; Auth-Provider (Session wiederherstellen, Login, Logout, Überall abmelden).
 - Loading-Screen (Ring-Animation ~1,4 s), Login-Screen nach Mockup (ohne „Passwort vergessen“), Fehler-/Retry-Screen, Platzhalter-Startseite mit Abmelden + „Überall abmelden“.
