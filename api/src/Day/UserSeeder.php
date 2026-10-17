@@ -42,6 +42,7 @@ final class UserSeeder
             $ids[] = $this->dayTypes->create($userId, $name, $kcal, null, $carbs, $sugar, $training, $now);
         }
         [$restDay, , , $basketballDay] = $ids;
+        $this->dayTypes->markAsRest($userId, $restDay);
 
         $days = [];
         for ($weekday = 1; $weekday <= 7; $weekday++) {

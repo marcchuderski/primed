@@ -34,10 +34,10 @@ Nutzer: der Betreiber und einzelne Freunde. Jeder User hat eigene, getrennte Dat
 
 Werte siehe `docs/DEFAULTS.md`. Alle Werte sind in den Einstellungen änderbar.
 
-- Die fünf Tagesarten aus `DEFAULTS.md` sind nur der Start: Tagesarten können **angelegt, bearbeitet und gelöscht** werden. Vergangene Tage behalten Name und Sollwerte ihrer Tagesart (Schnappschuss), auch wenn die Tagesart später gelöscht wird.
+- Die fünf Tagesarten aus `DEFAULTS.md` sind nur der Start: Tagesarten können **angelegt, bearbeitet und gelöscht** werden. Ausnahme: **„Ruhetag“ ist fest im System** (nicht löschbar, Name und Art fix, Sollwerte änderbar), damit er eindeutig erkennbar ist (D-106). Vergangene Tage behalten Name und Sollwerte ihrer Tagesart (Schnappschuss), auch wenn die Tagesart später gelöscht wird.
 - **Protein:** ein **Protein-Standard** (150 g) in den Einstellungen. Jede Tagesart kann optional einen abweichenden Wert haben; ohne Abweichung gilt immer der Standard.
 - Jeder Tag hat genau **eine** Tagesart. Ruhetag hat keine Trainingszeit.
-- Trainingstage haben **Startzeit** (Raster 15 min, **frühestens 09:00**) und **Dauer** (Standard 90 min, Auswahl 60/90/120).
+- Trainingstage haben **Startzeit** (Raster 15 min, **frühestens 09:00**) und **Dauer** (Standard 90 min, Auswahl 30/60/90/120).
 - **Tagesgrenze:** ein Tag endet um **02:00** des Folgetags. Einträge zwischen 00:00 und 01:59 gehören zum Vortag (z. B. Shake nach einem späten Spiel). Zeitzone Europe/Berlin.
 - Zwei Einheiten an einem Tag: der Nutzer wählt einfach „Intensiv“ und gibt die für die Ernährung relevante Uhrzeit an. Keine Sonderlogik.
 - Ein Spiel ist eine Einheit der Tagesart „Intensiv / Spiel“. Es gibt **keine** separaten Trainingsarten.
@@ -211,6 +211,11 @@ Aus Vorrat und Bibliothek die Optionen wählen, die die offenen Werte (bis Check
 - Aktuelles Proteinpulver, Protein-Standard
 - Darstellung: System · Hell · Dunkel (überschreibt Geräteeinstellung)
 - Tagesarten & Sollwerte · Wochenvorlage · Shakes · Checkpoints · Vorschläge (Schwellen) · Bewertung (Toleranz)
+- **Tagesarten & Sollwerte** (Screen 19): Protein-Standard als Stepper, Liste der Tagesarten (Icon Training/Ruhe, Name, kcal · Protein · KH; Tap = bearbeiten), Button „Neue Tagesart“, darunter immer sichtbar die Zeile „Hilfe beim Ermitteln deiner Richtwerte“ (Icon CircleHelp).
+- **Modal „Richtwerte ermitteln“** (Screen 20, Bottom-Sheet in voller Höhe, D-108): Titel, ein Satz Erklärung, Schließen. Vier Schritte: Fragebogen kopieren · KI deiner Wahl öffnen und einfügen · Fragen beantworten · Ergebnis hier eintragen. Vorschau des Fragebogens (nach unten ausgeblendet) mit Link „Ganzen Fragebogen anzeigen“; Primärbutton „Fragebogen kopieren“ (Zwischenablage nur auf Klick, danach kurz „Kopiert“; Fallback: markierbarer Text). „Dann einfügen in“: ChatGPT, Claude, Copilot, Gemini (neuer Tab, `rel="noopener noreferrer"`; Logos/Link-Ziele siehe Offene Punkte). Ganz unten, durch eine Linie abgesetzt, wörtlich:
+  - „Hinweis: Kein Ersatz für ärztliche oder ernährungsfachliche Beratung. Die Werte sind unverbindliche Richtwerte, die eine KI aus deinen Angaben berechnet; Primed übernimmt dafür keine Gewähr. Bei Erkrankungen, Schwangerschaft, Stillzeit oder Essstörungen sprich bitte mit einer Ärztin, einem Arzt oder einer Ernährungsfachkraft.“
+  - „Deine Antworten gehen an den Anbieter, den du wählst. Primed sendet dabei nichts.“
+- Der Fragebogen-Text stammt ausschließlich aus `docs/RICHTWERTE-PROMPT.md` und liegt als Konstante im Frontend (keine API, keine Nutzerdaten).
 - Abmelden (Button), darunter „Überall abmelden“ als Textlink
 - Konto löschen (Bestätigungsdialog + Passwort, löscht alle eigenen Daten)
 
@@ -239,3 +244,5 @@ Alle ursprünglich offenen Punkte wurden am 17.10.2026 mit dem Nutzer geklärt u
 4. ~~Neue Mockups für „Produkt anlegen“~~ – geliefert (06, 07, 17, 18), siehe D-073.
 5. ~~Screenshot zur PWA-Installation~~ – Screen 18 (nur Nutzer-Doku).
 6. **Shake-Regeln:** konkrete Reihenfolge bei „Protein hat Vorrang“ in Phase 5 bestätigen.
+7. **Richtwerte-Modal:** Link-Ziele (nur Startseite oder vorbefüllt per URL-Parameter) und Anbieter-Logos (offizielle Brand-Ressourcen, Nutzungsbedingungen) – Optionen liegen dem Nutzer vor.
+8. **Fragebogen** nennt als Dauer „60/90/120 min“; seit D-107 gibt es auch 30 min – Anpassung des Fragebogens durch den Nutzer.

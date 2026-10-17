@@ -32,6 +32,8 @@ export interface DayType {
   sugarRef: number;
   isTraining: boolean;
   sort: number;
+  /** The fixed rest day type (D-106). */
+  isRest: boolean;
 }
 
 const invalid = () => new ApiError(200, 'invalid_response', 'Unerwartete Antwort vom Server.');
@@ -122,6 +124,7 @@ export function parseDayType(value: unknown): DayType {
     sugarRef: num(t['sugarRef']),
     isTraining: bool(t['isTraining']),
     sort: num(t['sort']),
+    isRest: bool(t['isRest']),
   };
 }
 

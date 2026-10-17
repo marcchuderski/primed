@@ -131,7 +131,7 @@ Implementiert: `GET /v1/health` → `{"status":"ok"}`.
 
 - Logischer Tag: Europe/Berlin, endet um `day_boundary_min` (02:00) des Folgetags (`LogicalCalendar`).
 - Heute wird bei jedem Abruf aus den aktuellen Einstellungen neu berechnet; vergangene Tage bleiben fest. Vor jeder Änderung an Tagesarten, Wochenvorlage oder Protein-Standard werden alle vergangenen Tage ohne Datensatz (seit Kontoanlage) mit den bisherigen Werten gespeichert – in derselben Transaktion wie die Änderung.
-- Trainingszeit: 15-Minuten-Raster, `earliest_training_min` (09:00) bis 23:45; Dauer 60/90/120.
+- Trainingszeit: 15-Minuten-Raster, `earliest_training_min` (09:00) bis 23:45; Dauer 30/60/90/120.
 - Startdaten (`UserSeeder`, D-080): fünf Tagesarten, Wochenvorlage alles Ruhetag; mit `--owner-defaults` Di/Do Basketball 20:00.
 
 - Admin-CLI (`bin/`, nur per SSH): `user-create.php` (zufälliges Startpasswort oder `--set-password`), `user-password.php` (Reset + alle Sessions beenden), `migrate.php`, `user-seed.php` (Startdaten für bestehende User).
@@ -148,8 +148,8 @@ Alle schreibenden Endpunkte: Session-Cookie + CSRF-Token, serverseitige Validier
 | `schema_migrations` | version, applied_at (jede Migration trägt sich selbst ein) |
 | `sessions` | id, user_id (FK, CASCADE), token_hash (BINARY(32), SHA-256, unique), created_at, last_seen_at, expires_at (gleitend 30 Tage), absolute_expires_at (90 Tage), revoked_at |
 | `login_attempts` | id, username, ip_hash (HMAC), attempted_at, success · Löschung nach 30 Tagen |
-| `user_settings` | user_id (FK, CASCADE), theme (system/light/dark), protein_default, default_duration_min, earliest_training_min, checkpoint_offset_min, checkpoint_pct, earliest_checkpoint_min, day_boundary_min, updated_at · weitere Felder per späterer Migration: tolerance_pct, protein_default, protein_powder_food_id, Shake-Schwellen, Checkpoint-Vorlage (inkl. frühester Checkpoint/Trainingsbeginn), day_boundary (02:00) |
-| `day_types` | id, user_id, name, kcal, protein (nullable = Protein-Standard), carbs, sugar_ref, is_training, sort, deleted_at |
+| `user_settings` | user_id (FK, CASCADE), theme (system/light/dark), protein_default, default_duration_min, earliest_training_min, checkpoint_offset_min, checkpoint_pct, earliest_checkpoint_min, day_boundary_min, updated_at · noch geplant (spätere Migrationen): tolerance_pct, protein_powder_food_id, Shake-Schwellen, Pre-Workout-/KH-Snack-Fenster |
+| `day_types` | id, user_id, system_key (`rest` = fester Ruhetag, D-106), name, kcal, protein (nullable = Protein-Standard), carbs, sugar_ref, is_training, sort, deleted_at |
 | `week_template` | user_id, weekday (1–7, ISO), day_type_id (FK RESTRICT), training_start (Minuten), duration_min |
 | `days` | id, user_id, date (logischer Tag, unique je User), day_type_id (FK SET NULL), day_type_name (Schnappschuss), is_training, training_start, duration_min, target_kcal/protein/carbs/sugar (Schnappschuss), source (template/manual) |
 | `foods` | id, user_id, type (product/reference/ingredient), name, brand, barcode (unique je User), category (snacks/dairy/bread/produce/drinks), basis (per_100g/per_100ml/per_unit), Nährwerte je Basis (DECIMAL), package_amount (Einheit der Basis), source (seed/manual/off/bls), deleted_at, usage_count, last_amount, last_unit, is_quick (Shakes) |

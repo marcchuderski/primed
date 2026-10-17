@@ -11,7 +11,7 @@ use Primed\Support\Row;
 
 final class DayTypeRepository
 {
-    private const COLUMNS = 'id, name, kcal, protein, carbs, sugar_ref, is_training, sort';
+    private const COLUMNS = 'id, system_key, name, kcal, protein, carbs, sugar_ref, is_training, sort';
 
     public function __construct(private readonly PDO $pdo)
     {
@@ -102,6 +102,12 @@ final class DayTypeRepository
         )->execute([$name, $kcal, $protein, $carbs, $sugarRef, $isTraining ? 1 : 0, Db::dateTime($now), $userId, $id]);
     }
 
+    public function markAsRest(int $userId, int $id): void
+    {
+        $this->pdo->prepare("UPDATE day_types SET system_key = 'rest' WHERE user_id = ? AND id = ?")
+            ->execute([$userId, $id]);
+    }
+
     public function softDelete(int $userId, int $id, DateTimeImmutable $now): void
     {
         $this->pdo->prepare('UPDATE day_types SET deleted_at = ? WHERE user_id = ? AND id = ? AND deleted_at IS NULL')
@@ -122,6 +128,7 @@ final class DayTypeRepository
             Row::int($row, 'sugar_ref'),
             Row::int($row, 'is_training') === 1,
             Row::int($row, 'sort'),
+            ($row['system_key'] ?? null) === 'rest',
         );
     }
 }

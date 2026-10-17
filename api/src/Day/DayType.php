@@ -16,6 +16,8 @@ final class DayType
         public readonly int $sugarRef,
         public readonly bool $isTraining,
         public readonly int $sort,
+        /** The fixed rest day type (D-106): cannot be deleted, renamed or turned into a training day. */
+        public readonly bool $isRest = false,
     ) {
     }
 
@@ -39,6 +41,7 @@ final class DayType
             'sugarRef' => $this->sugarRef,
             'isTraining' => $this->isTraining,
             'sort' => $this->sort,
+            'isRest' => $this->isRest,
         ];
     }
 }

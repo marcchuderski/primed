@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-17 – Picker, fester Ruhetag, Richtwerte-Konzept
+- Migration `004_rest_day`: Ruhetag fest im System (D-106); Trainingsdauer 30 min.
+- Tagesart-Picker: eingeklappte Liste mit „Auswahl ändern“, Dauer-Pills 2×2 (D-107).
+- Konzept KI-Fragebogen „Richtwerte ermitteln“ (Screens 19/20, `docs/RICHTWERTE-PROMPT.md`, D-108) in BRIEFING, DESIGN, Roadmap 7.1/7.6.
+- Doku: DEFAULTS (Wochenvorlage nur für Betreiber), ARCHITECTURE (`user_settings` bereinigt).
+
 ## 2026-10-17 – 2.5 Einträge
 - Migration `003_foods_entries`; Startbibliothek (Milch für alle, Startprodukte für den Betreiber).
 - API für Einträge mit serverseitigem Nährwert-Schnappschuss und Einheiten-Umrechnung (geteilte Testfälle Frontend/API).

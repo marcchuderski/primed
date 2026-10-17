@@ -24,10 +24,16 @@ Tagesarten sind frei anleg-, änder- und löschbar; die folgenden fünf sind der
 | Intensiv / Spiel | 2.800 | 150 g | 400 g | 67 g | 50 g |
 
 \* berechnet: (kcal − Protein × 4 − KH × 4) / 9, gerundet.
-Standarddauer Training: 90 min. Auswahl: 60 / 90 / 120 min. Frühester Trainingsbeginn: 09:00.
+Standarddauer Training: 90 min. Auswahl: 30 / 60 / 90 / 120 min. Frühester Trainingsbeginn: 09:00.
 Tagesgrenze: 02:00 (Einträge bis 01:59 zählen zum Vortag).
 
+„Ruhetag“ ist fest im System (D-106): nicht löschbar, Name und Art fix, nur die Sollwerte sind änderbar.
+
 ## Wochenvorlage
+
+**Neue User (Standard, D-080):** alle sieben Tage „Ruhetag“.
+
+**Betreiber (nur mit `--owner-defaults`):**
 
 | Mo | Di | Mi | Do | Fr | Sa | So |
 |---|---|---|---|---|---|---|

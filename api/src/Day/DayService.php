@@ -20,7 +20,7 @@ use Throwable;
  */
 final class DayService
 {
-    public const DURATIONS = [60, 90, 120];
+    public const DURATIONS = [30, 60, 90, 120];
     public const LATEST_TRAINING_MIN = 23 * 60 + 45;
     /** Neutral training time when a training day has no time yet (e.g. switched manually). */
     public const DEFAULT_TRAINING_START = 18 * 60;
@@ -91,6 +91,13 @@ final class DayService
     public function updateDayType(int $userId, int $id, DayTypeInput $input): DayType
     {
         $existing = $this->requireDayType($userId, $id);
+        if ($existing->isRest && ($input->isTraining || $input->name !== $existing->name)) {
+            throw new HttpException(
+                422,
+                'rest_day_fixed',
+                'Der Ruhetag ist fest: Name und Art lassen sich nicht ändern, nur die Sollwerte.',
+            );
+        }
         if ($existing->isTraining !== $input->isTraining && $this->template->usesDayType($userId, $id)) {
             throw new HttpException(
                 422,
@@ -118,7 +125,10 @@ final class DayService
 
     public function deleteDayType(int $userId, int $id): void
     {
-        $this->requireDayType($userId, $id);
+        $type = $this->requireDayType($userId, $id);
+        if ($type->isRest) {
+            throw new HttpException(422, 'rest_day_fixed', 'Der Ruhetag ist fest und kann nicht gelöscht werden.');
+        }
         if ($this->template->usesDayType($userId, $id)) {
             throw new HttpException(
                 422,
@@ -293,7 +303,7 @@ final class DayService
         }
         $duration ??= $settings->defaultDurationMin;
         if (!in_array($duration, self::DURATIONS, true)) {
-            throw Input::invalid('Die Dauer muss 60, 90 oder 120 Minuten betragen.');
+            throw Input::invalid('Die Dauer muss 30, 60, 90 oder 120 Minuten betragen.');
         }
 
         return [$start, $duration];

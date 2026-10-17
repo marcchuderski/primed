@@ -102,6 +102,8 @@ Bewertet wird nur die **kcal-Bilanz gegen das Tagessoll, Toleranz ±5 %**. Drei 
 
 **Begrüßung (Heute):** über dem Datum eine Zeile „Hey, [Name].“ (Inter 15 px, 700, `--text`) gefolgt vom situativen Satz (Inter 15 px, 400, `--text-muted`) im selben Absatz; bricht sauber auf höchstens zwei Zeilen um. Regeln in `docs/BRIEFING.md` §4a.
 
+**Tagesart-Picker (Screen 08):** Ist eine Trainings-Tagesart gewählt, zeigt die Liste nur die Auswahl plus „Auswahl ändern“ (Trainingszeit rückt ins Blickfeld). Dauer-Pills 30 · 60 · 90 · 120 min als 2×2-Raster, gleich hoch wie das Uhrzeit-Rad (96 px).
+
 **Tagesart-Chip** unter dem Titel, tonal, öffnet den Tagesart-Picker (Bottom-Sheet).
 
 **Listeneintrag:** Titel + Menge, darunter Makrozeile (Protein in `--accent-text`), Uhrzeit rechts. Wischen löscht, Tap bearbeitet. Keine Mahlzeiten-Slots.
@@ -169,4 +171,6 @@ Statische Referenz-Mockups mit Beispieldaten (keine echten Werte), je Light und 
 | 13–15 | Verlauf | Woche, Monat, Jahr |
 | 16 | Menü | Profil, Darstellung, Einstellungen |
 | 17 | Meal Prep · Zutat | Zutat-Menge mit Einheiten-Umschalter |
+| 19 | Tagesarten & Sollwerte | Einstellungen: Protein-Standard, Tagesarten-Liste, „Neue Tagesart“, Hilfe-Zeile |
+| 20 | Richtwerte ermitteln | Modal (Sheet, volle Höhe): Schritte, Fragebogen kopieren, KI-Anbieter, Hinweise |
 | 18 | PWA-Installation | Anleitung Homescreen, nur für die Nutzer-Doku (wird nicht als App-Screen gebaut) |

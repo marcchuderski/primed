@@ -165,6 +165,34 @@ final class DaysFlowTest extends ApiTestCase
         self::assertSame(404, $this->call('PATCH', '/api/v1/day-types/' . $light, ['name' => 'x'])->status);
     }
 
+    public function testRestDayIsFixed(): void
+    {
+        $rest = $this->dayTypeId('Ruhetag');
+        $types = self::json($this->call('GET', '/api/v1/day-types'))['dayTypes'];
+        self::assertIsArray($types);
+        self::assertTrue(is_array($types[0]) && $types[0]['isRest'] === true);
+
+        self::assertSame(422, $this->call('DELETE', '/api/v1/day-types/' . $rest)->status);
+        $payload = ['kcal' => 2100, 'protein' => null, 'carbs' => 200, 'sugarRef' => 50];
+        $path = '/api/v1/day-types/' . $rest;
+        $cases = [['Pause', false, 422], ['Ruhetag', true, 422], ['Ruhetag', false, 200]];
+        foreach ($cases as [$name, $training, $status]) {
+            $response = $this->call('PATCH', $path, $payload + ['name' => $name, 'isTraining' => $training]);
+            self::assertSame($status, $response->status);
+        }
+    }
+
+    public function testThirtyMinuteTrainingIsAllowed(): void
+    {
+        $basketball = $this->dayTypeId('Normal · Basketball');
+        $day = $this->call('PUT', '/api/v1/days/2026-10-20', [
+            'dayTypeId' => $basketball,
+            'trainingStart' => 1200,
+            'durationMin' => 30,
+        ]);
+        self::assertSame(30, $this->day($day)['durationMin']);
+    }
+
     public function testDayTypeValidation(): void
     {
         $base = [

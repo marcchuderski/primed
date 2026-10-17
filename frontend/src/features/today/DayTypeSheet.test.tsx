@@ -35,6 +35,7 @@ const dayTypes = [
     sugarRef: 50,
     isTraining: false,
     sort: 1,
+    isRest: true,
   },
   {
     id: 4,
@@ -46,10 +47,29 @@ const dayTypes = [
     sugarRef: 50,
     isTraining: true,
     sort: 4,
+    isRest: false,
   },
 ];
 
 describe('DayTypeSheet', () => {
+  it('collapses to the selected training day with "Auswahl ändern" and offers 30 to 120 min', async () => {
+    fetchMock.mockResolvedValueOnce(new Response(JSON.stringify({ dayTypes })));
+    render(<DayTypeSheet open day={day} settings={settings} onClose={vi.fn()} onSaved={vi.fn()} />);
+
+    await screen.findByRole('button', { name: 'Auswahl ändern' });
+    expect(screen.queryByRole('button', { name: /Ruhetag/ })).not.toBeInTheDocument();
+    expect(screen.getAllByRole('button', { name: /min$/ }).map((b) => b.textContent)).toEqual([
+      '30 min',
+      '60 min',
+      '90 min',
+      '120 min',
+    ]);
+
+    await userEvent.click(screen.getByRole('button', { name: 'Auswahl ändern' }));
+    await userEvent.click(screen.getByRole('button', { name: /Normal · Basketball/ }));
+    expect(screen.queryByRole('button', { name: /Ruhetag/ })).not.toBeInTheDocument();
+  });
+
   const fetchMock = vi.fn<typeof fetch>();
 
   beforeEach(() => {
@@ -94,7 +114,8 @@ describe('DayTypeSheet', () => {
     );
     render(<DayTypeSheet open day={day} settings={settings} onClose={vi.fn()} onSaved={onSaved} />);
 
-    await userEvent.click(await screen.findByRole('button', { name: /Ruhetag/ }));
+    await userEvent.click(await screen.findByRole('button', { name: 'Auswahl ändern' }));
+    await userEvent.click(screen.getByRole('button', { name: /Ruhetag/ }));
     expect(screen.queryByText('Training um')).not.toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: 'Übernehmen' }));
 
@@ -138,7 +159,7 @@ describe('DayTypeSheet', () => {
     );
     render(<DayTypeSheet open day={day} settings={settings} onClose={vi.fn()} onSaved={vi.fn()} />);
 
-    await screen.findByRole('button', { name: /Ruhetag/ });
+    await screen.findByRole('button', { name: 'Auswahl ändern' });
     await userEvent.click(screen.getByRole('button', { name: 'Übernehmen' }));
     expect(await screen.findByRole('alert')).toHaveTextContent('Ungültige Trainingszeit.');
   });

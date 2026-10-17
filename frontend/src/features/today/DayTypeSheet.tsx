@@ -1,4 +1,4 @@
-import { Check } from 'lucide-react';
+import { Check, ChevronDown } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { fetchDayTypes, updateDay, type Day, type DayType, type Settings } from '../../api/days.ts';
 import { Button } from '../../components/Button/Button.tsx';
@@ -7,7 +7,7 @@ import { TimeWheel } from '../../components/Wheel/TimeWheel.tsx';
 import { formatInt } from '../../domain/format.ts';
 import styles from './DayTypeSheet.module.css';
 
-const DURATIONS = [60, 90, 120] as const;
+const DURATIONS = [30, 60, 90, 120] as const;
 const LATEST_TRAINING_MIN = 23 * 60 + 45;
 const FALLBACK_TRAINING_START = 18 * 60;
 
@@ -29,6 +29,8 @@ export function DayTypeSheet({
 }) {
   const [types, setTypes] = useState<DayType[] | null>(null);
   const [typeId, setTypeId] = useState(day.dayTypeId);
+  // With a training day selected, the list collapses so the training time is in view (D-107).
+  const [expanded, setExpanded] = useState(!day.isTraining);
   const [start, setStart] = useState(day.trainingStart ?? FALLBACK_TRAINING_START);
   const [duration, setDuration] = useState(day.durationMin ?? settings.defaultDurationMin);
   const [busy, setBusy] = useState(false);
@@ -85,34 +87,50 @@ export function DayTypeSheet({
   return (
     <Sheet open={open} title="Tagesart" subtitle={subtitle} onClose={onClose}>
       <div className={styles['list']} role="group" aria-label="Tagesart wählen">
-        {(types ?? []).map((type) => {
-          const active = type.id === typeId;
-          return (
-            <button
-              key={type.id}
-              type="button"
-              className={styles['option']}
-              aria-pressed={active}
-              onClick={() => {
-                setTypeId(type.id);
-              }}
-            >
-              <span className={styles['texts']}>
-                <span className={styles['name']}>{type.name}</span>
-                <span className={styles['meta']}>
-                  {formatInt(type.kcal)} kcal · {formatInt(type.carbs)} g KH
+        {(types ?? [])
+          .filter((type) => expanded || type.id === typeId)
+          .map((type) => {
+            const active = type.id === typeId;
+            return (
+              <button
+                key={type.id}
+                type="button"
+                className={styles['option']}
+                aria-pressed={active}
+                onClick={() => {
+                  setTypeId(type.id);
+                  setExpanded(!type.isTraining);
+                }}
+              >
+                <span className={styles['texts']}>
+                  <span className={styles['name']}>{type.name}</span>
+                  <span className={styles['meta']}>
+                    {formatInt(type.kcal)} kcal · {formatInt(type.carbs)} g KH
+                  </span>
                 </span>
-              </span>
-              {active ? (
-                <span className={styles['check']} aria-hidden="true">
-                  <Check size={14} strokeWidth={3} />
-                </span>
-              ) : (
-                <span className={styles['radio']} aria-hidden="true" />
-              )}
-            </button>
-          );
-        })}
+                {active ? (
+                  <span className={styles['check']} aria-hidden="true">
+                    <Check size={14} strokeWidth={3} />
+                  </span>
+                ) : (
+                  <span className={styles['radio']} aria-hidden="true" />
+                )}
+              </button>
+            );
+          })}
+        {!expanded && (
+          <button
+            type="button"
+            className={styles['change']}
+            aria-expanded={false}
+            onClick={() => {
+              setExpanded(true);
+            }}
+          >
+            Auswahl ändern
+            <ChevronDown size={16} strokeWidth={2.2} aria-hidden="true" />
+          </button>
+        )}
       </div>
 
       {selected?.isTraining === true && (
