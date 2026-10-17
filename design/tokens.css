@@ -1,0 +1,66 @@
+/* Primed – Design Tokens
+   Light = "Sand & Glut", Dark = "Night Court".
+   Theme: folgt dem Gerät (prefers-color-scheme), außer der Nutzer überschreibt im Menü
+   mit data-theme="light" | "dark" auf <html> (funktioniert auch auf einzelnen Containern). */
+
+:root, [data-theme="light"] {
+  color-scheme: light;
+  /* Flächen */
+  --bg: #ECE3D6;            /* Seitenhintergrund (Sand) */
+  --surface: #F5EEE4;       /* Karten, Listen, Sheets */
+  --tonal: #DED1BF;         /* Chips, sekundäre Buttons, Segment-Track */
+  --scrim: #B9AE9F;         /* Hintergrund hinter Bottom-Sheets */
+  /* Text */
+  --text: #2E2721;
+  --text-muted: #6A5E52;
+  /* Akzent (nur Protein, Hauptaktionen, Trainings-Marker) */
+  --accent: #F2622E;
+  --accent-text: #A8410F;   /* Akzent als Schriftfarbe auf hellen Flächen */
+  --on-accent: #2E2721;     /* Schrift auf Akzentfläche */
+  --accent-track: rgba(242, 98, 46, 0.2);
+  --accent-fill: rgba(242, 98, 46, 0.88);
+  /* Neutrale Balken */
+  --bar-track: rgba(46, 39, 33, 0.10);
+  --bar-fill: rgba(46, 39, 33, 0.72);
+  --bar-over: rgba(46, 39, 33, 0.85);
+  --divider: rgba(46, 39, 33, 0.07);
+  /* Status (Bewertung kcal ±5 %) – nie in voller Deckkraft als Fläche */
+  --status-ok-fg: #59603A;   --status-ok-bg: rgba(125, 132, 80, 0.24);   --status-ok-solid: rgba(125, 132, 80, 0.75);
+  --status-low-fg: #875C12;  --status-low-bg: rgba(212, 154, 58, 0.26);  --status-low-solid: rgba(212, 154, 58, 0.70);
+  --status-high-fg: #87483F; --status-high-bg: rgba(183, 134, 127, 0.34); --status-high-solid: rgba(183, 134, 127, 0.85);
+  /* Typo */
+  --font-display: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif;
+  --font-text: 'Inter', system-ui, sans-serif;
+  /* Radien */
+  --r-sheet: 30px; --r-card: 22px; --r-item: 18px; --r-button: 18px; --r-input: 16px; --r-pill: 999px;
+  /* Abstände */
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-5: 20px; --space-6: 24px;
+  --touch: 44px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #17191D; --surface: #1F2227; --tonal: #2B2F36; --scrim: #07080A;
+    --text: #E8E3DB; --text-muted: #9F9A92;
+    --accent: #F27A4B; --accent-text: #F59A73; --on-accent: #17191D;
+    --accent-track: rgba(242, 122, 75, 0.2); --accent-fill: rgba(242, 122, 75, 0.88);
+    --bar-track: rgba(232, 227, 219, 0.10); --bar-fill: rgba(232, 227, 219, 0.72); --bar-over: rgba(232, 227, 219, 0.85);
+    --divider: rgba(232, 227, 219, 0.07);
+    --status-ok-fg: #BCC48E;   --status-ok-bg: rgba(150, 160, 95, 0.22);
+    --status-low-fg: #E3B76A;  --status-low-bg: rgba(212, 154, 58, 0.20);
+    --status-high-fg: #DDA89F; --status-high-bg: rgba(190, 130, 122, 0.28);
+  }
+}
+[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #17191D; --surface: #1F2227; --tonal: #2B2F36; --scrim: #07080A;
+  --text: #E8E3DB; --text-muted: #9F9A92;
+  --accent: #F27A4B; --accent-text: #F59A73; --on-accent: #17191D;
+  --accent-track: rgba(242, 122, 75, 0.2); --accent-fill: rgba(242, 122, 75, 0.88);
+  --bar-track: rgba(232, 227, 219, 0.10); --bar-fill: rgba(232, 227, 219, 0.72); --bar-over: rgba(232, 227, 219, 0.85);
+  --divider: rgba(232, 227, 219, 0.07);
+  --status-ok-fg: #BCC48E;   --status-ok-bg: rgba(150, 160, 95, 0.22);
+  --status-low-fg: #E3B76A;  --status-low-bg: rgba(212, 154, 58, 0.20);
+  --status-high-fg: #DDA89F; --status-high-bg: rgba(190, 130, 122, 0.28);
+}

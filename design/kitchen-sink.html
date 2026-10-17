@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Primed · Kitchen Sink</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="tokens.css">
+<style>
+  body { margin: 0; font-family: var(--font-text); background: #cfc8bd; }
+  .wrap { display: flex; flex-wrap: wrap; gap: 0; }
+  .panel { flex: 1 1 560px; background: var(--bg); color: var(--text); padding: 48px 40px; display: flex; flex-direction: column; gap: 28px; }
+  h1 { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: 40px; letter-spacing: -0.035em; line-height: 1; }
+  h2 { margin: 0 0 12px; font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--text-muted); }
+  .card { background: var(--surface); border-radius: var(--r-card); padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+  .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+  .sw { display: flex; flex-direction: column; gap: 6px; font-size: 12px; }
+  .sw i { display: block; height: 48px; border-radius: 12px; border: 1px solid var(--divider); }
+  .sw b { font-size: 13px; }
+  .sw span { color: var(--text-muted); }
+  .num { font-variant-numeric: tabular-nums; }
+  .bar-head { display: flex; justify-content: space-between; font-size: 15px; }
+  .bar-head .muted { color: var(--text-muted); }
+  .bar { position: relative; height: 12px; border-radius: 999px; background: var(--bar-track); }
+  .bar > .fill { height: 12px; border-radius: 999px; background: var(--bar-fill); }
+  .bar.protein { background: var(--accent-track); }
+  .bar.protein > .fill { background: var(--accent-fill); }
+  .bar.over > .fill { background: var(--bar-over); width: 100%; }
+  .bar .marker { position: absolute; top: -5px; width: 3px; height: 22px; border-radius: 2px; background: var(--accent); }
+  .bar.protein .marker { background: var(--text); }
+  .bar.small { height: 6px; } .bar.small > .fill { height: 6px; opacity: .6; }
+  .btn { height: 52px; padding: 0 24px; border-radius: var(--r-button); border: none; font: 600 16px var(--font-text); }
+  .btn.primary { background: var(--accent); color: var(--on-accent); }
+  .btn.tonal { background: var(--tonal); color: var(--text); }
+  .chip { height: 40px; padding: 0 16px; border-radius: 999px; border: none; background: var(--tonal); color: var(--text); font: 600 14px var(--font-text); display: inline-flex; align-items: center; gap: 8px; }
+  .pill { height: 36px; padding: 0 14px; border-radius: 999px; border: none; background: var(--surface); color: var(--text); font: 600 13px var(--font-text); }
+  .pill.on { background: var(--accent-track); color: var(--accent-text); font-weight: 700; }
+  .icon { width: 44px; height: 44px; border-radius: 999px; border: none; display: inline-flex; align-items: center; justify-content: center; background: var(--surface); color: var(--text); }
+  .icon.accent { background: var(--accent); color: var(--on-accent); }
+  .seg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; padding: 4px; border-radius: 16px; background: var(--tonal); }
+  .seg button { height: 40px; border-radius: 12px; border: none; background: transparent; color: var(--text-muted); font: 600 14px var(--font-text); }
+  .seg button[aria-pressed="true"] { background: var(--surface); color: var(--text); font-weight: 700; }
+  .item { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border-radius: var(--r-item); background: var(--bg); }
+  .item small { display: block; margin-top: 4px; font-size: 13px; color: var(--text-muted); }
+  .p { color: var(--accent-text); font-weight: 600; }
+  .status { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 999px; font-weight: 800; }
+  .ok { background: var(--status-ok-bg); color: var(--status-ok-fg); }
+  .low { background: var(--status-low-bg); color: var(--status-low-fg); }
+  .high { background: var(--status-high-bg); color: var(--status-high-fg); }
+  .tile { padding: 10px 12px; border-radius: 14px; display: flex; flex-direction: column; gap: 2px; }
+  .tile b { font-size: 20px; } .tile span { font-size: 12px; font-weight: 600; }
+  .display { font-family: var(--font-display); font-weight: 800; letter-spacing: -0.04em; line-height: 1; }
+  .wordmark { font-family: var(--font-display); font-weight: 800; font-size: 40px; letter-spacing: -0.045em; }
+  .wordmark em { font-style: normal; color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+<!-- Panel wird zweimal gerendert: Light und Dark -->
+<template id="tpl">
+  <section class="panel">
+    <div class="row" style="justify-content: space-between">
+      <div class="row" style="gap: 14px">
+        <svg width="56" height="56" viewBox="0 0 120 120" aria-hidden="true"><rect width="120" height="120" rx="27" fill="var(--surface)"/><circle cx="64" cy="52" r="21" fill="none" stroke="var(--text)" stroke-opacity=".12" stroke-width="15"/><circle cx="64" cy="52" r="21" fill="none" stroke="var(--accent)" stroke-width="15" stroke-linecap="round" stroke-dasharray="95 132" transform="rotate(-90 64 52)"/><rect x="30" y="26" width="15" height="70" rx="7.5" fill="var(--text)"/></svg>
+        <span class="wordmark"><em>p</em>rimed</span>
+      </div>
+      <span class="theme-name" style="color: var(--text-muted); font-size: 14px"></span>
+    </div>
+
+    <div>
+      <h2>Farben</h2>
+      <div class="grid">
+        <div class="sw"><i style="background: var(--bg)"></i><b>bg</b><span>Seite</span></div>
+        <div class="sw"><i style="background: var(--surface)"></i><b>surface</b><span>Karten</span></div>
+        <div class="sw"><i style="background: var(--tonal)"></i><b>tonal</b><span>Chips, Sekundär</span></div>
+        <div class="sw"><i style="background: var(--accent)"></i><b>accent</b><span>Protein, Aktion</span></div>
+        <div class="sw"><i style="background: var(--text)"></i><b>text</b><span>Schrift</span></div>
+        <div class="sw"><i style="background: var(--text-muted)"></i><b>text-muted</b><span>Sekundärtext</span></div>
+        <div class="sw"><i style="background: var(--accent-text)"></i><b>accent-text</b><span>Protein-Zahlen</span></div>
+        <div class="sw"><i style="background: var(--scrim)"></i><b>scrim</b><span>hinter Sheets</span></div>
+      </div>
+    </div>
+
+    <div>
+      <h2>Status · Bewertung kcal ±5 %</h2>
+      <div class="grid" style="grid-template-columns: repeat(3, 1fr)">
+        <div class="tile ok"><b class="num">5</b><span>✓ im Rahmen</span></div>
+        <div class="tile low"><b class="num">1</b><span>↓ unter Soll</span></div>
+        <div class="tile high"><b class="num">1</b><span>↑ über Soll</span></div>
+      </div>
+      <div class="row" style="margin-top: 10px"><span class="status ok">✓</span><span class="status low">↓</span><span class="status high">↑</span></div>
+    </div>
+
+    <div>
+      <h2>Typografie</h2>
+      <div class="card">
+        <span class="display" style="font-size: 38px">Dienstag, 20. Okt.</span>
+        <span class="display num" style="font-size: 72px">150 <span style="font-size: 28px; color: var(--text-muted)">g</span></span>
+        <span style="font-size: 16px">Fließtext Inter 15–16 px. Zahlen immer mit gleich breiten Ziffern.</span>
+        <span style="font-size: 13px; color: var(--text-muted)">Sekundärtext Inter 13 px</span>
+      </div>
+    </div>
+
+    <div>
+      <h2>Balken</h2>
+      <div class="card">
+        <div><div class="bar-head"><b>Kalorien</b><span class="num"><b>1.092</b> <span class="muted">/ 2.600</span></span></div><div class="bar" style="margin-top: 8px"><div class="fill" style="width: 42%"></div><div class="marker" style="left: 70%"></div></div></div>
+        <div><div class="bar-head"><b class="p">Protein</b><span class="num"><b>95</b> <span class="muted">/ 150 g</span></span></div><div class="bar protein" style="margin-top: 8px"><div class="fill" style="width: 63%"></div><div class="marker" style="left: 70%"></div></div></div>
+        <div><div class="bar-head"><b>Überschritten</b><span class="num"><b>2.780 / 2.600 · +180</b></span></div><div class="bar over" style="margin-top: 8px"><div class="fill"></div></div></div>
+        <div><div class="bar-head" style="font-size: 13px; color: var(--text-muted)"><span>Fett</span><span class="num">19 / ~67 g</span></div><div class="bar small" style="margin-top: 6px"><div class="fill" style="width: 28%"></div></div></div>
+      </div>
+    </div>
+
+    <div>
+      <h2>Buttons &amp; Steuerelemente</h2>
+      <div class="card">
+        <div class="row"><button class="btn primary">Hinzufügen</button><button class="btn tonal">Abbrechen</button></div>
+        <div class="row"><button class="chip">Normal Basketball · 20:00 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button><button class="pill on">Alle</button><button class="pill">Snacks</button></div>
+        <div class="row">
+          <button class="icon accent" aria-label="Hinzufügen"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M12 5v14"/></svg></button>
+          <button class="icon" aria-label="Vorschläge"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.2 1.2 0 0 0 1.72 0L21.64 5.36a1.2 1.2 0 0 0 0-1.72"/><path d="m14 7 3 3"/></svg></button>
+          <button class="icon" aria-label="Menü"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+        </div>
+        <div class="seg"><button aria-pressed="false">System</button><button aria-pressed="true">Hell</button><button aria-pressed="false">Dunkel</button></div>
+        <div class="item"><div><b>REWE Quarkcreme · 200 g</b><small class="num">134 kcal · <span class="p">25 g P</span> · 6 g KH · 1 g F</small></div><span style="font-size: 13px; color: var(--text-muted)">10:30</span></div>
+      </div>
+    </div>
+  </section>
+</template>
+</div>
+<script>
+  const wrap = document.querySelector('.wrap'), tpl = document.getElementById('tpl');
+  [['light','Light · Sand & Glut'],['dark','Dark · Night Court']].forEach(([t, name]) => {
+    const node = tpl.content.firstElementChild.cloneNode(true);
+    node.setAttribute('data-theme', t);
+    node.querySelector('.theme-name').textContent = name;
+    wrap.appendChild(node);
+  });
+</script>
+</body>
+</html>
