@@ -14,6 +14,8 @@ use Primed\Day\LogicalCalendar;
 use Primed\Day\SettingsRepository;
 use Primed\Day\UserSeeder;
 use Primed\Day\WeekTemplateRepository;
+use Primed\Dish\DishRepository;
+use Primed\Dish\DishService;
 use Primed\Entry\EntryRepository;
 use Primed\Entry\EntryService;
 use Primed\Food\FoodRepository;
@@ -36,6 +38,7 @@ final class Container
     private ?DayService $days = null;
     private ?EntryService $entries = null;
     private ?FoodService $foods = null;
+    private ?DishService $dishes = null;
 
     /**
      * @param \Closure(): PDO $connect
@@ -105,6 +108,17 @@ final class Container
             $this->settings(),
             $this->clock,
             $this->shakes(),
+            $this->dishes(),
+        );
+    }
+
+    public function dishes(): DishService
+    {
+        return $this->dishes ??= new DishService(
+            new DishRepository($this->pdo()),
+            new FoodRepository($this->pdo()),
+            $this->days(),
+            $this->clock,
         );
     }
 

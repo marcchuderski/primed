@@ -14,7 +14,7 @@ use Primed\Support\Row;
 final class ShakeService
 {
     public const SHAKES = [
-        'big' => ['name' => 'Shake Groß', 'label' => 'Groß', 'milk' => 'low', 'size' => 'big'],
+        'big' => ['name' => 'Shake Groß 1,5 %', 'label' => 'Groß 1,5 %', 'milk' => 'low', 'size' => 'big'],
         'small_low' => ['name' => 'Shake Klein 1,5 %', 'label' => 'Klein 1,5 %', 'milk' => 'low', 'size' => 'small'],
         'small_high' => ['name' => 'Shake Klein 3,5 %', 'label' => 'Klein 3,5 %', 'milk' => 'high', 'size' => 'small'],
     ];

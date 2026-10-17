@@ -16,7 +16,7 @@ final class ShakesFlowTest extends ApiTestCase
         self::assertCount(3, $shakes);
         $big = $shakes[0];
         self::assertIsArray($big);
-        self::assertSame('Shake Groß', $big['name']);
+        self::assertSame('Shake Groß 1,5 %', $big['name']);
         // 400 ml Milch 1,5 % (188 kcal, 13,6 P) + 30 g ESN Whey (112,2 kcal, 21,6 P)
         $expected = ['kcal' => 300.2, 'protein' => 35.2, 'carbs' => 21, 'sugar' => 20.8, 'fat' => 7.6];
         self::assertEquals($expected, $big['nutrients']);

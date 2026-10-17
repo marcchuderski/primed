@@ -37,19 +37,19 @@ Nach jedem Item: Tests, Security Audit (`agent-skills:security-and-hardening`), 
 | ID | Item | Status |
 |---|---|---|
 | 3.1 | Bibliothek mit Startprodukten und Richtwerten | fertig (API, Seed: BLS-Richtwerte, Milch, Whey, Startprodukte) |
-| 3.2 | Schnell-Eintrag-Sheet (Suche, Vorrat, Shakes, Häufig um diese Zeit) | fertig (Vorrat folgt mit Phase 4) |
+| 3.2 | Schnell-Eintrag-Sheet (Suche, Gerichte, Shakes, Häufig um diese Zeit) | fertig (Gerichte mit Phase 4) |
 | 3.3 | Mengen-Sheet (Stepper, Schnellwahl, Uhrzeit, „Danach offen“) | fertig (inkl. Tagesauswahl zum Nachtragen) |
 | 3.4 | Open-Food-Facts-Proxy mit Cache (Barcode + Namenssuche) | fertig |
 | 3.5 | Barcode-Scan im Browser | fertig (ZXing, manuelle Eingabe als Alternative; auf dem iPhone noch real zu testen) |
 | 3.6 | Produkt anlegen (Stepper-Liste) | fertig |
-| 3.7 | Essen-Tab: Bibliothek mit Suche, Kategorie-Pills, Typ-Filter | fertig (Vorrat-Segment folgt mit Phase 4) |
+| 3.7 | Essen-Tab: Bibliothek mit Suche, Kategorie-Pills, Typ-Filter | fertig (Gerichte-Segment mit Phase 4) |
 
 ## Phase 4 – Meal Prep
 
 | ID | Item | Status |
 |---|---|---|
-| 4.1 | Meal-Prep-Editor (Zutaten, Live-Summe, Portionen) | geplant |
-| 4.2 | Vorrat mit Portionszähler, Eintragen aus Vorrat, Archiv | geplant |
+| 4.1 | Meal-Prep-Editor (Zutaten, Live-Summe, Portionen) | in Arbeit (API fertig) |
+| 4.2 | Gerichte mit Portionszähler, Eintragen, Archiv, „Nochmal kochen“ | in Arbeit (API fertig) |
 
 ## Phase 5 – Vorschläge
 

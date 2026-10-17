@@ -26,7 +26,7 @@ Nutzer: der Betreiber und einzelne Freunde. Jeder User hat eigene, getrennte Dat
 | Checkpoint | Zwischenziel „bis X Uhr Y % gegessen“, abgeleitet aus der Trainingszeit |
 | Eintrag | Ein gegessenes Lebensmittel bzw. eine Portion mit Menge und Uhrzeit |
 | Bibliothek | Wiederverwendbare Lebensmittel (Markenprodukte, Richtwerte, Zutaten) |
-| Vorrat | Aktuelle Meal-Prep-Gerichte mit verbleibenden Portionen |
+| Gerichte | Meal-Prep-Gerichte mit verbleibenden Portionen (früher „Vorrat“, D-118); aufgegessene im Archiv |
 | Richtwert | Standard-Nährwert für Unverpacktes (z. B. Bäckerbrötchen), sichtbar markiert |
 | Im Rahmen | kcal-Ist innerhalb ±5 % des kcal-Solls |
 
@@ -125,29 +125,30 @@ Oben auf „Heute“: „Hey, [Display-Name].“ (fett, Textfarbe), direkt dahin
 
 ## 7. Hinzufügen-Ablauf
 
-1. **„+“** öffnet den Schnell-Eintrag (Bottom-Sheet): Suche mit Scan-Button, Vorrat, Shakes, „Häufig um diese Zeit“.
+1. **„+“** öffnet den Schnell-Eintrag (Bottom-Sheet): Suche mit Scan-Button, Gerichte (mit übrigen Portionen), Shakes, „Häufig um diese Zeit“. Fest unten: „Gericht zubereiten“ und „Produkt anlegen“.
 2. **Suche** zeigt drei Gruppen: eigene Bibliothek · Online-Treffer (Open Food Facts) · Richtwerte. Fest unten: „Barcode scannen“ und „Neu anlegen“.
 3. **Menge:** Einheiten-Umschalter (g · ml · EL · TL · Packung, siehe Einträge), große Zahl mit −/+, Umrechnungszeile, Schnellwahl passend zur Einheit (z. B. 100 g / 150 g / Packung oder 1 / 2 / 3 EL), Nährwerte dieser Portion, Uhrzeit-Rad, getrennte Karte „Danach offen“ mit Mini-Balken.
 4. **Scan:** Produkt gefunden → Menge. Nicht gefunden → Produkt anlegen.
 5. **Produkt anlegen:** Name, Kategorie, Segment „Nährwerte angeben pro 100 g · 100 ml · Stück“ („So, wie es auf der Packung steht“), Werte als **Stepper-Liste** mit eigener Schrittweite pro Wert (kcal ±20, Protein/KH/Zucker ±1, Fett ±0,5, Packung ±50; Packungseinheit folgt der Basis). Zahl antippen öffnet die Tastatur. Gescannter Barcode wird verknüpft. Danach direkt zur Menge.
 
-## 8. Meal Prep und Vorrat
+## 8. Meal Prep und Gerichte
 
 - **Neues Gericht:** Name, Zutaten (Scan, Suche, Richtwert; Standard „ganze Packung“), Live-Summe.
 - **Zutat-Menge** (Screen 17): gleicher Einheiten-Umschalter wie beim Essen (g · ml · EL · TL · Packung), z. B. Öl „2 EL = 30 g“; Button „Zur Zutatenliste hinzufügen“. Zutaten speichern Menge + Einheit wie eingegeben und die umgerechnete Menge.
 - **Portionen:** gleichmäßige Aufteilung durch N, Werte pro Portion werden sofort angezeigt.
-- **Speichern** legt das Gericht im **Vorrat** an, mit Zähler („3 von 4“).
-- Tap auf eine Vorrats-Portion im Schnell-Eintrag trägt eine Portion ein, Zähler −1. **Halbe Portionen** sind möglich (Schritte von 0,5, z. B. „2,5 von 4“). Der Zähler fällt nie unter 0.
-- Wird ein Vorrats-Eintrag gelöscht oder geändert, wird der Zähler korrigiert; ein archiviertes Gericht kehrt dabei bei Bedarf in den Vorrat zurück.
+- **Speichern** legt das Gericht unter **Gerichte** an, mit Zähler („3 von 4“). Der Zähler ergibt sich immer aus den eingetragenen Portionen.
+- Tap auf ein Gericht im Schnell-Eintrag öffnet die Menge (Standard 1 Portion, Schritte 0,5) mit Uhrzeit; Zähler sinkt entsprechend. **Halbe Portionen** sind möglich (Schritte von 0,5, z. B. „2,5 von 4“). Der Zähler fällt nie unter 0.
+- Wird ein Gericht-Eintrag gelöscht oder geändert, wird der Zähler korrigiert; ein archiviertes Gericht kehrt dabei bei Bedarf zu den Gerichten zurück.
 - Bei 0 Portionen wandert das Gericht ins **Archiv**: zählt weiter für den Verlauf, taucht in keiner Suche auf.
 - **„Rest entsorgen“** schiebt ein Gericht ohne Einträge ins Archiv.
 - Gerichte bleiben **immer editierbar** (Name, Zutaten, Portionsanzahl), auch nach dem ersten Eintrag, z. B. wenn Portionen abgegeben werden. Bereits erfasste Einträge behalten ihren Schnappschuss.
-- Gerichte sind **keine** Bibliotheks-Einträge und werden nicht als Vorlage wiederverwendet (jedes Kochen ist anders).
+- Gerichte sind **keine** Bibliotheks-Einträge und tauchen in keiner Lebensmittel-Suche auf.
+- **„Nochmal kochen“** (D-118): Im Archiv öffnet jedes Gericht auf Wunsch den Editor mit Name, Zutaten und Mengen vorausgefüllt; anpassen (Zutat weg, weniger Gramm, Portionen) und als **neues** Gericht speichern. Das alte bleibt unverändert.
 - Kein Vorab-Planen auf Wochentage.
 
 ## 9. Shakes
 
-Drei vordefinierte Shakes als Schnellbuttons (Zusammensetzung in `docs/DEFAULTS.md`, änderbar): Groß (400 ml Milch 1,5 % + 30 g Proteinpulver), Klein 1,5 % (200 ml + 30 g), Klein 3,5 % (200 ml + 30 g).
+Drei vordefinierte Shakes als Schnellbuttons (Zusammensetzung in `docs/DEFAULTS.md`, änderbar): Groß 1,5 % (400 ml Milch 1,5 % + 30 g Proteinpulver), Klein 1,5 % (200 ml + 30 g), Klein 3,5 % (200 ml + 30 g).
 
 - Milch 1,5 % und 3,5 % sind normale Bibliothekseinträge (Basis pro 100 ml).
 - Das Proteinpulver ist das in den Einstellungen gewählte **„Aktuelle Proteinpulver“** (ein Bibliotheksprodukt, Standard: ESN Designer Whey, Milk Chocolate).
@@ -161,7 +162,7 @@ Drei vordefinierte Shakes als Schnellbuttons (Zusammensetzung in `docs/DEFAULTS.
 
 | Situation | Vorschlag |
 |---|---|
-| Protein offen < 25 g | kein Shake, stattdessen passendes Lebensmittel aus Bibliothek/Vorrat |
+| Protein offen < 25 g | kein Shake, stattdessen passendes Lebensmittel aus Bibliothek/Gerichten |
 | Trainingstag, **vor** dem Training | kein Shake, Fokus auf Kohlenhydrate (Checkpoint) |
 | Trainingstag, **nach** dem Training | Shake hat Vorrang: **Groß** bei ≥ 35 g Protein **und** ≥ 500 kcal offen, sonst **Klein** |
 | Nach dem Training, ≥ 700 kcal **und** viele KH offen (≥ 400 kcal aus KH, also ≥ 100 g KH) | „leichte Mahlzeit + kleiner Shake“ |
@@ -179,7 +180,7 @@ Grundsätze aus dem Ernährungsplan:
 - Vorschläge beziehen sich auf den Rest des Tages, nicht auf die Vergangenheit.
 
 ### Essens-Vorschläge
-Aus Vorrat und Bibliothek die Optionen wählen, die die offenen Werte (bis Checkpoint bzw. Tagesende) am besten treffen, ohne das Soll deutlich zu überschreiten.
+Aus Gerichten und Bibliothek die Optionen wählen, die die offenen Werte (bis Checkpoint bzw. Tagesende) am besten treffen, ohne das Soll deutlich zu überschreiten.
 
 ## 11. Verlauf
 

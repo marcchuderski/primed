@@ -55,6 +55,7 @@ final class EntryRepository
         int $timeMin,
         string $kind,
         ?int $foodId,
+        ?int $dishId,
         string $name,
         float $amount,
         string $unit,
@@ -63,15 +64,16 @@ final class EntryRepository
         DateTimeImmutable $now,
     ): int {
         $this->pdo->prepare(
-            'INSERT INTO entries (user_id, date, time_min, kind, food_id, name_snapshot, amount, unit, quantity,
-                                  kcal, protein, carbs, sugar, fat, created_at, updated_at)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            'INSERT INTO entries (user_id, date, time_min, kind, food_id, dish_id, name_snapshot, amount, unit,
+                                  quantity, kcal, protein, carbs, sugar, fat, created_at, updated_at)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
         )->execute([
             $userId,
             $date,
             $timeMin,
             $kind,
             $foodId,
+            $dishId,
             $name,
             $amount,
             $unit,

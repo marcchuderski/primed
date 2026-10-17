@@ -159,13 +159,13 @@ Statische Referenz-Mockups mit Beispieldaten (keine echten Werte), je Light und 
 | 01 | Loading | ~~Animiertes Logo~~ entfällt (D-096), Animation jetzt im Login |
 | 02 | Login | Lockup + Claim „Primed for performance.“ (wie Screen 18, `--accent-text`, 24 px), Username, Passwort |
 | 03 | Heute | Tag, Tagesart, Balken, Einträge |
-| 04 | Hinzufügen | Suche, Scan, Vorrat, Shakes, Häufig |
+| 04 | Hinzufügen | Suche, Scan, Gerichte, Shakes, Häufig; unten „Gericht zubereiten“ · „Produkt anlegen“ |
 | 05 | Suche | Bibliothek, Online-Treffer, Richtwerte, Neu anlegen |
 | 06 | Menge | Einheit, Menge, Uhrzeit, „Danach offen“ |
 | 07 | Produkt anlegen | Basis-Wahl, Stepper-Liste |
 | 08 | Tagesart | Tagesart, Trainingszeit, Dauer |
 | 09 | Vorschläge | Zauberstab, regelbasiert |
-| 10 | Essen · Vorrat | Meal-Prep-Portionen |
+| 10 | Essen · Gerichte | Meal-Prep-Portionen (Segment „Gerichte“ statt „Vorrat“, D-118), Archiv mit „Nochmal kochen“ |
 | 11 | Essen · Bibliothek | Produkte, Filter |
 | 12 | Meal Prep | Gericht anlegen, Portionen |
 | 13–15 | Verlauf | Woche, Monat, Jahr |

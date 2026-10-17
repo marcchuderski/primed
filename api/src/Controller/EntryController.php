@@ -14,7 +14,7 @@ use Primed\Http\Response;
 
 final class EntryController
 {
-    private const UNITS = ['g', 'ml', 'el', 'tl', 'packung', 'stueck'];
+    private const UNITS = ['g', 'ml', 'el', 'tl', 'packung', 'stueck', 'portion'];
 
     public function __construct(private readonly Container $c)
     {
@@ -62,6 +62,24 @@ final class EntryController
             $input->text('date', 10, 10, 'Datum'),
             $input->int('timeMin', 0, 1439, 'Uhrzeit'),
             $input->enum('shake', array_keys(ShakeService::SHAKES), 'Shake'),
+        );
+
+        return Response::json(['entry' => $entry->toPublic()], 201);
+    }
+
+    /**
+     * @param array<string, string> $params
+     */
+    public function createDish(Request $request, array $params): Response
+    {
+        $user = $this->c->authenticator()->require($request)->user;
+        $input = Input::fromRequest($request);
+        $entry = $this->c->entries()->createDishPortion(
+            $user->id,
+            $input->text('date', 10, 10, 'Datum'),
+            $input->int('timeMin', 0, 1439, 'Uhrzeit'),
+            $input->int('dishId', 1, PHP_INT_MAX, 'Gericht'),
+            $input->number('portions', 0.5, 50, 'Portionen'),
         );
 
         return Response::json(['entry' => $entry->toPublic()], 201);

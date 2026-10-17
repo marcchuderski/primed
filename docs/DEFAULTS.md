@@ -65,7 +65,7 @@ Richtwerte zur Orientierung (mit typischem Whey 30 g = 117 kcal · 24 g P · 2 g
 
 | Shake | Zusammensetzung | kcal | Protein | KH | Fett |
 |---|---|---|---|---|---|
-| Groß | 400 ml Milch 1,5 % + 30 g Whey | ~305 | ~38 g | ~21 g | ~8 g |
+| Groß 1,5 % | 400 ml Milch 1,5 % + 30 g Whey | ~305 | ~38 g | ~21 g | ~8 g |
 | Klein 1,5 % | 200 ml Milch 1,5 % + 30 g Whey | ~211 | ~31 g | ~12 g | ~5 g |
 | Klein 3,5 % | 200 ml Milch 3,5 % + 30 g Whey | ~245 | ~31 g | ~11 g | ~9 g |
 

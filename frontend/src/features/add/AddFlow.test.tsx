@@ -52,8 +52,8 @@ const offSkyr = {
 const shakes = [
   {
     id: 'big',
-    name: 'Shake Groß',
-    label: 'Groß',
+    name: 'Shake Groß 1,5 %',
+    label: 'Groß 1,5 %',
     nutrients: { kcal: 300.2, protein: 35.2, carbs: 21, sugar: 20.8, fat: 7.6 },
   },
 ];
@@ -126,14 +126,14 @@ describe('AddFlow', () => {
   it('shows shakes and "Häufig um diese Zeit" with the last amount', async () => {
     setup();
     expect(
-      await screen.findByRole('button', { name: /Shake Groß eintragen: 300 kcal, 35 g Protein/ }),
+      await screen.findByRole('button', { name: /Shake Groß 1,5 % eintragen: 300 kcal, 35 g Protein/ }),
     ).toBeInTheDocument();
     expect(await screen.findByText('134 kcal ·', { exact: false })).toHaveTextContent('1 Packung');
   });
 
   it('logs a shake with one tap at the rounded current time', async () => {
     const onAdded = setup();
-    await userEvent.click(await screen.findByRole('button', { name: /Shake Groß eintragen/ }));
+    await userEvent.click(await screen.findByRole('button', { name: /Shake Groß 1,5 % eintragen/ }));
     await waitFor(() => {
       expect(onAdded).toHaveBeenCalledOnce();
     });

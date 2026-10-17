@@ -98,7 +98,7 @@ Die API speichert, validiert und liefert Daten; sie berechnet Nährwert-Schnapps
 | Bibliothek | `GET /foods?q=&category=&type=` · `GET /foods/frequent?time=` · `POST /foods` · `PATCH /foods/{id}` |
 | Bibliothek (umgesetzt 3.1/3.4) | `GET /foods?q=&category=&type=&context=mealprep` · `GET /foods/frequent` · `GET /foods/{id}` · `POST /foods` · `PATCH /foods/{id}` · `DELETE /foods/{id}` (weich) · `GET /foods/barcode/{ean}` (eigene Bibliothek, sonst OFF) |
 | Open Food Facts | `GET /off/search?q=` (Proxy mit Cache, max. 10 Treffer, DE) |
-| Meal Prep | `GET /dishes?status=active|archived` · `POST /dishes` · `PATCH /dishes/{id}` |
+| Gerichte (umgesetzt 4.x) | `GET /dishes?status=active|archived` · `GET /dishes/{id}` (mit Zutaten) · `POST /dishes` `{name, portions, ingredients:[{foodId, amount, unit}], basedOnDishId?}` · `PUT /dishes/{id}` · `POST /dishes/{id}/discard` · `POST /entries/dish` `{date, timeMin, dishId, portions}` |
 | Einträge (umgesetzt 2.5) | `GET /days/{date}/entries` · `POST /entries` `{date, timeMin, foodId, amount, unit}` · `POST /entries/shake` `{date, timeMin, shake: big/small_low/small_high}` · `GET /shakes` · `PATCH /entries/{id}` `{timeMin?, amount?, unit?}` · `DELETE /entries/{id}` |
 | Verlauf | `GET /history/week?start=` · `GET /history/month?month=` · `GET /history/year?year=` |
 
@@ -156,8 +156,8 @@ Alle schreibenden Endpunkte: Session-Cookie + CSRF-Token, serverseitige Validier
 | `foods` | id, user_id, type (product/reference/ingredient), name, brand, barcode (unique je User), category (snacks/dairy/bread/produce/drinks), basis (per_100g/per_100ml/per_unit), Nährwerte je Basis (DECIMAL), package_amount (Einheit der Basis), source (seed/manual/off/bls), deleted_at, usage_count, last_amount, last_unit, is_quick (Shakes) |
 | `off_cache` | cache_key (`barcode:…`/`search:<sha256>`), payload (normalisiert, NULL = nicht gefunden), fetched_at · TTL: Treffer 30 Tage, Fehlanzeigen/Suchen 1 Tag |
 | `rate_limits` | user_id, bucket, window_start, hits (z. B. OFF-Barcode 30/min, OFF-Suche 10/min je User) |
-| `dishes` | id, user_id, name, cooked_at, portions_total, portions_left (DECIMAL, Schritte 0,5), Summen, status (active/archived/discarded) |
-| `dish_ingredients` | id, dish_id, food_id (nullable), name_snapshot, amount + unit (wie eingegeben: g/ml/EL/TL/Packung/Stück), grams_or_ml (umgerechnet; bei Basis Stück: Stückzahl), Nährwerte |
+| `dishes` | id, user_id, name, cooked_on, portions_total (DECIMAL, Schritte 0,5), Summen kcal/protein/carbs/sugar/fat, discarded_at, based_on_dish_id · übrige Portionen = total − Summe der Gericht-Einträge (abgeleitet); Status active/archived/discarded abgeleitet |
+| `dish_ingredients` | id, dish_id, food_id (FK SET NULL), sort, name_snapshot, food_type, amount + unit (wie eingegeben), quantity (umgerechnet), Nährwert-Schnappschuss |
 | `entries` | id, user_id, date (logischer Tag), time_min (Wandzeit, 15-Min-Raster), kind (food/dish/shake), food_id (FK SET NULL) / dish_id, name_snapshot, amount + unit (wie eingegeben: g/ml/el/tl/packung/stueck/portion), quantity (umgerechnet: g, ml, Stück oder Portionen), Nährwert-Schnappschuss kcal/protein/carbs/sugar/fat |
 
 Der **logische Tag** endet um 02:00 (`day_boundary`); ein Eintrag um 00:30 am 21.10. gehört zum Tag 20.10. Tage werden beim ersten Zugriff aus der Wochenvorlage angelegt (mit Soll-Schnappschuss). Damit vergangene Tage fest bleiben, werden **vor jeder Änderung** an Wochenvorlage, Tagesarten oder Protein-Standard alle vergangenen Tage seit Kontoanlage ohne Datensatz mit den bisherigen Werten angelegt (wenige hundert Zeilen pro Jahr, in einer Transaktion).

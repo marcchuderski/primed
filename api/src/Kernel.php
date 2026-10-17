@@ -21,6 +21,7 @@ use Primed\Controller\HealthController;
 use Primed\Controller\WeekTemplateController;
 use Primed\Controller\SettingsController;
 use Primed\Controller\DayTypeController;
+use Primed\Controller\DishController;
 use Primed\Controller\EntryController;
 use Primed\Controller\FoodController;
 use Primed\Off\CurlFetcher;
@@ -156,6 +157,14 @@ final class Kernel
         $router->add('GET', '/v1/days/{date}/entries', $entries->index(...));
         $router->add('POST', '/v1/entries', $entries->create(...));
         $router->add('POST', '/v1/entries/shake', $entries->createShake(...));
+        $router->add('POST', '/v1/entries/dish', $entries->createDish(...));
+
+        $dishes = new DishController($c);
+        $router->add('GET', '/v1/dishes', $dishes->index(...));
+        $router->add('POST', '/v1/dishes', $dishes->create(...));
+        $router->add('GET', '/v1/dishes/{id}', $dishes->show(...));
+        $router->add('PUT', '/v1/dishes/{id}', $dishes->update(...));
+        $router->add('POST', '/v1/dishes/{id}/discard', $dishes->discard(...));
         $router->add('GET', '/v1/shakes', $entries->shakes(...));
         $router->add('PATCH', '/v1/entries/{id}', $entries->update(...));
         $router->add('DELETE', '/v1/entries/{id}', $entries->delete(...));

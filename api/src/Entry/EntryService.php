@@ -7,6 +7,7 @@ namespace Primed\Entry;
 use Primed\Day\DayService;
 use Primed\Day\SettingsRepository;
 use Primed\Food\FoodRepository;
+use Primed\Dish\DishService;
 use Primed\Food\ShakeService;
 use Primed\Food\Units;
 use Primed\Http\HttpException;
@@ -27,6 +28,7 @@ final class EntryService
         private readonly SettingsRepository $settings,
         private readonly Clock $clock,
         private readonly ShakeService $shakes,
+        private readonly DishService $dishes,
     ) {
     }
 
@@ -59,6 +61,7 @@ final class EntryService
             $timeMin,
             'food',
             $food->id,
+            null,
             $food->name,
             $amount,
             $unit,
@@ -83,11 +86,36 @@ final class EntryService
             $timeMin,
             'shake',
             null,
+            null,
             $shake['name'],
             1,
             'stueck',
             1,
             $shake['nutrients'],
+            $this->clock->now(),
+        );
+
+        return $this->entries->find($userId, $id) ?? throw HttpException::notFound();
+    }
+
+    /** Logs portions of a meal prep dish (0.5 steps, not more than left). */
+    public function createDishPortion(int $userId, string $date, int $timeMin, int $dishId, float $portions): Entry
+    {
+        $this->days->getDay($userId, $date);
+        self::assertTime($timeMin);
+        $result = $this->dishes->portions($userId, $dishId, $portions);
+        $id = $this->entries->create(
+            $userId,
+            $date,
+            $timeMin,
+            'dish',
+            null,
+            $dishId,
+            $result['dish']->name,
+            $portions,
+            'portion',
+            $portions,
+            $result['nutrients'],
             $this->clock->now(),
         );
 
@@ -104,6 +132,14 @@ final class EntryService
         self::assertTime($timeMin);
         $amount ??= $entry->amount;
         $unit ??= $entry->unit;
+        if ($entry->kind === 'dish') {
+            if ($unit !== 'portion' || $entry->dishId === null) {
+                throw Input::invalid('Gerichte werden in Portionen eingetragen.');
+            }
+            if ($amount !== $entry->amount) {
+                $this->dishes->portions($userId, $entry->dishId, $amount, $entry->amount);
+            }
+        }
 
         if ($unit === $entry->unit) {
             $quantity = $entry->quantity * ($amount / $entry->amount);
