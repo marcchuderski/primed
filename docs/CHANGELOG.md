@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-17 – 1.1 Migrationen
+- Migration `001_init`: users, sessions, login_attempts, user_settings, schema_migrations.
+- Migrator + `bin/migrate.php`; Integrationstests gegen MariaDB 10.11 (Constraints, Kaskaden-Löschung, Idempotenz).
+- DEPLOYMENT: zwei DB-User (Least Privilege), Migrationen per phpMyAdmin.
+
 ## 2026-10-17 – 0.4 Tokens, Schriften, Basis-Komponenten
 - Tokens aus `design/tokens.css` direkt eingebunden, um `--input-border` und `--ring-track` ergänzt.
 - Bricolage Grotesque und Inter selbst gehostet.

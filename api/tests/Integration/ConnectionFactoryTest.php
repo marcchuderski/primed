@@ -13,7 +13,8 @@ final class ConnectionFactoryTest extends DatabaseTestCase
         $pdo = self::connect();
 
         self::assertSame(PDO::ERRMODE_EXCEPTION, $pdo->getAttribute(PDO::ATTR_ERRMODE));
-        self::assertFalse($pdo->getAttribute(PDO::ATTR_EMULATE_PREPARES));
+        // PHP 8.3 reports 0, PHP 8.4+ false.
+        self::assertContains($pdo->getAttribute(PDO::ATTR_EMULATE_PREPARES), [false, 0]);
 
         $statement = $pdo->query(
             'SELECT @@session.time_zone AS tz, @@session.sql_mode AS mode, @@character_set_connection AS cs',

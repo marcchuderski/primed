@@ -8,6 +8,7 @@
     <file>tests</file>
     <file>public</file>
     <file>bootstrap.php</file>
+    <file>bin</file>
     <rule ref="PSR12"/>
     <rule ref="Generic.PHP.ForbiddenFunctions">
         <properties>

@@ -12,19 +12,40 @@ use Primed\Config\ConfigException;
 use Primed\Database\ConnectionFactory;
 
 /**
- * Base class for tests against the DDEV test database (DB_TEST_NAME). Skipped outside DDEV.
+ * Base class for tests against the DDEV test database (DB_TEST_NAME). Skipped if unreachable.
  */
 abstract class DatabaseTestCase extends TestCase
 {
     protected static function connect(): PDO
     {
         try {
-            $config = Config::fromEnvFile(__DIR__ . '/../../.env');
+            // .env.testing (optional, not committed) overrides .env, e.g. for a test DB outside DDEV.
+            $testing = __DIR__ . '/../../.env.testing';
+            $config = Config::fromEnvFile(is_file($testing) ? $testing : __DIR__ . '/../../.env');
             $testDb = $config->string('DB_TEST_NAME');
             $pdo = ConnectionFactory::create($config, $testDb);
         } catch (ConfigException | PDOException) {
             self::markTestSkipped('Test database not reachable; run inside DDEV (ddev composer test).');
         }
+
+        return $pdo;
+    }
+
+    /**
+     * Drops every table in the test database and returns a connection to it.
+     */
+    protected static function freshDatabase(): PDO
+    {
+        $pdo = self::connect();
+        $pdo->exec('SET FOREIGN_KEY_CHECKS = 0');
+        $tables = $pdo->query('SHOW TABLES');
+        self::assertNotFalse($tables);
+        foreach ($tables->fetchAll(PDO::FETCH_COLUMN) as $table) {
+            self::assertIsString($table);
+            self::assertMatchesRegularExpression('/^[a-z_]+$/', $table);
+            $pdo->exec('DROP TABLE `' . $table . '`');
+        }
+        $pdo->exec('SET FOREIGN_KEY_CHECKS = 1');
 
         return $pdo;
     }

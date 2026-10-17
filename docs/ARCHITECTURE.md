@@ -98,6 +98,8 @@ Die API speichert, validiert und liefert Daten; sie berechnet Nährwert-Schnapps
 | Meal Prep | `GET /dishes?status=active|archived` · `POST /dishes` · `PATCH /dishes/{id}` |
 | Verlauf | `GET /history/week?start=` · `GET /history/month?month=` · `GET /history/year?year=` |
 
+Migrationen: `api/migrations/NNN_name.sql`, nur vorwärts; lokal `php bin/migrate.php [--test]`, Produktion per phpMyAdmin (siehe DEPLOYMENT). Implementiert ab 1.1: `001_init` (users, sessions, login_attempts, user_settings, schema_migrations). Alle Zeitstempel UTC.
+
 Implementiert: `GET /v1/health` → `{"status":"ok"}`.
 
 Fehlerformat: `{"error":{"code":"…","message":"…"}}` mit deutscher, nutzbarer Meldung; interne Details nur im Log. Body max. 64 KB, JSON-Tiefe max. 32, Pfad-Parameter nur `[A-Za-z0-9_-]{1,64}`.
@@ -108,10 +110,11 @@ Alle schreibenden Endpunkte: Session-Cookie + CSRF-Token, serverseitige Validier
 
 | Tabelle | Wichtige Felder |
 |---|---|
-| `users` | id, username (unique), display_name, password_hash, password_changed_at |
-| `sessions` | id, user_id, token_hash (unique), created_at, last_seen_at, expires_at (gleitend 30 Tage), absolute_expires_at (90 Tage), revoked_at |
+| `users` | id, username (unique, klein, `[a-z0-9._-]{3,32}`), display_name, password_hash (Argon2id), password_changed_at, created_at |
+| `schema_migrations` | version, applied_at (jede Migration trägt sich selbst ein) |
+| `sessions` | id, user_id (FK, CASCADE), token_hash (BINARY(32), SHA-256, unique), created_at, last_seen_at, expires_at (gleitend 30 Tage), absolute_expires_at (90 Tage), revoked_at |
 | `login_attempts` | id, username, ip_hash (HMAC), attempted_at, success · Löschung nach 30 Tagen |
-| `user_settings` | user_id, theme (system/light/dark), tolerance_pct, protein_default, protein_powder_food_id, Shake-Schwellen, Checkpoint-Vorlage (inkl. frühester Checkpoint/Trainingsbeginn), day_boundary (02:00) |
+| `user_settings` | user_id (FK, CASCADE), theme (system/light/dark), updated_at · weitere Felder per späterer Migration: tolerance_pct, protein_default, protein_powder_food_id, Shake-Schwellen, Checkpoint-Vorlage (inkl. frühester Checkpoint/Trainingsbeginn), day_boundary (02:00) |
 | `day_types` | id, user_id, name, kcal, protein (nullable = Protein-Standard), carbs, sugar_ref, is_training, sort, deleted_at |
 | `week_template` | user_id, weekday, day_type_id, training_start, duration_min |
 | `days` | id, user_id, date (logischer Tag, unique je User), day_type_id, day_type_name_snapshot, training_start, duration_min, Soll-Schnappschuss |

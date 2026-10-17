@@ -160,3 +160,7 @@ Neue Einträge unten anhängen. Getroffene Entscheidungen werden nicht gelöscht
 **D-082 · Konto selbst löschen** – in den Einstellungen, mit Bestätigungsdialog (unwiderruflich) **und** erneuter Passworteingabe; löscht alle Daten des Users (`ON DELETE CASCADE`). · Datenhoheit der Freunde; Schutz bei entsperrtem Gerät. · CLI-Löschung durch Betreiber, nur Dialog. · Nutzer · 2026-10-17
 
 **D-083 · „Häufig um diese Zeit“: ±1,5 h** (3 h Fenster). · Nutzer · 2026-10-17
+
+**D-084 · Migrationen als nummerierte SQL-Dateien** – nur vorwärts, jede Datei trägt sich in `schema_migrations` ein, damit `bin/migrate.php` (lokal/SSH) und phpMyAdmin (Produktion) denselben Stand führen. Eine Anweisung endet mit `;` am Zeilenende. · einfach, ohne Migrations-Framework, nachvollziehbar. · Phinx, Doctrine Migrations. · Claude · 2026-10-17
+
+**D-085 · Integrationstests auch ohne DDEV** – optionale, nicht versionierte `api/.env.testing` zeigt auf eine Test-DB (z. B. Container aus dem DDEV-MariaDB-10.11-Image); Tests laufen zusätzlich unter PHP 8.3 im DDEV-Webserver-Image. · Produktionsparität (PHP 8.3, MariaDB 10.11) unabhängig vom DDEV-Start. · Claude · 2026-10-17
