@@ -197,7 +197,7 @@ export function TodayScreen({ displayName }: { displayName: string }) {
           food={quantityFoodForEntry(editing)}
           initial={{
             amount: editing.amount,
-            unit: editing.unit === 'portion' ? 'g' : editing.unit,
+            unit: editing.unit,
             timeMin: editing.timeMin,
           }}
           targets={day.targets}

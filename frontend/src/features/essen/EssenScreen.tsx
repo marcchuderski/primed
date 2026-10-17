@@ -8,6 +8,7 @@ import { CATEGORIES, type Category } from '../../domain/categories.ts';
 import { defaultAmount, nutrientsFor } from '../../domain/foodAmounts.ts';
 import { formatDecimal, formatInt } from '../../domain/format.ts';
 import { basisLabel, unitLabel } from '../../domain/units.ts';
+import { DishesView } from '../dishes/DishesView.tsx';
 import { ProductSheet } from '../foods/ProductSheet.tsx';
 import styles from './EssenScreen.module.css';
 
@@ -17,9 +18,9 @@ const TYPES: { id: FoodType; label: string }[] = [
   { id: 'ingredient', label: 'Zutat' },
 ];
 
-/** Screens 10/11 "Essen": supply (phase 4) and the food library with search, category pills and type filter. */
+/** Screens 10/11 "Essen": dishes (meal prep) and the food library with search, category pills and type filter. */
 export function EssenScreen() {
-  const [segment, setSegment] = useState<'vorrat' | 'bibliothek'>('bibliothek');
+  const [segment, setSegment] = useState<'gerichte' | 'bibliothek'>('gerichte');
 
   return (
     <div className={styles['screen']}>
@@ -27,12 +28,12 @@ export function EssenScreen() {
       <div className={styles['segment']} role="group" aria-label="Ansicht">
         <button
           type="button"
-          aria-pressed={segment === 'vorrat'}
+          aria-pressed={segment === 'gerichte'}
           onClick={() => {
-            setSegment('vorrat');
+            setSegment('gerichte');
           }}
         >
-          Vorrat
+          Gerichte
         </button>
         <button
           type="button"
@@ -44,11 +45,7 @@ export function EssenScreen() {
           Bibliothek
         </button>
       </div>
-      {segment === 'vorrat' ? (
-        <p className={styles['empty']}>Meal Prep und Vorrat folgen in Phase 4.</p>
-      ) : (
-        <Library />
-      )}
+      {segment === 'gerichte' ? <DishesView /> : <Library />}
     </div>
   );
 }

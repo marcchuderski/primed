@@ -164,7 +164,6 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
-  white-space: nowrap;
   position: sticky;
   bottom: 0;
   padding-top: 8px;
@@ -174,5 +173,40 @@
 .error {
   color: var(--status-high-fg);
   font-size: 14px;
+  font-weight: 600;
+}
+
+.footer button {
+  padding: 0 10px;
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+.dishes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.dish {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px;
+  border: none;
+  border-radius: var(--r-item);
+  background: var(--surface);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+}
+
+.left {
+  align-self: flex-start;
+  margin-top: 4px;
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  background: var(--bg);
+  font-size: 12px;
   font-weight: 600;
 }

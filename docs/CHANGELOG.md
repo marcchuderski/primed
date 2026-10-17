@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-17 – Phase 4 Gerichte
+- Migration `008_dishes`; API für Gerichte (Zutaten-Schnappschüsse, Portionen in ½-Schritten, abgeleiteter Zähler, Archiv, Rest entsorgen, „Nochmal kochen“) und Portionen-Einträge.
+- Essen-Tab „Gerichte“ (statt „Vorrat“) mit Karten, Editor, Archiv; „+“-Sheet mit Gerichten und „Gericht zubereiten“ · „Produkt anlegen“.
+- Shake „Groß 1,5 %“ benannt.
+
 ## 2026-10-17 – 3.7 Essen-Tab
 - Bibliothek mit Suche, Kategorie-Pills, Typ-Filter, Bearbeiten und Löschen; Lizenzhinweise.
 

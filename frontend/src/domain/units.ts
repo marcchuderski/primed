@@ -2,7 +2,7 @@
  * Units and household measures (D-073). Mirrors api/src/Food/Units.php; both use units.cases.json.
  */
 export type Basis = 'per_100g' | 'per_100ml' | 'per_unit';
-export type Unit = 'g' | 'ml' | 'el' | 'tl' | 'packung' | 'stueck';
+export type Unit = 'g' | 'ml' | 'el' | 'tl' | 'packung' | 'stueck' | 'portion';
 
 export const EL = 15;
 export const TL = 5;
@@ -10,6 +10,7 @@ export const TL = 5;
 /** Order of the unit switcher (screen 06): g · ml · EL · TL · Packung (Stück only for per-piece foods). */
 export const SWITCHER_UNITS: readonly Unit[] = ['g', 'ml', 'el', 'tl', 'packung'];
 
+/** Units of foods (portions only exist for dishes). */
 const ALLOWED: Record<Basis, readonly Unit[]> = {
   per_100g: ['g', 'el', 'tl', 'packung'],
   per_100ml: ['ml', 'el', 'tl', 'packung'],
@@ -65,7 +66,7 @@ export function baseUnit(basis: Basis): 'g' | 'ml' | 'Stück' {
 
 /** Step of the −/+ buttons per unit. */
 export function stepFor(unit: Unit): number {
-  return unit === 'g' || unit === 'ml' ? 10 : unit === 'packung' ? 0.5 : 1;
+  return unit === 'g' || unit === 'ml' ? 10 : unit === 'packung' || unit === 'portion' ? 0.5 : 1;
 }
 
 /** Quick-select chips per unit (screen 06). */
@@ -77,6 +78,8 @@ export function quickAmounts(unit: Unit): number[] {
       return [100, 200, 400];
     case 'packung':
       return [0.5, 1, 2];
+    case 'portion':
+      return [0.5, 1, 1.5];
     default:
       return [1, 2, 3];
   }

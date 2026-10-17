@@ -74,6 +74,11 @@ function parseEntry(value: unknown): Entry {
   };
 }
 
+/** Parses `{ entry }` responses (also used by the dishes API). */
+export function parseEntryResponse(data: unknown): Entry {
+  return entryOf(data);
+}
+
 function entryOf(data: unknown): Entry {
   if (!isRecord(data)) {
     throw invalid();

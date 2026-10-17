@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { Day } from '../../api/days.ts';
 import { createEntry, createShakeEntry, fetchShakes, type Entry, type Shake } from '../../api/entries.ts';
+import { fetchDishes, logDishPortion, type Dish } from '../../api/dishes.ts';
 import {
   createFood,
   draftFromOff,
@@ -10,11 +11,14 @@ import {
   type OffProduct,
 } from '../../api/foods.ts';
 import { categoryLabel, displayName } from '../../domain/categories.ts';
+import { formatDecimal } from '../../domain/format.ts';
 import { recentDays } from '../../domain/dates.ts';
 import { defaultAmount, nutrientsFor } from '../../domain/foodAmounts.ts';
 import { berlinWallMinute, MINUTES_PER_DAY, roundUpToQuarterHour } from '../../domain/time.ts';
 import type { Macros } from '../../domain/types.ts';
 import { allowedUnits, basisLabel } from '../../domain/units.ts';
+import { cookedText } from '../dishes/dishModel.ts';
+import { DishEditorSheet } from '../dishes/DishEditorSheet.tsx';
 import { QuantitySheet, type QuantityFood } from '../entries/QuantitySheet.tsx';
 import { ProductSheet } from '../foods/ProductSheet.tsx';
 import { AddSheet } from './AddSheet.tsx';
@@ -24,7 +28,9 @@ type View =
   | { kind: 'search' }
   | { kind: 'scan' }
   | { kind: 'quantity'; item: { source: 'library'; food: Food } | { source: 'off'; product: OffProduct } }
-  | { kind: 'product'; initial: Partial<FoodDraft>; notice: string | null };
+  | { kind: 'product'; initial: Partial<FoodDraft>; notice: string | null }
+  | { kind: 'dish'; dish: Dish }
+  | { kind: 'cook' };
 
 function nowMinute(): number {
   return roundUpToQuarterHour(berlinWallMinute(new Date())) % MINUTES_PER_DAY;
@@ -62,6 +68,7 @@ export function AddFlow({
 }) {
   const [view, setView] = useState<View>({ kind: 'search' });
   const [shakes, setShakes] = useState<Shake[]>([]);
+  const [dishes, setDishes] = useState<Dish[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -74,6 +81,15 @@ export function AddFlow({
       })
       .catch(() => {
         // Shakes are optional (e.g. protein powder deleted).
+      });
+    fetchDishes('active')
+      .then((list) => {
+        if (!cancelled) {
+          setDishes(list);
+        }
+      })
+      .catch(() => {
+        // Optional section.
       });
     return () => {
       cancelled = true;
@@ -115,6 +131,13 @@ export function AddFlow({
         <AddSheet
           open
           shakes={shakes}
+          dishes={dishes}
+          onPickDish={(dish) => {
+            setView({ kind: 'dish', dish });
+          }}
+          onCook={() => {
+            setView({ kind: 'cook' });
+          }}
           error={error}
           onClose={onClose}
           onPickFood={(food) => {
@@ -154,6 +177,64 @@ export function AddFlow({
           onSubmit={async (draft) => {
             const food = await createFood(draft);
             setView({ kind: 'quantity', item: { source: 'library', food } });
+          }}
+        />
+      )}
+
+      {view.kind === 'cook' && (
+        <DishEditorSheet
+          open
+          mode="new"
+          onClose={() => {
+            setView({ kind: 'search' });
+          }}
+          onSaved={(dish) => {
+            setDishes((list) => [dish, ...list]);
+            setView({ kind: 'dish', dish });
+          }}
+        />
+      )}
+
+      {view.kind === 'dish' && (
+        <QuantitySheet
+          open
+          mode="add"
+          food={{
+            name: view.dish.name,
+            subtitle: `${cookedText(view.dish)} · ${formatDecimal(view.dish.portionsLeft)} von ${formatDecimal(view.dish.portionsTotal)} übrig`,
+            basis: 'per_unit',
+            packageAmount: null,
+            units: ['portion'],
+            switcher: ['portion'],
+            nutrientsFor: (amount) => {
+              const t = view.dish.totals;
+              const f = amount / view.dish.portionsTotal;
+              const r = (v: number) => Math.round(v * f * 10) / 10;
+              return {
+                kcal: r(t.kcal),
+                protein: r(t.protein),
+                carbs: r(t.carbs),
+                sugar: r(t.sugar),
+                fat: r(t.fat),
+              };
+            },
+          }}
+          initial={{ amount: Math.min(1, view.dish.portionsLeft), unit: 'portion', timeMin: nowMinute() }}
+          dates={recentDays(day.date)}
+          targets={day.targets}
+          eatenBefore={eatenBefore}
+          onClose={() => {
+            setView({ kind: 'search' });
+          }}
+          onSubmit={async ({ amount, timeMin, date }) => {
+            onAdded(
+              await logDishPortion({
+                date: date ?? day.date,
+                timeMin,
+                dishId: view.dish.id,
+                portions: amount,
+              }),
+            );
           }}
         />
       )}

@@ -29,11 +29,14 @@ export interface QuantityFood {
   units: Unit[];
   /** Nutrients for an amount in a unit, or null if not computable. */
   nutrientsFor: (amount: number, unit: Unit) => EntryNutrients | null;
+  /** Units shown in the switcher; default depends on the basis (dishes: portions only). */
+  switcher?: Unit[] | undefined;
 }
 
 interface QuantitySheetProps {
   open: boolean;
-  mode: 'add' | 'edit';
+  /** add/edit a diary entry, or an ingredient of a dish (no time, no "Danach offen"). */
+  mode: 'add' | 'edit' | 'ingredient';
   food: QuantityFood;
   initial: { amount: number; unit: Unit; timeMin: number };
   targets: Targets;
@@ -79,7 +82,9 @@ export function QuantitySheet({
 
   const amount = parseAmount(text);
   const nutrients = amount === null ? null : food.nutrientsFor(amount, unit);
-  const switcher = food.basis === 'per_unit' ? (['stueck', 'packung'] as Unit[]) : SWITCHER_UNITS;
+  const switcher =
+    food.switcher ?? (food.basis === 'per_unit' ? (['stueck', 'packung'] as Unit[]) : SWITCHER_UNITS);
+  const isEntry = mode !== 'ingredient';
   const base = baseUnit(food.basis);
 
   function setAmount(value: number) {
@@ -108,7 +113,7 @@ export function QuantitySheet({
   }
 
   let conversion: string | null = null;
-  if (amount !== null && unit !== 'g' && unit !== 'ml' && unit !== 'stueck') {
+  if (amount !== null && unit !== 'g' && unit !== 'ml' && unit !== 'stueck' && unit !== 'portion') {
     try {
       const quantity = toQuantity(food.basis, unit, amount, food.packageAmount);
       const one = toQuantity(food.basis, unit, 1, food.packageAmount);
@@ -217,7 +222,7 @@ export function QuantitySheet({
         </div>
       </div>
 
-      {dates !== undefined && dates.length > 1 && (
+      {isEntry && dates !== undefined && dates.length > 1 && (
         <label className={styles['dayRow']}>
           <span className={styles['label']}>Tag</span>
           <select
@@ -236,68 +241,72 @@ export function QuantitySheet({
         </label>
       )}
 
-      <div className={styles['group']}>
-        <div className={styles['groupHead']}>
-          <span className={styles['label']}>Uhrzeit</span>
-          <button
-            type="button"
-            className={styles['now']}
-            onClick={() => {
-              setTimeMin(nowRounded());
-            }}
-          >
-            Jetzt
-          </button>
-        </div>
-        <TimeWheel value={timeMin} onChange={setTimeMin} label="Uhrzeit" tone="surface" />
-      </div>
+      {isEntry && (
+        <>
+          <div className={styles['group']}>
+            <div className={styles['groupHead']}>
+              <span className={styles['label']}>Uhrzeit</span>
+              <button
+                type="button"
+                className={styles['now']}
+                onClick={() => {
+                  setTimeMin(nowRounded());
+                }}
+              >
+                Jetzt
+              </button>
+            </div>
+            <TimeWheel value={timeMin} onChange={setTimeMin} label="Uhrzeit" tone="surface" />
+          </div>
 
-      <div className={styles['after']}>
-        <div className={styles['afterHead']}>
-          <span className={styles['label']}>Danach offen</span>
-          <span className={styles['legend']}>
-            <span className={styles['legendSwatch']} aria-hidden="true" />
-            dieser Eintrag
-          </span>
-        </div>
-        <div className={styles['afterRow']}>
-          <span className={styles['afterValues']}>
-            <span>Kalorien</span>
-            <span>
-              <strong>{formatInt(afterKcal)}</strong> <span className={styles['muted']}>kcal</span>
-            </span>
-          </span>
-          <span className={styles['miniBar']} aria-hidden="true">
-            <span
-              className={styles['miniEaten']}
-              style={{ width: `${String(pct(eatenBefore.kcal, targets.kcal))}%` }}
-            />
-            <span
-              className={styles['miniThis']}
-              style={{ width: `${String(pct(nutrients?.kcal ?? 0, targets.kcal))}%` }}
-            />
-          </span>
-        </div>
-        <div className={styles['afterRow']}>
-          <span className={styles['afterValues']}>
-            <span>Protein</span>
-            <span>
-              <strong className={styles['afterProtein']}>{formatInt(afterProtein)}</strong>{' '}
-              <span className={styles['muted']}>g</span>
-            </span>
-          </span>
-          <span className={styles['miniBar']} aria-hidden="true">
-            <span
-              className={styles['miniEaten']}
-              style={{ width: `${String(pct(eatenBefore.protein, targets.protein))}%` }}
-            />
-            <span
-              className={styles['miniThis']}
-              style={{ width: `${String(pct(nutrients?.protein ?? 0, targets.protein))}%` }}
-            />
-          </span>
-        </div>
-      </div>
+          <div className={styles['after']}>
+            <div className={styles['afterHead']}>
+              <span className={styles['label']}>Danach offen</span>
+              <span className={styles['legend']}>
+                <span className={styles['legendSwatch']} aria-hidden="true" />
+                dieser Eintrag
+              </span>
+            </div>
+            <div className={styles['afterRow']}>
+              <span className={styles['afterValues']}>
+                <span>Kalorien</span>
+                <span>
+                  <strong>{formatInt(afterKcal)}</strong> <span className={styles['muted']}>kcal</span>
+                </span>
+              </span>
+              <span className={styles['miniBar']} aria-hidden="true">
+                <span
+                  className={styles['miniEaten']}
+                  style={{ width: `${String(pct(eatenBefore.kcal, targets.kcal))}%` }}
+                />
+                <span
+                  className={styles['miniThis']}
+                  style={{ width: `${String(pct(nutrients?.kcal ?? 0, targets.kcal))}%` }}
+                />
+              </span>
+            </div>
+            <div className={styles['afterRow']}>
+              <span className={styles['afterValues']}>
+                <span>Protein</span>
+                <span>
+                  <strong className={styles['afterProtein']}>{formatInt(afterProtein)}</strong>{' '}
+                  <span className={styles['muted']}>g</span>
+                </span>
+              </span>
+              <span className={styles['miniBar']} aria-hidden="true">
+                <span
+                  className={styles['miniEaten']}
+                  style={{ width: `${String(pct(eatenBefore.protein, targets.protein))}%` }}
+                />
+                <span
+                  className={styles['miniThis']}
+                  style={{ width: `${String(pct(nutrients?.protein ?? 0, targets.protein))}%` }}
+                />
+              </span>
+            </div>
+          </div>
+        </>
+      )}
 
       {error !== null && (
         <p className={styles['error']} role="alert">
@@ -305,11 +314,15 @@ export function QuantitySheet({
         </p>
       )}
       <Button size="large" block busy={busy} disabled={amount === null} onClick={() => void submit()}>
-        {mode === 'add' ? 'Hinzufügen' : 'Speichern'} · {formatClock(timeMin)}
+        {mode === 'ingredient'
+          ? onDelete === undefined
+            ? 'Zur Zutatenliste hinzufügen'
+            : 'Zutat übernehmen'
+          : `${mode === 'add' ? 'Hinzufügen' : 'Speichern'} · ${formatClock(timeMin)}`}
       </Button>
-      {mode === 'edit' && onDelete !== undefined && (
+      {mode !== 'add' && onDelete !== undefined && (
         <button type="button" className={styles['deleteLink']} onClick={onDelete}>
-          Eintrag löschen
+          {mode === 'ingredient' ? 'Zutat entfernen' : 'Eintrag löschen'}
         </button>
       )}
     </Sheet>

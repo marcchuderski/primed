@@ -57,6 +57,7 @@ describe('EssenScreen library', () => {
 
   it('lists all types with tags and filters by category and type', async () => {
     render(<EssenScreen />);
+    await userEvent.click(screen.getByRole('button', { name: 'Bibliothek' }));
 
     expect(await screen.findByRole('button', { name: /REWE Quarkcreme/ })).toHaveTextContent('134 kcal');
     expect(screen.getByRole('button', { name: /Magerquark/ })).toHaveTextContent('Richtwert');
@@ -77,6 +78,7 @@ describe('EssenScreen library', () => {
 
   it('edits a product and deletes it only after confirmation', async () => {
     render(<EssenScreen />);
+    await userEvent.click(screen.getByRole('button', { name: 'Bibliothek' }));
 
     await userEvent.click(await screen.findByRole('button', { name: /REWE Quarkcreme/ }));
     const sheet = screen.getByRole('dialog', { name: 'Produkt bearbeiten' });

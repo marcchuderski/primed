@@ -48,8 +48,8 @@ Nach jedem Item: Tests, Security Audit (`agent-skills:security-and-hardening`), 
 
 | ID | Item | Status |
 |---|---|---|
-| 4.1 | Meal-Prep-Editor (Zutaten, Live-Summe, Portionen) | in Arbeit (API fertig) |
-| 4.2 | Gerichte mit Portionszähler, Eintragen, Archiv, „Nochmal kochen“ | in Arbeit (API fertig) |
+| 4.1 | Meal-Prep-Editor (Zutaten, Live-Summe, Portionen) | fertig |
+| 4.2 | Gerichte mit Portionszähler, Eintragen, Archiv, „Nochmal kochen“ | fertig |
 
 ## Phase 5 – Vorschläge
 

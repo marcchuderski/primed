@@ -1,4 +1,5 @@
-import { Plus, ScanBarcode, Search } from 'lucide-react';
+import { ChefHat, Plus, ScanBarcode, Search } from 'lucide-react';
+import type { Dish } from '../../api/dishes.ts';
 import { useEffect, useState } from 'react';
 import type { Shake } from '../../api/entries.ts';
 import {
@@ -28,6 +29,9 @@ interface AddSheetProps {
   onCreate: (name: string) => void;
   onClose: () => void;
   error?: string | null;
+  dishes?: Dish[];
+  onPickDish?: (dish: Dish) => void;
+  onCook?: () => void;
 }
 
 /** Screens 04 + 05: quick add (shakes, frequent at this time) and search (library, online, reference values). */
@@ -41,6 +45,9 @@ export function AddSheet({
   onCreate,
   onClose,
   error = null,
+  dishes = [],
+  onPickDish,
+  onCook,
 }: AddSheetProps) {
   const [query, setQuery] = useState('');
   const [frequent, setFrequent] = useState<Food[]>([]);
@@ -154,6 +161,28 @@ export function AddSheet({
 
       {trimmed === '' ? (
         <>
+          {dishes.length > 0 && (
+            <section className={styles['section']} aria-label="Gerichte">
+              <h3 className={styles['sectionTitle']}>Gerichte</h3>
+              <div className={styles['dishes']}>
+                {dishes.map((dish) => (
+                  <button
+                    key={dish.id}
+                    type="button"
+                    className={styles['dish']}
+                    onClick={() => onPickDish?.(dish)}
+                  >
+                    <span className={styles['itemName']}>{dish.name}</span>
+                    <span className={styles['itemMeta']}>
+                      {formatInt(dish.perPortion.kcal)} kcal ·{' '}
+                      <span className={styles['protein']}>{formatInt(dish.perPortion.protein)} g P</span>
+                    </span>
+                    <span className={styles['left']}>{formatDecimal(dish.portionsLeft)} übrig</span>
+                  </button>
+                ))}
+              </div>
+            </section>
+          )}
           {shakes.length > 0 && (
             <section className={styles['section']} aria-label="Shakes">
               <h3 className={styles['sectionTitle']}>Shakes</h3>
@@ -242,8 +271,8 @@ export function AddSheet({
       )}
 
       <div className={styles['footer']}>
-        <Button variant="tonal" onClick={onScan}>
-          <ScanBarcode size={18} strokeWidth={2.2} aria-hidden="true" /> Scannen
+        <Button variant="tonal" onClick={onCook}>
+          <ChefHat size={18} strokeWidth={2.2} aria-hidden="true" /> Gericht zubereiten
         </Button>
         <Button
           variant="tonal"
@@ -251,7 +280,7 @@ export function AddSheet({
             onCreate(trimmed);
           }}
         >
-          <Plus size={18} strokeWidth={2.2} aria-hidden="true" /> Neu anlegen
+          <Plus size={18} strokeWidth={2.2} aria-hidden="true" /> Produkt anlegen
         </Button>
       </div>
     </Sheet>
