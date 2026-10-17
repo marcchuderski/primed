@@ -17,6 +17,11 @@ use Primed\Day\WeekTemplateRepository;
 use Primed\Entry\EntryRepository;
 use Primed\Entry\EntryService;
 use Primed\Food\FoodRepository;
+use Primed\Food\FoodService;
+use Primed\Off\HttpFetcher;
+use Primed\Off\OffClient;
+use Primed\Off\OffUnavailable;
+use Primed\Support\UserRateLimit;
 use Primed\Food\FoodSeeder;
 use Primed\Support\Clock;
 
@@ -29,16 +34,37 @@ final class Container
     private ?AuthService $auth = null;
     private ?DayService $days = null;
     private ?EntryService $entries = null;
+    private ?FoodService $foods = null;
 
     /**
      * @param \Closure(): PDO $connect
      * @param \Closure(PDO, Clock): AuthService $authFactory
+     * @param (\Closure(): HttpFetcher)|null $offFetcher outbound HTTP for Open Food Facts
      */
     public function __construct(
         private readonly \Closure $connect,
         private readonly \Closure $authFactory,
         public readonly Clock $clock,
+        private readonly ?\Closure $offFetcher = null,
     ) {
+    }
+
+    public function foods(): FoodService
+    {
+        return $this->foods ??= new FoodService(
+            new FoodRepository($this->pdo()),
+            $this->settings(),
+            new LogicalCalendar($this->clock),
+            $this->clock,
+            new UserRateLimit($this->pdo(), $this->clock),
+            function (): OffClient {
+                if ($this->offFetcher === null) {
+                    throw new OffUnavailable('Open Food Facts not configured');
+                }
+
+                return new OffClient(($this->offFetcher)(), $this->pdo(), $this->clock);
+            },
+        );
     }
 
     public function pdo(): PDO

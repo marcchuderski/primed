@@ -29,6 +29,7 @@ use Primed\Http\Response;
 use Primed\Kernel;
 use Primed\Log\MemoryLogger;
 use Primed\Support\FixedClock;
+use Primed\Tests\Support\FakeFetcher;
 
 /**
  * HTTP-level tests through the kernel with two seeded users: "marcch" (owner defaults) and "freund".
@@ -42,6 +43,8 @@ abstract class ApiTestCase extends DatabaseTestCase
     protected PDO $pdo;
     protected FixedClock $clock;
     protected App $app;
+    protected FakeFetcher $offFetcher;
+    protected MemoryLogger $logger;
     /** @var array<string, string> username => session token */
     protected array $tokens = [];
     /** @var array<string, string> username => csrf token */
@@ -78,9 +81,16 @@ abstract class ApiTestCase extends DatabaseTestCase
             new MemoryLogger(),
         );
         $pdo = $this->pdo;
-        $container = new Container(static fn (): PDO => $pdo, static fn (): AuthService => $service, $this->clock);
+        $fetcher = $this->offFetcher = new FakeFetcher();
+        $container = new Container(
+            static fn (): PDO => $pdo,
+            static fn (): AuthService => $service,
+            $this->clock,
+            static fn (): FakeFetcher => $fetcher,
+        );
         $guard = new OriginGuard([self::ORIGIN]);
-        $this->app = new App(Kernel::routes($container), new MemoryLogger(), '/api', $guard);
+        $this->logger = new MemoryLogger();
+        $this->app = new App(Kernel::routes($container), $this->logger, '/api', $guard);
 
         $this->clock->advance('+5 days +2 hours'); // 2026-10-20 10:00 UTC = 12:00 Berlin
         foreach (['marcch', 'freund'] as $username) {
@@ -115,13 +125,24 @@ abstract class ApiTestCase extends DatabaseTestCase
             $headers['X-CSRF-Token'] = $this->csrf[$as] ?? '';
         }
 
+        $query = [];
+        $parts = explode('?', $path, 2);
+        if (isset($parts[1])) {
+            parse_str($parts[1], $parsed);
+            foreach ($parsed as $key => $value) {
+                if (is_string($value)) {
+                    $query[(string) $key] = $value;
+                }
+            }
+        }
+
         return $this->app->handle(new Request(
             $method,
-            $path,
+            $parts[0],
             $headers,
             $json === null ? '' : (string) json_encode($json),
             '203.0.113.7',
-            [],
+            $query,
             [SessionCookie::NAME => $this->tokens[$as] ?? ''],
         ));
     }

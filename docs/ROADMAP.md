@@ -36,10 +36,10 @@ Nach jedem Item: Tests, Security Audit (`agent-skills:security-and-hardening`), 
 
 | ID | Item | Status |
 |---|---|---|
-| 3.1 | Bibliothek mit Startprodukten und Richtwerten | geplant |
+| 3.1 | Bibliothek mit Startprodukten und Richtwerten | fertig (API, Seed: BLS-Richtwerte, Milch, Whey, Startprodukte) |
 | 3.2 | Schnell-Eintrag-Sheet (Suche, Vorrat, Shakes, Häufig um diese Zeit) | geplant |
 | 3.3 | Mengen-Sheet (Stepper, Schnellwahl, Uhrzeit, „Danach offen“) | in Arbeit (Sheet fertig und im Bearbeiten-Modus genutzt; Hinzufügen-Modus mit 3.2) |
-| 3.4 | Open-Food-Facts-Proxy mit Cache (Barcode + Namenssuche) | geplant |
+| 3.4 | Open-Food-Facts-Proxy mit Cache (Barcode + Namenssuche) | fertig |
 | 3.5 | Barcode-Scan im Browser | geplant |
 | 3.6 | Produkt anlegen (Stepper-Liste) | geplant |
 | 3.7 | Essen-Tab: Bibliothek mit Suche, Kategorie-Pills, Typ-Filter | geplant |

@@ -22,6 +22,8 @@ use Primed\Controller\WeekTemplateController;
 use Primed\Controller\SettingsController;
 use Primed\Controller\DayTypeController;
 use Primed\Controller\EntryController;
+use Primed\Controller\FoodController;
+use Primed\Off\CurlFetcher;
 use Primed\Controller\DayController;
 use Primed\Database\ConnectionFactory;
 use Primed\Http\HttpException;
@@ -52,6 +54,15 @@ final class Kernel
             static fn (): PDO => ConnectionFactory::create($config),
             static fn (PDO $pdo, Clock $c): AuthService => self::authService($config, $pdo, $c, $logger, $appRoot),
             $clock,
+            static function () use ($config): CurlFetcher {
+                $agent = sprintf(
+                    '%s (%s)',
+                    $config->string('OFF_USER_AGENT', 'Primed/0.1'),
+                    $config->string('OFF_CONTACT_EMAIL'),
+                );
+
+                return new CurlFetcher($agent);
+            },
         );
 
         $origins = [OriginGuard::originOf($config->string('APP_URL'))];
@@ -130,6 +141,16 @@ final class Kernel
         $router->add('GET', '/v1/days/today', $days->today(...));
         $router->add('GET', '/v1/days/{date}', $days->show(...));
         $router->add('PUT', '/v1/days/{date}', $days->update(...));
+
+        $foods = new FoodController($c);
+        $router->add('GET', '/v1/foods', $foods->index(...));
+        $router->add('POST', '/v1/foods', $foods->create(...));
+        $router->add('GET', '/v1/foods/frequent', $foods->frequent(...));
+        $router->add('GET', '/v1/foods/barcode/{ean}', $foods->barcode(...));
+        $router->add('GET', '/v1/foods/{id}', $foods->show(...));
+        $router->add('PATCH', '/v1/foods/{id}', $foods->update(...));
+        $router->add('DELETE', '/v1/foods/{id}', $foods->delete(...));
+        $router->add('GET', '/v1/off/search', $foods->searchOnline(...));
 
         $entries = new EntryController($c);
         $router->add('GET', '/v1/days/{date}/entries', $entries->index(...));

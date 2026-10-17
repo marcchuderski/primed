@@ -26,6 +26,25 @@ final class Input
         return array_key_exists($field, $this->data);
     }
 
+    public function isNull(string $field): bool
+    {
+        return ($this->data[$field] ?? null) === null;
+    }
+
+    /** Trimmed string or null for missing/null/empty values; non-strings are rejected. */
+    public function nullableText(string $field): ?string
+    {
+        $value = $this->data[$field] ?? null;
+        if ($value === null) {
+            return null;
+        }
+        if (!is_string($value)) {
+            throw self::invalid('Ungültiger Wert.');
+        }
+
+        return trim($value) === '' ? null : trim($value);
+    }
+
     public function int(string $field, int $min, int $max, string $label): int
     {
         $value = $this->data[$field] ?? null;

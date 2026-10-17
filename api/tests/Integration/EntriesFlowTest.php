@@ -114,13 +114,13 @@ final class EntriesFlowTest extends ApiTestCase
         self::assertSame(404, $this->call('DELETE', '/api/v1/entries/' . $id)->status);
     }
 
-    public function testFriendsGetMilkButNotTheOwnersProducts(): void
+    public function testFriendsGetSharedDefaultsButNotTheOwnersProducts(): void
     {
         $count = $this->pdo->query(
             "SELECT COUNT(*) FROM foods f JOIN users u ON u.id = f.user_id WHERE u.username = 'freund'",
         );
         self::assertNotFalse($count);
-        self::assertSame(2, (int) $count->fetchColumn());
+        self::assertSame(17, (int) $count->fetchColumn()); // 2 milks, protein powder, 14 BLS references
     }
 
     private function create(string $date, int $time, int $foodId, float $amount, string $unit): Response

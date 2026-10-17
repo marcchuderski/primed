@@ -214,3 +214,9 @@ Neue Einträge unten anhängen. Getroffene Entscheidungen werden nicht gelöscht
 **D-109 · KI-Links nur auf Startseiten, ohne Logos** – „Dann einfügen in“ öffnet die Startseiten von ChatGPT, Claude, Copilot, Gemini; der Fragebogen wird vorher kopiert. Anzeige nur Name + Lucide ExternalLink. · einheitlich und robust (Vorbefüllung nur bei zwei Anbietern, teils undokumentiert, Auto-Submit-Risiko), keine Markenrechts-Prüfung, Icon-Regel (nur Lucide) bleibt. · Vorbefüllung per `?q=`, offizielle Logos. · Nutzer · 2026-10-17
 
 **D-110 · Richtwerte und Proteinpulver ohne Einzelbestätigung** – Claude recherchiert die Nährwerte der 14 Richtwerte (Quelle BLS, sonst gleichwertige Referenz, jeweils dokumentiert) und des ESN Designer Whey Milk Chocolate und übernimmt sie direkt in den Seed; Werte bleiben in der App änderbar. Formulierungen unter 30 Minuten (Begrüßung) angepasst. · Nutzer · 2026-10-17
+
+**D-111 · Kategorie „Grundnahrungsmittel“ (vorläufig)** – sechste Kategorie für BLS-Richtwerte ohne passende Kategorie (Hähnchen, Reis, Nudeln, Haferflocken, Öl, Butter, Ei). · Die fünf Kategorien decken diese nicht ab. · Zuordnung zu bestehenden Kategorien. · Claude, Bestätigung durch Nutzer ausstehend · 2026-10-17
+
+**D-112 · OFF-Suche über search.openfoodfacts.org** – der Legacy-Endpunkt `cgi/search.pl` antwortet 503; Suche über den neuen Suchdienst (Lucene), Barcode weiter über `api/v2/product`. Begriffe werden auf Buchstaben/Ziffern reduziert, Länderfilter serverseitig. · im Live-Test festgestellt. · Claude · 2026-10-17
+
+**D-113 · Startbibliothek idempotent** – `FoodSeeder` ergänzt fehlende Standard-Lebensmittel (nach Name) auch bei bestehenden Usern (`bin/user-seed.php`); Startprodukte des Betreibers nur beim ersten Seed. · Claude · 2026-10-17

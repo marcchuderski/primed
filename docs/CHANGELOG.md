@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-17 – 3.1/3.4 Bibliothek & Open Food Facts (API)
+- Migrationen `005_off_cache`, `006_basics_category`.
+- Bibliotheks-API (Suche, häufig um diese Zeit ±1,5 h, anlegen/ändern/löschen, Barcode-Lookup).
+- Seed: 14 BLS-Richtwerte (CC BY 4.0), ESN Designer Whey, Milch – für alle User; idempotent.
+- OFF-Proxy mit Cache, Rate-Limit, SSRF-Schutz; Suche über search.openfoodfacts.org.
+
 ## 2026-10-17 – Picker, fester Ruhetag, Richtwerte-Konzept
 - Migration `004_rest_day`: Ruhetag fest im System (D-106); Trainingsdauer 30 min.
 - Tagesart-Picker: eingeklappte Liste mit „Auswahl ändern“, Dauer-Pills 2×2 (D-107).

@@ -111,7 +111,7 @@ Oben auf „Heute“: „Hey, [Display-Name].“ (fett, Textfarbe), direkt dahin
 
 **Typen:** Markenprodukt (meist mit Barcode), Richtwert (unverpackt, Standard-Nährwerte ohne Etikett), Zutat (nur im Meal-Prep-Editor sichtbar, nie im Schnell-Eintrag). Ein im Meal-Prep-Editor neu gescanntes Produkt wird als Zutat angelegt; der Typ ist später in der Bibliothek änderbar.
 
-**Kategorien:** Snacks & Riegel · Milchprodukte & Quark · Brot & Backwaren · Obst & Gemüse · Getränke & Shakes
+**Kategorien:** Snacks & Riegel · Milchprodukte & Quark · Brot & Backwaren · Obst & Gemüse · Getränke & Shakes · Grundnahrungsmittel (vorläufig, D-111)
 
 **Regeln**
 - Nährwerte **pro 100 g, pro 100 ml oder pro Stück** (genau eine Basis je Produkt), plus optional Packungsgröße in der Einheit der Basis (g, ml oder Stück). Haushaltsmaße werden **nicht** pro Produkt gepflegt (siehe Einträge).
@@ -119,7 +119,7 @@ Oben auf „Heute“: „Hey, [Display-Name].“ (fett, Textfarbe), direkt dahin
 - Sortierung nach Häufigkeit. „Häufig um diese Zeit“: Einträge der letzten 60 Tage im Fenster **±1,5 h** um die aktuelle Uhrzeit, die 5 häufigsten absteigend nach Häufigkeit, ohne Shakes.
 - Gelöschte Produkte verschwinden aus Bibliothek und Suche; vergangene Einträge bleiben dank Schnappschuss unverändert.
 - Online-Suche (Open Food Facts): gefiltert auf Deutschland/Deutsch, höchstens 10 Treffer, Hinweis „Daten: Open Food Facts“ (Lizenz ODbL).
-- Richtwerte stammen aus dem Bundeslebensmittelschlüssel (BLS), Lizenz wird vor Nutzung geprüft.
+- Richtwerte stammen aus dem Bundeslebensmittelschlüssel (BLS 4.0, CC BY 4.0); die Quellenangabe wird in der App angezeigt (Bibliothek/Suche).
 - Filter: Kategorie als Pill-Reihe, Typ hinter einem Filter-Button.
 - Alles, was einmal eingetragen wird, landet automatisch in der Bibliothek (Kategorie wird vorgeschlagen und bestätigt).
 

@@ -57,9 +57,9 @@ Shakes werden aus Bibliothekseinträgen berechnet: Milch + **Aktuelles Proteinpu
 |---|---|---|---|---|---|---|---|---|
 | Milch 1,5 % | Richtwert | pro 100 ml | 47 | 3,4 | 4,8 | 4,8 | 1,5 | Getränke & Shakes |
 | Milch 3,5 % | Richtwert | pro 100 ml | 64 | 3,3 | 4,7 | 4,7 | 3,5 | Getränke & Shakes |
-| ESN Designer Whey, Milk Chocolate ⚠ | Markenprodukt | pro 100 g | Werte werden recherchiert und bestätigt | | | | | Getränke & Shakes |
+| ESN Designer Whey Milk Chocolate (EAN 4250519647234, Packung 908 g) | Markenprodukt | pro 100 g | 374 | 72,0 | 5,9 | 5,2 | 5,3 | Getränke & Shakes |
 
-Milchwerte vom Nutzer bestätigt (17.10.2026). Standard-Proteinpulver: ESN Designer Whey, Milk Chocolate.
+Milchwerte vom Nutzer bestätigt (17.10.2026). Standard-Proteinpulver: ESN Designer Whey, Milk Chocolate – Werte aus übereinstimmenden Händlerangaben und Open Food Facts (Stand 10/2026), nicht gegen das Etikett geprüft (D-110). Milch, Whey und Richtwerte bekommt jeder User.
 
 Richtwerte zur Orientierung (mit typischem Whey 30 g = 117 kcal · 24 g P · 2 g KH · 1,8 g F; werden mit dem echten Pulver neu berechnet):
 
@@ -104,9 +104,26 @@ Toleranz „im Rahmen“: **±5 %** vom kcal-Soll.
 | Lidl Müsli-Riegel | 1 Stück | 87 | 2,3 | 17,0 | 0,4 | 1,9 | Snacks & Riegel |
 | Lidl Chicken Nuggets | pro 100 g | 315 | 13,2 | 23,3 | 1,1 | 25,2 | Snacks & Riegel |
 
-## Richtwert-Grundliste ⚠
+## Richtwert-Grundliste (für alle User)
 
-Quelle: Bundeslebensmittelschlüssel (BLS), Lizenz wird vor Nutzung geprüft. Umfang: diese 14 Lebensmittel, Werte vor dem Seed bestätigen: Bäckerbrötchen (Weizen), Magerquark, Skyr natur, Hähnchenbrust, Reis (roh), Nudeln (roh), Haferflocken, Banane, Apfel, Zwiebel, Paprika, Olivenöl, Butter, Eier.
+Quelle: Max Rubner-Institut (2025): Bundeslebensmittelschlüssel (BLS), Version 4.0 – Deutsche Nährstoffdatenbank. Karlsruhe. DOI: 10.25826/Data20251217-134202-0. Lizenz CC BY 4.0 (Namensnennung Pflicht; Werte auf 0,1 gerundet, KH = „verfügbar“ ohne Ballaststoffe). Freigegeben ohne Einzelbestätigung (D-110). Alle pro 100 g:
+
+| Richtwert | BLS-Code | kcal | Protein | KH | Zucker | Fett | Kategorie |
+|---|---|---|---|---|---|---|---|
+| Bäckerbrötchen (Weizen) | B511000 | 280 | 10,1 | 54,0 | 3,1 | 1,8 | Brot |
+| Magerquark | M713100 | 66 | 11,9 | 3,7 | 3,7 | 0,2 | Milchprodukte |
+| Skyr natur | M710100 | 64 | 10,4 | 3,2 | 3,1 | 0,8 | Milchprodukte |
+| Hähnchenbrust, roh | V416100 | 109 | 23,3 | 0 | 0 | 1,8 | Grundnahrungsmittel |
+| Reis, roh | C352000 | 351 | 7,9 | 77,1 | 0,3 | 0,6 | Grundnahrungsmittel |
+| Nudeln, roh | E401000 | 346 | 12,4 | 68,8 | 2,0 | 1,6 | Grundnahrungsmittel |
+| Haferflocken | C133000 | 348 | 13,2 | 53,3 | 0,7 | 6,7 | Grundnahrungsmittel |
+| Banane | F503100 | 79 | 1,3 | 15,9 | 13,9 | 0,4 | Obst & Gemüse |
+| Apfel | F110100 | 58 | 0,4 | 11,7 | 10,5 | 0,5 | Obst & Gemüse |
+| Zwiebel | G480100 | 34 | 1,2 | 6,0 | 6,0 | 0,2 | Obst & Gemüse |
+| Paprika, rot | G543100 | 36 | 1,0 | 6,2 | 6,2 | 0,2 | Obst & Gemüse |
+| Olivenöl | Q120000 | 899 | 0 | 0 | 0 | 99,9 | Grundnahrungsmittel |
+| Butter | Q630000 | 747 | 0,6 | 0,6 | 0,6 | 82,5 | Grundnahrungsmittel |
+| Ei (Hühnerei), roh | E111100 | 135 | 13,2 | 0,3 | 0,3 | 9,0 | Grundnahrungsmittel |
 
 ## Haushaltsmaße (fest im Code)
 
@@ -119,4 +136,4 @@ Nicht änderbar, nicht pro Produkt; bei Basis Stück nicht verfügbar.
 
 ## Kategorien
 
-Snacks & Riegel · Milchprodukte & Quark · Brot & Backwaren · Obst & Gemüse · Getränke & Shakes
+Snacks & Riegel · Milchprodukte & Quark · Brot & Backwaren · Obst & Gemüse · Getränke & Shakes · Grundnahrungsmittel (vorläufig, D-111)

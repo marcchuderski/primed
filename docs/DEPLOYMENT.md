@@ -5,7 +5,7 @@ Wird von Claude Code mit jedem Schritt präzisiert (Befehle, Dateilisten, Migrat
 ## Einmalig einrichten
 
 1. Subdomain `primed.dev-pfeffermond.de` in Plesk anlegen, **Let's Encrypt** aktivieren, HTTPS-Weiterleitung an.
-2. PHP 8.3 wählen, `display_errors` aus (auch serverseitig nötig: Parse-Fehler entstehen, bevor `bootstrap.php` es abschalten kann). CLI per SSH immer mit `/opt/plesk/php/8.3/bin/php` (das Standard-`php` kann eine andere Version sein).
+2. PHP 8.3 wählen (Erweiterungen: pdo_mysql, mbstring, sodium, curl), `display_errors` aus (auch serverseitig nötig: Parse-Fehler entstehen, bevor `bootstrap.php` es abschalten kann). CLI per SSH immer mit `/opt/plesk/php/8.3/bin/php` (das Standard-`php` kann eine andere Version sein).
 3. Datenbank (MariaDB 10.11) anlegen, **tägliches DB-Backup** in Plesk einrichten. Zwei DB-User (Least Privilege):
    - `primed_app` (für `.env`): nur `SELECT, INSERT, UPDATE, DELETE`.
    - Migrationen: über phpMyAdmin (Plesk-Admin) oder einen zweiten User mit zusätzlich `CREATE, ALTER, INDEX, REFERENCES, DROP`, der **nicht** in der `.env` steht.

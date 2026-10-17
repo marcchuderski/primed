@@ -96,7 +96,8 @@ Die API speichert, validiert und liefert Daten; sie berechnet Nährwert-Schnapps
 | Tage | `GET /days/{date}` (Tagesart, Training, Sollwerte, Einträge) · `PUT /days/{date}` (Tagesart/Training) |
 | Einträge | `POST /entries` · `PATCH /entries/{id}` · `DELETE /entries/{id}` |
 | Bibliothek | `GET /foods?q=&category=&type=` · `GET /foods/frequent?time=` · `POST /foods` · `PATCH /foods/{id}` |
-| Open Food Facts | `GET /off/barcode/{ean}` · `GET /off/search?q=` (Proxy mit Cache) |
+| Bibliothek (umgesetzt 3.1/3.4) | `GET /foods?q=&category=&type=&context=mealprep` · `GET /foods/frequent` · `GET /foods/{id}` · `POST /foods` · `PATCH /foods/{id}` · `DELETE /foods/{id}` (weich) · `GET /foods/barcode/{ean}` (eigene Bibliothek, sonst OFF) |
+| Open Food Facts | `GET /off/search?q=` (Proxy mit Cache, max. 10 Treffer, DE) |
 | Meal Prep | `GET /dishes?status=active|archived` · `POST /dishes` · `PATCH /dishes/{id}` |
 | Einträge (umgesetzt 2.5) | `GET /days/{date}/entries` · `POST /entries` `{date, timeMin, foodId, amount, unit}` · `PATCH /entries/{id}` `{timeMin?, amount?, unit?}` · `DELETE /entries/{id}` |
 | Verlauf | `GET /history/week?start=` · `GET /history/month?month=` · `GET /history/year?year=` |
@@ -153,7 +154,8 @@ Alle schreibenden Endpunkte: Session-Cookie + CSRF-Token, serverseitige Validier
 | `week_template` | user_id, weekday (1–7, ISO), day_type_id (FK RESTRICT), training_start (Minuten), duration_min |
 | `days` | id, user_id, date (logischer Tag, unique je User), day_type_id (FK SET NULL), day_type_name (Schnappschuss), is_training, training_start, duration_min, target_kcal/protein/carbs/sugar (Schnappschuss), source (template/manual) |
 | `foods` | id, user_id, type (product/reference/ingredient), name, brand, barcode (unique je User), category (snacks/dairy/bread/produce/drinks), basis (per_100g/per_100ml/per_unit), Nährwerte je Basis (DECIMAL), package_amount (Einheit der Basis), source (seed/manual/off/bls), deleted_at, usage_count, last_amount, last_unit, is_quick (Shakes) |
-| `off_cache` | barcode, payload, fetched_at |
+| `off_cache` | cache_key (`barcode:…`/`search:<sha256>`), payload (normalisiert, NULL = nicht gefunden), fetched_at · TTL: Treffer 30 Tage, Fehlanzeigen/Suchen 1 Tag |
+| `rate_limits` | user_id, bucket, window_start, hits (z. B. OFF-Barcode 30/min, OFF-Suche 10/min je User) |
 | `dishes` | id, user_id, name, cooked_at, portions_total, portions_left (DECIMAL, Schritte 0,5), Summen, status (active/archived/discarded) |
 | `dish_ingredients` | id, dish_id, food_id (nullable), name_snapshot, amount + unit (wie eingegeben: g/ml/EL/TL/Packung/Stück), grams_or_ml (umgerechnet; bei Basis Stück: Stückzahl), Nährwerte |
 | `entries` | id, user_id, date (logischer Tag), time_min (Wandzeit, 15-Min-Raster), food_id (FK SET NULL) / dish_id, name_snapshot, amount + unit (wie eingegeben: g/ml/el/tl/packung/stueck/portion), quantity (umgerechnet: g, ml, Stück oder Portionen), Nährwert-Schnappschuss kcal/protein/carbs/sugar/fat |
@@ -168,7 +170,9 @@ Einträge und Gerichtszutaten speichern **Schnappschüsse**, damit spätere Prod
 
 **Login:** Username + Passwort → Bereinigung alter Versuche/Sessions → Rate-Limit-Prüfung → Argon2id-Prüfung → zufälliger Session-Token (nur Hash in DB) → Cookie `HttpOnly; Secure; SameSite=Strict`, gleitend 30 Tage, max. 90 Tage → CSRF-Token an den Client.
 
-**Barcode:** Kamera liest EAN → `GET /off/barcode/{ean}` → API prüft eigene Bibliothek, dann `off_cache`, dann Open Food Facts (Timeout, User-Agent mit Kontakt) → normalisierte Werte zurück → Nutzer bestätigt → Produkt in Bibliothek.
+**Barcode:** Kamera liest EAN → `GET /foods/barcode/{ean}` → API prüft Prüfziffer, eigene Bibliothek, dann `off_cache`, dann Open Food Facts (`world.openfoodfacts.org/api/v2/product`) → normalisierte, plausibilisierte Werte zurück → Nutzer bestätigt → Produkt in Bibliothek.
+
+**Online-Suche:** `search.openfoodfacts.org/search` (Lucene); der Suchbegriff wird auf Buchstaben/Ziffern reduziert, der Länderfilter `countries_tags:"en:germany"` von der API angehängt. Ausgehende Anfragen nur per `CurlFetcher`: Host-Allowlist, nur HTTPS, keine Redirects, 3 s Connect-/5 s Gesamt-Timeout, max. 1 MB Antwort.
 
 **Eintrag:** Lebensmittel/Portion + Menge + Zeit → API berechnet Nährwerte aus Produktdaten → speichert Schnappschuss → bei Gerichten `portions_left − 1`, bei 0 Status `archived`.
 

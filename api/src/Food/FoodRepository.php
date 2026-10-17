@@ -66,6 +66,130 @@ final class FoodRepository
         return (int) $this->pdo->lastInsertId();
     }
 
+    /**
+     * Library search (BRIEFING §6): sorted by frequency. Ingredients only when requested (meal prep).
+     *
+     * @return list<Food>
+     */
+    public function search(
+        int $userId,
+        ?string $query,
+        ?string $category,
+        ?string $type,
+        bool $includeIngredients,
+        int $limit = 50,
+    ): array {
+        $sql = 'SELECT ' . self::COLUMNS . ' FROM foods WHERE user_id = ? AND deleted_at IS NULL';
+        $params = [$userId];
+        if (!$includeIngredients && $type === null) {
+            $sql .= " AND type <> 'ingredient'";
+        }
+        if ($category !== null) {
+            $sql .= ' AND category = ?';
+            $params[] = $category;
+        }
+        if ($type !== null) {
+            $sql .= ' AND type = ?';
+            $params[] = $type;
+        }
+        if ($query !== null && $query !== '') {
+            $like = '%' . addcslashes($query, '%_\\') . '%';
+            $sql .= " AND (name LIKE ? ESCAPE '\\\\' OR brand LIKE ? ESCAPE '\\\\')";
+            $params[] = $like;
+            $params[] = $like;
+        }
+        $sql .= ' ORDER BY usage_count DESC, name LIMIT ' . max(1, min(100, $limit));
+
+        return $this->fetchAll($sql, $params);
+    }
+
+    /**
+     * Most used foods around a time of day (±window) in the recent past, most frequent first (D-083).
+     *
+     * @return list<Food>
+     */
+    public function frequentAround(
+        int $userId,
+        int $logicalMinute,
+        int $windowMin,
+        int $dayBoundaryMin,
+        string $sinceDate,
+        int $limit = 5,
+    ): array {
+        $sql = 'SELECT ' . self::prefixed('f') . ', COUNT(*) AS hits
+                  FROM entries e
+                  JOIN foods f ON f.id = e.food_id AND f.user_id = e.user_id
+                 WHERE e.user_id = ? AND e.date >= ? AND f.deleted_at IS NULL AND f.type <> \'ingredient\'
+                   AND (CASE WHEN e.time_min < ? THEN e.time_min + 1440 ELSE e.time_min END) BETWEEN ? AND ?
+                 GROUP BY f.id
+                 ORDER BY hits DESC, f.usage_count DESC, f.name
+                 LIMIT ' . max(1, min(20, $limit));
+
+        return $this->fetchAll($sql, [
+            $userId,
+            $sinceDate,
+            $dayBoundaryMin,
+            $logicalMinute - $windowMin,
+            $logicalMinute + $windowMin,
+        ]);
+    }
+
+    public function findByBarcode(int $userId, string $barcode): ?Food
+    {
+        return $this->fetchOne(
+            'SELECT ' . self::COLUMNS . ' FROM foods WHERE user_id = ? AND barcode = ? AND deleted_at IS NULL',
+            [$userId, $barcode],
+        );
+    }
+
+    /** Id of a soft-deleted food with this barcode (so it can be restored instead of duplicated). */
+    public function deletedIdByBarcode(int $userId, string $barcode): ?int
+    {
+        $statement = $this->pdo->prepare(
+            'SELECT id FROM foods WHERE user_id = ? AND barcode = ? AND deleted_at IS NOT NULL',
+        );
+        $statement->execute([$userId, $barcode]);
+        $id = $statement->fetchColumn();
+
+        return $id === false ? null : (int) $id;
+    }
+
+    /**
+     * @param array{type: string, name: string, brand: string|null, barcode: string|null, category: string,
+     *     basis: string, kcal: float, protein: float, carbs: float, sugar: float, fat: float,
+     *     packageAmount: float|null, source: string} $food
+     */
+    public function update(int $userId, int $id, array $food, DateTimeImmutable $now): void
+    {
+        $this->pdo->prepare(
+            'UPDATE foods SET type = ?, name = ?, brand = ?, barcode = ?, category = ?, basis = ?, kcal = ?,
+                    protein = ?, carbs = ?, sugar = ?, fat = ?, package_amount = ?, deleted_at = NULL, updated_at = ?
+              WHERE user_id = ? AND id = ?',
+        )->execute([
+            $food['type'],
+            $food['name'],
+            $food['brand'],
+            $food['barcode'],
+            $food['category'],
+            $food['basis'],
+            $food['kcal'],
+            $food['protein'],
+            $food['carbs'],
+            $food['sugar'],
+            $food['fat'],
+            $food['packageAmount'],
+            Db::dateTime($now),
+            $userId,
+            $id,
+        ]);
+    }
+
+    public function softDelete(int $userId, int $id, DateTimeImmutable $now): void
+    {
+        $this->pdo->prepare('UPDATE foods SET deleted_at = ? WHERE user_id = ? AND id = ? AND deleted_at IS NULL')
+            ->execute([Db::dateTime($now), $userId, $id]);
+    }
+
     public function recordUse(int $userId, int $foodId, float $amount, string $unit, DateTimeImmutable $now): void
     {
         $this->pdo->prepare(
@@ -74,12 +198,54 @@ final class FoodRepository
         )->execute([$amount, $unit, Db::dateTime($now), $userId, $foodId]);
     }
 
+    /**
+     * @return array<string, true> names of all foods of the user (including deleted)
+     */
+    public function namesOf(int $userId): array
+    {
+        $statement = $this->pdo->prepare('SELECT name FROM foods WHERE user_id = ?');
+        $statement->execute([$userId]);
+        $names = [];
+        foreach ($statement->fetchAll(PDO::FETCH_COLUMN) as $name) {
+            if (is_string($name)) {
+                $names[$name] = true;
+            }
+        }
+
+        return $names;
+    }
+
     public function hasAny(int $userId): bool
     {
         $statement = $this->pdo->prepare('SELECT 1 FROM foods WHERE user_id = ? LIMIT 1');
         $statement->execute([$userId]);
 
         return $statement->fetchColumn() !== false;
+    }
+
+    /**
+     * @param list<int|string> $params
+     * @return list<Food>
+     */
+    private function fetchAll(string $sql, array $params): array
+    {
+        $statement = $this->pdo->prepare($sql);
+        $statement->execute($params);
+        $foods = [];
+        foreach ($statement->fetchAll() as $row) {
+            if (is_array($row)) {
+                $foods[] = self::hydrate($row);
+            }
+        }
+
+        return $foods;
+    }
+
+    private static function prefixed(string $alias): string
+    {
+        $columns = array_map('trim', explode(',', self::COLUMNS));
+
+        return implode(', ', array_map(static fn (string $c): string => $alias . '.' . $c, $columns));
     }
 
     /**
