@@ -15,7 +15,7 @@ Primed ersetzt einen bisherigen Ablauf, bei dem Mahlzeiten-Makros in einem KI-Ch
 
 Gewicht ist kein Steuerungsparameter. Ziel ist Leistungs- und Muskelerhalt mit langsamer, optionaler Fettreduktion (Defizit vor allem an Ruhetagen).
 
-Nutzer: zunächst ein einzelner User, Datenmodell aber mehrbenutzerfähig. Keine öffentliche Registrierung.
+Nutzer: der Betreiber und einzelne Freunde. Jeder User hat eigene, getrennte Daten und eine eigene Bibliothek (D-081). Keine öffentliche Registrierung: Accounts legt der Betreiber per CLI an und vergibt ein Startpasswort (D-079). Neue User starten mit einer neutralen Vorlage (D-080). Jeder User kann sein Konto in den Einstellungen selbst löschen (Bestätigungsdialog + Passwort, D-082).
 
 ## 2. Begriffe
 
@@ -93,7 +93,7 @@ Darstellung: Auf den Balken für kcal, Protein und KH sitzt ein Marker an der Po
 **Regeln**
 - Nährwerte **pro 100 g, pro 100 ml oder pro Stück** (genau eine Basis je Produkt), plus optional Packungsgröße in der Einheit der Basis (g, ml oder Stück). Haushaltsmaße werden **nicht** pro Produkt gepflegt (siehe Einträge).
 - Ein Barcode existiert nur einmal (keine Duplikate).
-- Sortierung nach Häufigkeit. „Häufig um diese Zeit“: Einträge der letzten 60 Tage in einem Fenster um die aktuelle Uhrzeit, die 5 häufigsten absteigend nach Häufigkeit, ohne Shakes (Fenstergröße siehe Offene Punkte).
+- Sortierung nach Häufigkeit. „Häufig um diese Zeit“: Einträge der letzten 60 Tage im Fenster **±1,5 h** um die aktuelle Uhrzeit, die 5 häufigsten absteigend nach Häufigkeit, ohne Shakes.
 - Gelöschte Produkte verschwinden aus Bibliothek und Suche; vergangene Einträge bleiben dank Schnappschuss unverändert.
 - Online-Suche (Open Food Facts): gefiltert auf Deutschland/Deutsch, höchstens 10 Treffer, Hinweis „Daten: Open Food Facts“ (Lizenz ODbL).
 - Richtwerte stammen aus dem Bundeslebensmittelschlüssel (BLS), Lizenz wird vor Nutzung geprüft.
@@ -189,6 +189,7 @@ Aus Vorrat und Bibliothek die Optionen wählen, die die offenen Werte (bis Check
 - Darstellung: System · Hell · Dunkel (überschreibt Geräteeinstellung)
 - Tagesarten & Sollwerte · Wochenvorlage · Shakes · Checkpoints · Vorschläge (Schwellen) · Bewertung (Toleranz)
 - Abmelden (Button), darunter „Überall abmelden“ als Textlink
+- Konto löschen (Bestätigungsdialog + Passwort, löscht alle eigenen Daten)
 
 ## 13. Login
 
@@ -209,9 +210,9 @@ Alle ursprünglich offenen Punkte wurden am 17.10.2026 mit dem Nutzer geklärt u
 
 ## 16. Offene Punkte
 
-1. **„Häufig um diese Zeit“:** Fenster ±90 min (3 h gesamt) oder ±3 h? Vorläufig ±90 min. Vor Phase 3 klären.
+1. ~~„Häufig um diese Zeit“~~ – ±1,5 h (D-083).
 2. **ESN Designer Whey, Milk Chocolate:** Nährwerte pro 30 g werden recherchiert und vor dem Seed bestätigt.
 3. **BLS-Lizenz** und Werte der 14 Richtwerte vor dem Seed (Phase 3) prüfen und bestätigen.
 4. ~~Neue Mockups für „Produkt anlegen“~~ – geliefert (06, 07, 17, 18), siehe D-073.
-5. **Screenshot zur PWA-Installation** liefert der Nutzer (für die Nutzer-Doku).
+5. ~~Screenshot zur PWA-Installation~~ – Screen 18 (nur Nutzer-Doku).
 6. **Shake-Regeln:** konkrete Reihenfolge bei „Protein hat Vorrang“ in Phase 5 bestätigen.

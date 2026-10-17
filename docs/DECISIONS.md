@@ -148,3 +148,15 @@ Neue Einträge unten anhängen. Getroffene Entscheidungen werden nicht gelöscht
 **D-077 · Styling mit CSS-Modulen, Tokens direkt aus `design/`** – Komponenten-Styles als CSS-Module (in Vite eingebaut, keine Laufzeit, CSP-freundlich); `design/tokens.css` wird direkt importiert statt kopiert (eine Quelle). Fehlende Mockup-Farben als Tokens ergänzt: `--input-border`, `--ring-track` (Werte 1:1 aus Login-/Loading-Mockup). · keine zusätzliche Abhängigkeit, keine Duplikate. · Tailwind, CSS-in-JS, Kopie mit Sync-Skript. · Claude · 2026-10-17
 
 **D-078 · Schriften über `@fontsource-variable`** – Bricolage Grotesque (Achsen opsz + wght, wie im Mockup) und Inter (wght), nur Latin + Latin Extended, eigene `@font-face` mit den Familiennamen aus `tokens.css`. · gepflegte npm-Pakete mit OFL-Lizenz, Dateien werden mitgebündelt (D-037). · manuell heruntergeladene Dateien. · Claude · 2026-10-17
+
+## Multi-User (2026-10-17)
+
+**D-079 · Freunde als weitere User** – Accounts nur per CLI (`bin/user-create`) durch den Betreiber; Startpasswort wird vom Betreiber vergeben, **ohne** Pflicht zur Änderung beim ersten Login. · einfacher Ablauf. · Änderungspflicht (empfohlen), Einmal-Link. · Nutzer · 2026-10-17 · Hinweis: Der Betreiber kennt das Startpasswort, bis der User es selbst ändert; die Nutzer-Doku empfiehlt das Ändern.
+
+**D-080 · Startdaten neuer User** – Vorlage ohne persönliche Daten: die fünf Tagesarten mit den Default-Sollwerten, leere Wochenvorlage (alles Ruhetag), Shakes, Milch, Richtwerte, Standard-Proteinpulver; keine Markenprodukte des Betreibers. Der erste User (`marcch`) bekommt zusätzlich Wochenvorlage und Startprodukte aus `DEFAULTS.md`. · Nutzer · 2026-10-17
+
+**D-081 · Getrennte Bibliotheken** – jede Bibliothek gehört einem User (Richtwerte als Kopie je User); nur der OFF-Cache ist gemeinsam (nicht personenbezogen). · Nutzer · 2026-10-17
+
+**D-082 · Konto selbst löschen** – in den Einstellungen, mit Bestätigungsdialog (unwiderruflich) **und** erneuter Passworteingabe; löscht alle Daten des Users (`ON DELETE CASCADE`). · Datenhoheit der Freunde; Schutz bei entsperrtem Gerät. · CLI-Löschung durch Betreiber, nur Dialog. · Nutzer · 2026-10-17
+
+**D-083 · „Häufig um diese Zeit“: ±1,5 h** (3 h Fenster). · Nutzer · 2026-10-17

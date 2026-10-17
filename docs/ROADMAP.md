@@ -71,7 +71,7 @@ Nach jedem Item: Tests, Security Audit (`agent-skills:security-and-hardening`), 
 
 | ID | Item | Status |
 |---|---|---|
-| 7.1 | Menü und alle Einstellungen | geplant |
+| 7.1 | Menü und alle Einstellungen (inkl. Konto löschen mit Passwort, D-082) | geplant |
 | 7.2 | Theme-Schalter System/Hell/Dunkel | geplant |
 | 7.3 | PWA: Manifest, Icons, Service Worker (nur App-Shell) | geplant |
 | 7.4 | Animationen (Sheets, Balken), `prefers-reduced-motion` | geplant |

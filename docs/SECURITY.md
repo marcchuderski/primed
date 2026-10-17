@@ -15,7 +15,8 @@ Oberstes Prinzip: **maximale Sicherheit**. Trade-offs mit Benutzerfreundlichkeit
 - Cookie mit `__Host-`-Präfix (erzwingt `Secure`, `Path=/`, keine Domain), `HttpOnly; Secure; SameSite=Strict; Path=/`, gleitend 30 Tage, höchstens 90 Tage ab Login, serverseitig widerrufbar (D-060).
 - „Überall abmelden“; nach Passwortänderung alle anderen Sessions beenden.
 - Rate-Limit (D-061): IP+Username 5 Fehlversuche/15 min → 15 min Sperre; Username ab 10 Fehlversuchen steigende Verzögerung (keine harte Sperre); IP max. 30 Versuche/h. IPs nur als HMAC (Schlüssel in `.env`), Löschung nach 30 Tagen. Einheitliche Fehlermeldung (kein Hinweis, ob Username existiert), gleiche Laufzeit für unbekannte User.
-- Kein Passwort-Reset über das Web; User-Anlage und Reset nur per CLI auf dem Server (D-063).
+- Kein Passwort-Reset über das Web; User-Anlage und Reset nur per CLI auf dem Server (D-063). Startpasswörter: zufällig erzeugt (CLI), keine Änderungspflicht (D-079).
+- Konto löschen nur mit Passwort-Bestätigung (D-082); löscht alle Daten des Users.
 - Keine öffentliche Registrierung.
 
 **Anfragen & Daten**
