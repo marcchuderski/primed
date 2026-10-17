@@ -51,7 +51,7 @@ Stand: 17.10.2026 · Entwurf vor Implementierung. Wird von Claude Code laufend a
 │       ├── domain/       reine Fachlogik + Tests (Sollwerte, Checkpoints, Shake-Regeln, Bewertung, Bilanzen)
 │       ├── api/          typisierter API-Client (client.ts: fetch, CSRF-Header, ApiError; auth.ts; days.ts mit Laufzeit-Prüfung der Antworten)
 │       ├── features/     auth (AuthProvider, Login), shell (Tabs), today (Heute), menu (Platzhalter bis 7.1); später hinzufuegen, essen, verlauf
-│       ├── components/   UI-Bausteine als React + CSS-Module (Button, TextField, Logo, Footer; später Balken, Sheet, Stepper …)
+│       ├── components/   UI-Bausteine als React + CSS-Module (Button, TextField, Logo, Footer, MacroBar, TopNav, Sheet, TimeWheel; später Stepper …)
 │       └── styles/       index.css (importiert design/tokens.css direkt), fonts.css, base.css
 ├── .ddev/                DDEV (PHP 8.3, MariaDB 10.11, Apache; /api → api/public, Docroot frontend/dist)
 └── api/

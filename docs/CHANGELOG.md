@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-10-17 – 2.4 Tagesart-Picker
+- Bottom-Sheet-Komponente und Scroll-Rad (15-Minuten-Raster); Tagesart-Picker mit Tagesart-Liste, Trainingszeit (ab 09:00) und Dauer 60/90/120; Änderung gilt nur für diesen Tag.
+
 ## 2026-10-17 – 2.3 Heute-Screen
 - Tabs Heute · Essen · Verlauf mit Menü; Heute mit situativer Begrüßung, Datum, Tagesart-Chip, Makro-Balken (Marker, Überschreitung, Fett-/Zucker-Richtwert) und Checkpoint-Pop-up.
 - Menü-Platzhalter mit Abmelden / Überall abmelden.

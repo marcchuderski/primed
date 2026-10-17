@@ -15,6 +15,7 @@ import {
   toLogicalMinute,
 } from '../../domain/time.ts';
 import type { EntryMacros } from '../../domain/types.ts';
+import { DayTypeSheet } from './DayTypeSheet.tsx';
 import { useNow } from './useNow.ts';
 import styles from './TodayScreen.module.css';
 
@@ -30,15 +31,10 @@ interface TodayData {
 }
 
 /** Screen 03 "Heute" (DESIGN.md §6, BRIEFING §4/§4a). */
-export function TodayScreen({
-  displayName,
-  onOpenDayType,
-}: {
-  displayName: string;
-  onOpenDayType?: (day: Day) => void;
-}) {
+export function TodayScreen({ displayName }: { displayName: string }) {
   const [data, setData] = useState<TodayData | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [pickerOpen, setPickerOpen] = useState(false);
   const now = useNow();
   // Reload whenever a new logical day starts while the app is open (day boundary 02:00).
   const dayKey = berlinLogicalDate(now, data?.settings.dayBoundaryMin ?? DEFAULT_DAY_BOUNDARY_MIN);
@@ -108,7 +104,9 @@ export function TodayScreen({
         className={styles['chip']}
         aria-haspopup="dialog"
         aria-label={`Tagesart: ${chipText}. Ändern`}
-        onClick={() => onOpenDayType?.(day)}
+        onClick={() => {
+          setPickerOpen(true);
+        }}
       >
         <ChipIcon size={16} strokeWidth={2.4} className={styles['chipIcon']} aria-hidden="true" />
         {chipText}
@@ -140,6 +138,21 @@ export function TodayScreen({
       </section>
 
       <Footer />
+
+      {pickerOpen && (
+        <DayTypeSheet
+          open
+          day={day}
+          settings={settings}
+          onClose={() => {
+            setPickerOpen(false);
+          }}
+          onSaved={(saved) => {
+            setData({ ...data, day: saved });
+            setPickerOpen(false);
+          }}
+        />
+      )}
     </div>
   );
 }
