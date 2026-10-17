@@ -39,6 +39,31 @@ export async function logout(): Promise<void> {
   setCsrfToken(null);
 }
 
+function parseUser(data: unknown): User {
+  if (isRecord(data) && isRecord(data['user'])) {
+    const { id, username, displayName } = data['user'];
+    if (typeof id === 'number' && typeof username === 'string' && typeof displayName === 'string') {
+      return { id, username, displayName };
+    }
+  }
+  throw new ApiError(200, 'invalid_response', 'Unerwartete Antwort vom Server.');
+}
+
+export async function updateProfile(displayName: string, username: string): Promise<User> {
+  return parseUser(await apiRequest('PATCH', '/profile', { displayName, username }));
+}
+
+/** Other sessions end; this one stays (BRIEFING §13). */
+export async function changePassword(currentPassword: string, newPassword: string): Promise<void> {
+  await apiRequest('POST', '/auth/password', { currentPassword, newPassword });
+}
+
+/** Deletes the account and all its data (D-082). */
+export async function deleteAccount(password: string): Promise<void> {
+  await apiRequest('POST', '/account/delete', { password });
+  setCsrfToken(null);
+}
+
 export async function logoutEverywhere(): Promise<void> {
   await apiRequest('POST', '/auth/logout-all');
   setCsrfToken(null);

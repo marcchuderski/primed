@@ -246,3 +246,15 @@ Neue Einträge unten anhängen. Getroffene Entscheidungen werden nicht gelöscht
 **D-125 · Umbenennung Archiv-Hinweis** – „vergangene Gerichte“ statt „aufgegessene Gerichte“ (Screen 10 angepasst). Entschieden: Nutzer.
 
 **D-126 · Reihenfolge Phase 7** – 7.1 und 7.3 vor Phase 6; 7.2, 7.5 und 7.6 erst nach dem ersten Deploy-Check. Entschieden: Nutzer.
+
+**D-127 · Einstellungen speichern automatisch** – Stepper-Seiten (Protein-Standard, Shakes, Checkpoints, Vorschläge, Bewertung) speichern 0,5 s nach der letzten Änderung (Teil-Update, D-123), beim Verlassen sofort; Status „Gespeichert“ bzw. Fehler unten. Formulare mit Texteingabe (Profil, Passwort) und Sheets (Tagesart, Wochentag) haben einen eigenen Speichern-Button. · Screen 19 zeigt keinen Speichern-Button; viele kleine Änderungen per Tipp. · überall Speichern-Button. · Claude · 2026-10-17
+
+**D-128 · „Konto löschen“ in der Profil-Seite** – unten in „Profil“ statt im Menü: Sheet mit Warnung und Passwort, danach Bestätigungsdialog „Konto endgültig löschen?“ (D-082). · Screen 16 sieht im Menü keinen Platz vor; seltene, unwiderrufliche Aktion gehört nicht neben „Abmelden“. · eigener Menüpunkt. · Claude · 2026-10-17
+
+**D-129 · Shake-Zutaten per Suche wählen** – Proteinpulver und beide Milchsorten werden über eine Bibliothekssuche gewählt (nur Basis pro 100 g/ml, „Keins“ möglich), Mengen per Stepper (Milch in 50-ml-, Pulver in 5-g-Schritten; Server erlaubt feiner). · Auswahlliste wäre auf 50 Treffer begrenzt. · `<select>`. · Claude · 2026-10-17
+
+**D-130 · Theme ohne Seitenneuladen** – Auswahl im Menü setzt `data-theme` sofort und speichert danach; bei Fehler zurück. Nach dem Login wird das gespeicherte Theme gesetzt; flackerfreier Start (vor dem ersten Rendern) folgt in 7.2. · Claude · 2026-10-17
+
+**D-131 · Fragebogen-Sync per Test** – `GUIDANCE_PROMPT` ist eine Frontend-Konstante; ein Vitest-Test vergleicht sie mit dem Codeblock in `docs/RICHTWERTE-PROMPT.md`. Vite darf `docs/` nur während Vitest lesen. · eine Quelle, keine Drift, kein Laufzeit-Import aus `docs/`. · Claude · 2026-10-17
+
+**D-132 · Vorschlags-Schwellen aus den Einstellungen** – der Zauberstab nutzt die Schwellen aus „Vorschläge“; Pre-Workout-/KH-Snack-Werte und die größte realistische Mahlzeit bleiben fest (DEFAULTS). Wochenvorlage-Zusammenfassung im Menü: „Di + Do Basketball 20:00“, sonst „n Trainingstage“. · Claude · 2026-10-17

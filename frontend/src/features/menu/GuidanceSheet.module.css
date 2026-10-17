@@ -1,0 +1,148 @@
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 16px;
+  border-radius: 20px;
+  background: var(--surface);
+  list-style: none;
+}
+
+.steps li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.num {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
+  background: var(--text);
+  color: var(--accent);
+  font: 800 14px var(--font-text);
+}
+
+.stepTexts {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.stepTitle {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.stepSub {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.preview {
+  position: relative;
+  height: 128px;
+  overflow: hidden;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: var(--surface);
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: pre-line;
+}
+
+.preview::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 56px;
+  background: linear-gradient(transparent, var(--surface));
+}
+
+.full {
+  width: 100%;
+  padding: 14px 16px;
+  border: none;
+  border-radius: 18px;
+  background: var(--surface);
+  color: var(--text);
+  font: 13px/1.5 var(--font-text);
+  resize: vertical;
+}
+
+.showAll {
+  align-self: flex-start;
+  min-height: var(--touch);
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--text);
+  font: 600 13px var(--font-text);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.links {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.links a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  height: 56px;
+  padding: 0 14px;
+  border-radius: 16px;
+  background: var(--surface);
+  color: var(--text);
+  font: 600 15px var(--font-text);
+  text-decoration: none;
+}
+
+.links a svg {
+  color: var(--text-muted);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.notes {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 14px;
+  border-top: 1px solid var(--divider);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.notes strong {
+  color: var(--text);
+  font-weight: 700;
+}

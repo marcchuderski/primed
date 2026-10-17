@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Primed\Tests\Integration;
 
+use Primed\Auth\SessionCookie;
+use Primed\Http\Request;
+
 /**
  * Menu and settings (roadmap 7.1): settings groups, profile, account deletion.
  */
@@ -146,6 +149,27 @@ final class SettingsFlowTest extends ApiTestCase
 
         // The other account is untouched.
         self::assertSame(200, $this->call('GET', '/api/v1/days/today')->status);
+    }
+
+    public function testProfileAndDeletionNeedCsrf(): void
+    {
+        $cases = [
+            ['PATCH', '/api/v1/profile', '{"displayName":"X","username":"freund"}'],
+            ['POST', '/api/v1/account/delete', '{"password":"x"}'],
+        ];
+        foreach ($cases as [$method, $path, $body]) {
+            $response = $this->app->handle(new Request(
+                $method,
+                $path,
+                ['Origin' => self::ORIGIN, 'Content-Type' => 'application/json'],
+                $body,
+                '203.0.113.7',
+                [],
+                [SessionCookie::NAME => $this->tokens['freund'] ?? ''],
+            ));
+            self::assertSame(403, $response->status, $path);
+        }
+        self::assertSame(200, $this->call('GET', '/api/v1/auth/me', null, 'freund')->status);
     }
 
     public function testAccountDeletionIsRateLimited(): void

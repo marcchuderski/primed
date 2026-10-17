@@ -22,6 +22,67 @@ export interface Settings {
   dayBoundaryMin: number;
   /** Foods used by the quick shakes (never suggested on their own). */
   shakeFoods: { proteinPowder: number | null; milkLow: number | null; milkHigh: number | null };
+  shakeAmounts: { bigMl: number; smallMl: number; powderG: number };
+  /** Rating tolerance in percent (history, D-044). */
+  tolerancePct: number;
+  thresholds: Thresholds;
+}
+
+/** Suggestion thresholds (BRIEFING §10), editable under "Vorschläge". */
+export interface Thresholds {
+  minProteinGap: number;
+  bigShakeProtein: number;
+  bigShakeKcal: number;
+  lightMealKcal: number;
+  /** Logical minute from which a rest-day shake is suggested. */
+  restShakeFrom: number;
+  richMilkKcal: number;
+  overKcalProtein: number;
+}
+
+export const DEFAULT_SETTINGS_THRESHOLDS: Thresholds = {
+  minProteinGap: 25,
+  bigShakeProtein: 35,
+  bigShakeKcal: 500,
+  lightMealKcal: 700,
+  restShakeFrom: 19 * 60,
+  richMilkKcal: 400,
+  overKcalProtein: 30,
+};
+
+/** Partial update for PATCH /settings (D-123). */
+export interface SettingsPatch {
+  theme?: Settings['theme'];
+  proteinDefault?: number;
+  earliestTrainingMin?: number;
+  checkpoint?: Settings['checkpoint'];
+  tolerancePct?: number;
+  thresholds?: Partial<Thresholds>;
+  shake?: Partial<{
+    proteinPowderFoodId: number | null;
+    milkLowFoodId: number | null;
+    milkHighFoodId: number | null;
+    bigMl: number;
+    smallMl: number;
+    powderG: number;
+  }>;
+}
+
+export interface TemplateDay {
+  /** ISO weekday, 1 = Monday. */
+  weekday: number;
+  dayTypeId: number;
+  trainingStart: number | null;
+  durationMin: number | null;
+}
+
+export interface DayTypeDraft {
+  name: string;
+  kcal: number;
+  protein: number | null;
+  carbs: number;
+  sugarRef: number;
+  isTraining: boolean;
 }
 
 export interface DayType {
@@ -112,7 +173,28 @@ export function parseSettings(value: unknown): Settings {
     checkpoint: { offsetMin: num(c['offsetMin']), pct: num(c['pct']), earliestMin: num(c['earliestMin']) },
     dayBoundaryMin: num(s['dayBoundaryMin']),
     shakeFoods: parseShakeFoods(s['shakeFoods']),
+    shakeAmounts: parseShakeAmounts(s['shakeAmounts']),
+    tolerancePct: s['tolerancePct'] === undefined ? 5 : num(s['tolerancePct']),
+    thresholds: parseThresholds(s['thresholds']),
   };
+}
+
+function parseShakeAmounts(value: unknown): Settings['shakeAmounts'] {
+  if (!isRecord(value)) {
+    return { bigMl: 400, smallMl: 200, powderG: 30 };
+  }
+  return { bigMl: num(value['bigMl']), smallMl: num(value['smallMl']), powderG: num(value['powderG']) };
+}
+
+function parseThresholds(value: unknown): Thresholds {
+  if (!isRecord(value)) {
+    return { ...DEFAULT_SETTINGS_THRESHOLDS };
+  }
+  const result = { ...DEFAULT_SETTINGS_THRESHOLDS };
+  for (const key of Object.keys(result) as (keyof Thresholds)[]) {
+    result[key] = num(value[key]);
+  }
+  return result;
 }
 
 function parseShakeFoods(value: unknown): Settings['shakeFoods'] {
@@ -166,6 +248,46 @@ export async function updateDay(
 
 export async function fetchSettings(): Promise<Settings> {
   return parseSettings(record(await apiRequest('GET', '/settings'))['settings']);
+}
+
+export async function updateSettings(patch: SettingsPatch): Promise<Settings> {
+  return parseSettings(record(await apiRequest('PATCH', '/settings', patch))['settings']);
+}
+
+export async function createDayType(draft: DayTypeDraft): Promise<DayType> {
+  return parseDayType(record(await apiRequest('POST', '/day-types', draft))['dayType']);
+}
+
+export async function updateDayType(id: number, draft: DayTypeDraft): Promise<DayType> {
+  return parseDayType(record(await apiRequest('PATCH', `/day-types/${String(id)}`, draft))['dayType']);
+}
+
+export async function deleteDayType(id: number): Promise<void> {
+  await apiRequest('DELETE', `/day-types/${String(id)}`);
+}
+
+function parseTemplate(value: unknown): TemplateDay[] {
+  const list = record(value)['days'];
+  if (!Array.isArray(list)) {
+    throw invalid();
+  }
+  return list.map((item) => {
+    const d = record(item);
+    return {
+      weekday: num(d['weekday']),
+      dayTypeId: num(d['dayTypeId']),
+      trainingStart: nullableNum(d['trainingStart']),
+      durationMin: nullableNum(d['durationMin']),
+    };
+  });
+}
+
+export async function fetchWeekTemplate(): Promise<TemplateDay[]> {
+  return parseTemplate(await apiRequest('GET', '/week-template'));
+}
+
+export async function updateWeekTemplate(days: TemplateDay[]): Promise<TemplateDay[]> {
+  return parseTemplate(await apiRequest('PUT', '/week-template', { days }));
 }
 
 export async function fetchDayTypes(): Promise<DayType[]> {

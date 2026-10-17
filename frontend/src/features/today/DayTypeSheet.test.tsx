@@ -1,17 +1,10 @@
+import { testSettings } from '../../test/fixtures.ts';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { Day, Settings } from '../../api/days.ts';
 import { DayTypeSheet } from './DayTypeSheet.tsx';
 
-const settings: Settings = {
-  theme: 'system',
-  proteinDefault: 150,
-  defaultDurationMin: 90,
-  earliestTrainingMin: 540,
-  checkpoint: { offsetMin: 180, pct: 70, earliestMin: 360 },
-  dayBoundaryMin: 120,
-  shakeFoods: { proteinPowder: null, milkLow: null, milkHigh: null },
-};
+const settings: Settings = testSettings;
 
 const day: Day = {
   date: '2026-10-20',

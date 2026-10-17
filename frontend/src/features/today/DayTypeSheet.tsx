@@ -27,12 +27,55 @@ export function DayTypeSheet({
   onClose: () => void;
   onSaved: (day: Day) => void;
 }) {
+  const subtitle = `${weekday.format(new Date(`${day.date}T12:00:00Z`))} · ${
+    day.source === 'manual' ? 'manuell gewählt' : 'aus Wochenvorlage'
+  }`;
+  return (
+    <DayTypePickerSheet
+      open={open}
+      title="Tagesart"
+      subtitle={subtitle}
+      initial={day}
+      settings={settings}
+      onClose={onClose}
+      onSubmit={async (dayTypeId, trainingStart, durationMin) => {
+        onSaved(await updateDay(day.date, dayTypeId, trainingStart, durationMin));
+      }}
+    />
+  );
+}
+
+export interface DayTypeChoice {
+  dayTypeId: number | null;
+  isTraining: boolean;
+  trainingStart: number | null;
+  durationMin: number | null;
+}
+
+/** Day type list plus training time and duration; used for a day (screen 08) and the week template. */
+export function DayTypePickerSheet({
+  open,
+  title,
+  subtitle,
+  initial,
+  settings,
+  onClose,
+  onSubmit,
+}: {
+  open: boolean;
+  title: string;
+  subtitle: string;
+  initial: DayTypeChoice;
+  settings: Settings;
+  onClose: () => void;
+  onSubmit: (dayTypeId: number, trainingStart: number | null, durationMin: number | null) => Promise<void>;
+}) {
   const [types, setTypes] = useState<DayType[] | null>(null);
-  const [typeId, setTypeId] = useState(day.dayTypeId);
+  const [typeId, setTypeId] = useState(initial.dayTypeId);
   // With a training day selected, the list collapses so the training time is in view (D-107).
-  const [expanded, setExpanded] = useState(!day.isTraining);
-  const [start, setStart] = useState(day.trainingStart ?? FALLBACK_TRAINING_START);
-  const [duration, setDuration] = useState(day.durationMin ?? settings.defaultDurationMin);
+  const [expanded, setExpanded] = useState(!initial.isTraining);
+  const [start, setStart] = useState(initial.trainingStart ?? FALLBACK_TRAINING_START);
+  const [duration, setDuration] = useState(initial.durationMin ?? settings.defaultDurationMin);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -58,9 +101,6 @@ export function DayTypeSheet({
   }, [open]);
 
   const selected = types?.find((t) => t.id === typeId) ?? null;
-  const subtitle = `${weekday.format(new Date(`${day.date}T12:00:00Z`))} · ${
-    day.source === 'manual' ? 'manuell gewählt' : 'aus Wochenvorlage'
-  }`;
   const earliest = settings.earliestTrainingMin;
 
   async function save() {
@@ -70,13 +110,11 @@ export function DayTypeSheet({
     setBusy(true);
     setError(null);
     try {
-      const saved = await updateDay(
-        day.date,
+      await onSubmit(
         selected.id,
         selected.isTraining ? Math.max(earliest, start) : null,
         selected.isTraining ? duration : null,
       );
-      onSaved(saved);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Speichern fehlgeschlagen.');
     } finally {
@@ -85,7 +123,7 @@ export function DayTypeSheet({
   }
 
   return (
-    <Sheet open={open} title="Tagesart" subtitle={subtitle} onClose={onClose}>
+    <Sheet open={open} title={title} subtitle={subtitle} onClose={onClose}>
       <div className={styles['list']} role="group" aria-label="Tagesart wählen">
         {(types ?? [])
           .filter((type) => expanded || type.id === typeId)

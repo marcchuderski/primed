@@ -1,0 +1,44 @@
+.stepper {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 4px;
+}
+
+.minus,
+.plus {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: var(--r-pill);
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.plus {
+  background: var(--tonal);
+}
+
+.minus:disabled,
+.plus:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.value {
+  min-width: 62px;
+  text-align: center;
+  font: 700 18px var(--font-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.unit {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+}

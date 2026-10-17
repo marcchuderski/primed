@@ -1,0 +1,22 @@
+.icon {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  background: var(--tonal);
+  color: var(--text-muted);
+}
+
+.training {
+  background: var(--accent-track);
+  color: var(--accent-text);
+}
+
+.help {
+  border-bottom: none;
+  border-radius: 20px;
+  background: var(--surface);
+}

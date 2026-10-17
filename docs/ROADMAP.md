@@ -73,7 +73,7 @@ Reihenfolge (Nutzer, 2026-10-17): 7.1 und 7.3 vor Phase 6, danach 7.4 und Deploy
 
 | ID | Item | Status |
 |---|---|---|
-| 7.1 | Menü und alle Einstellungen (inkl. Konto löschen mit Passwort, D-082; Tagesarten & Sollwerte mit Modal „Richtwerte ermitteln“, Screens 19/20, D-108) | in Arbeit (API fertig) |
+| 7.1 | Menü und alle Einstellungen (inkl. Konto löschen mit Passwort, D-082; Tagesarten & Sollwerte mit Modal „Richtwerte ermitteln“, Screens 19/20, D-108) | fertig |
 | 7.2 | Theme-Schalter System/Hell/Dunkel (flackerfrei) | geplant (nach erstem Deploy-Check) |
 | 7.3 | PWA: Manifest, Icons, Service Worker (nur App-Shell) | geplant |
 | 7.4 | Animationen (Sheets, Balken), `prefers-reduced-motion` | geplant |

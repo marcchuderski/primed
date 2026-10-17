@@ -193,6 +193,10 @@ export async function searchOnline(q: string): Promise<OffProduct[]> {
   return list.map(parseOffProduct);
 }
 
+export async function fetchFood(id: number): Promise<Food> {
+  return parseFood(rec(await apiRequest('GET', `/foods/${String(id)}`))['food']);
+}
+
 export async function createFood(draft: FoodDraft): Promise<Food> {
   return parseFood(rec(await apiRequest('POST', '/foods', draft))['food']);
 }

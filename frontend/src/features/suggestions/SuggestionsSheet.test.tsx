@@ -1,3 +1,4 @@
+import { testSettings } from '../../test/fixtures.ts';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { Day } from '../../api/days.ts';
@@ -88,15 +89,7 @@ describe('SuggestionsSheet', () => {
     render(
       <SuggestionsSheet
         day={day}
-        settings={{
-          theme: 'system',
-          proteinDefault: 150,
-          defaultDurationMin: 90,
-          earliestTrainingMin: 540,
-          checkpoint: { offsetMin: 180, pct: 70, earliestMin: 360 },
-          dayBoundaryMin: 120,
-          shakeFoods: { proteinPowder: 99, milkLow: null, milkHigh: null },
-        }}
+        settings={{ ...testSettings, shakeFoods: { proteinPowder: 99, milkLow: null, milkHigh: null } }}
         now={19 * 60 + 50}
         checkpoint={null}
         eaten={m(1400, 100)}

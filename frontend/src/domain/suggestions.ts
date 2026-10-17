@@ -3,7 +3,7 @@ import { formatInt, formatRemaining } from './format.ts';
 import { formatClock } from './time.ts';
 import type { Macros, Targets, TrainingInfo } from './types.ts';
 
-/** Thresholds (docs/DEFAULTS.md, editable in the settings later, roadmap 7.1). */
+/** Thresholds (docs/DEFAULTS.md); most are editable in the menu under „Vorschläge“ (7.1). */
 export interface SuggestionThresholds {
   minProteinGapForShake: number;
   bigShakeProtein: number;
@@ -94,7 +94,10 @@ export function decideShake(input: SuggestionInput): ShakeDecision {
   const { day, now } = input;
 
   if (proteinOpen < t.minProteinGapForShake) {
-    return { shake: null, reason: 'Weniger als 25 g Protein offen – dafür reicht normales Essen.' };
+    return {
+      shake: null,
+      reason: `Weniger als ${formatInt(t.minProteinGapForShake)} g Protein offen – dafür reicht normales Essen.`,
+    };
   }
   if (kcalOpen < 0) {
     return proteinOpen >= t.overKcalShakeProtein

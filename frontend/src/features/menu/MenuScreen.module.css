@@ -1,32 +1,114 @@
 .screen {
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
+  gap: 20px;
   width: 100%;
-  min-height: calc(100dvh - 44px);
+  min-height: calc(100dvh - 44px - 28px);
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .title {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: 36px;
-  line-height: 1.05;
-  letter-spacing: -0.035em;
+  font-size: 30px;
+  letter-spacing: -0.03em;
 }
 
-.lead {
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 14px 16px;
+  border: none;
+  border-radius: 20px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.avatar {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--r-pill);
+  background: var(--accent);
+  color: var(--bg);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 20px;
+}
+
+.profileTexts {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.profileName {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.profileMeta {
+  font-size: 13px;
   color: var(--text-muted);
+  overflow-wrap: anywhere;
+}
+
+.segment {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4px;
+  padding: 4px;
+  border-radius: 16px;
+  background: var(--tonal);
+}
+
+.segment button {
+  height: 40px;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--text-muted);
+  font: 600 14px var(--font-text);
+  cursor: pointer;
+}
+
+.segment button[aria-pressed='true'] {
+  background: var(--bg);
+  color: var(--text);
+  font-weight: 700;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 12%);
+}
+
+.loading {
+  padding: 16px;
+  color: var(--text-muted);
+  font-size: 14px;
 }
 
 .actions {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-4);
+  gap: var(--space-2);
   margin-top: auto;
 }
 
-.link {
+.textLink {
   min-height: var(--touch);
   padding: 0 var(--space-3);
   border: none;

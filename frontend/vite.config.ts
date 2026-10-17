@@ -9,6 +9,8 @@ const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 
 };
 const designDir = fileURLToPath(new URL('../design', import.meta.url));
 const frontendDir = fileURLToPath(new URL('.', import.meta.url));
+// docs/ only for Vitest: a test keeps the in-app questionnaire in sync with the docs (D-108).
+const docsDir = process.env.VITEST === undefined ? [] : [fileURLToPath(new URL('../docs', import.meta.url))];
 
 // Local API runs in DDEV (see docs/ARCHITECTURE.md); the dev server proxies /api there.
 const apiTarget = process.env.PRIMED_API_TARGET ?? 'https://primed.ddev.site';
@@ -22,7 +24,7 @@ export default defineConfig({
     port: 5173,
     strictPort: true,
     // design/tokens.css is imported directly from the design folder (single source of truth).
-    fs: { allow: [frontendDir, designDir] },
+    fs: { allow: [frontendDir, designDir, ...docsDir] },
     proxy: {
       '/api': { target: apiTarget, changeOrigin: true, secure: false },
     },

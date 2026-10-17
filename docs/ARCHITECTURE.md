@@ -50,7 +50,7 @@ Stand: 17.10.2026 · Entwurf vor Implementierung. Wird von Claude Code laufend a
 │   └── src/
 │       ├── domain/       reine Fachlogik + Tests (Sollwerte, Checkpoints, Shake-Regeln, Bewertung, Bilanzen)
 │       ├── api/          typisierter API-Client (client.ts: fetch, CSRF-Header, ApiError; auth.ts; days.ts mit Laufzeit-Prüfung der Antworten)
-│       ├── features/     auth, shell (Tabs), today (Heute), entries (Mengen-Sheet), add (Hinzufügen, Suche, Scanner), foods (Produkt-Formular), essen (Bibliothek), menu (Platzhalter bis 7.1); später verlauf
+│       ├── features/     auth, shell (Tabs), today (Heute), entries (Mengen-Sheet), add (Hinzufügen, Suche, Scanner), foods (Produkt-Formular), essen (Bibliothek), menu (Menü und Einstellungsseiten, Richtwerte-Modal, `useAutoSave`, Theme), dishes, suggestions; später verlauf
 │       ├── components/   UI-Bausteine als React + CSS-Module (Button, TextField, Logo, Footer, MacroBar, TopNav, Sheet, TimeWheel; später Stepper …)
 │       └── styles/       index.css (importiert design/tokens.css direkt), fonts.css, base.css
 ├── .ddev/                DDEV (PHP 8.3, MariaDB 10.11, Apache; /api → api/public, Docroot frontend/dist)
@@ -84,7 +84,7 @@ Stand: 17.10.2026 · Entwurf vor Implementierung. Wird von Claude Code laufend a
 Berechnungen laufen als reine Funktionen in `frontend/src/domain/` und sind vollständig unit-getestet:
 Sollwerte je Tagesart, Fett-Richtwert, Checkpoints, Offen-Werte, Shake- und Essens-Vorschläge, Bewertung (±5 %), Wochen-/Monats-/Jahresbilanzen.
 
-Umgesetzt (5.1): `suggestions.ts` (Shake-Entscheidung, Essens-Auswahl, 2–3 Vorschläge mit Zeitpunkt, Begründung, Effekt, Aktion); Kandidaten (nur bereits gegessene Lebensmittel, Gerichte) in `features/suggestions/candidates.ts`. `GET /settings` liefert dafür `shakeFoods` (Proteinpulver, Milch).
+Umgesetzt (5.1): `suggestions.ts` (Shake-Entscheidung, Essens-Auswahl, 2–3 Vorschläge mit Zeitpunkt, Begründung, Effekt, Aktion); Kandidaten (nur bereits gegessene Lebensmittel, Gerichte) in `features/suggestions/candidates.ts`. `GET /settings` liefert dafür `shakeFoods` (Proteinpulver, Milch). Die Schwellen kommen aus `settings.thresholds` (`features/suggestions/thresholds.ts`, 7.1).
 
 Umgesetzt (2.2): `targets.ts` (Fett-Richtwert, Summen, Offen-Werte), `checkpoint.ts` (Checkpoint, gegessen bis, Trainingsende), `rating.ts` (kcal ±5 %, Grenzen inklusive), `format.ts` (deutsche Zahlen, Restzeit in halben Stunden), `time.ts` (15-Minuten-Raster, logische Minute nach Tagesgrenze), `greeting.ts` (Begrüßung, BRIEFING §4a).
 Die API speichert, validiert und liefert Daten; sie berechnet Nährwert-Schnappschüsse beim Speichern eines Eintrags serverseitig, damit gespeicherte Werte konsistent sind.

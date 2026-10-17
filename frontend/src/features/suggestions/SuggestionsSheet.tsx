@@ -18,6 +18,7 @@ import { formatClock, MINUTES_PER_DAY } from '../../domain/time.ts';
 import type { Macros } from '../../domain/types.ts';
 import type { Unit } from '../../domain/units.ts';
 import { buildCandidates } from './candidates.ts';
+import { thresholdsFromSettings } from './thresholds.ts';
 import styles from './SuggestionsSheet.module.css';
 
 interface Data {
@@ -91,6 +92,7 @@ export function SuggestionsSheet({
           eatenUntilCheckpoint,
           shakes: data.shakes,
           candidates: data.candidates,
+          thresholds: thresholdsFromSettings(settings),
         });
 
   const wall = now % MINUTES_PER_DAY;

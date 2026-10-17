@@ -44,14 +44,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setState({ status: 'anonymous' });
   }, []);
 
+  const updateProfile = useCallback(async (displayName: string, username: string) => {
+    const user = await authApi.updateProfile(displayName, username);
+    setState({ status: 'authenticated', user });
+  }, []);
+
+  const deleteAccount = useCallback(async (password: string) => {
+    await authApi.deleteAccount(password);
+    setState({ status: 'anonymous' });
+  }, []);
+
   const retry = useCallback(() => {
     setState({ status: 'loading' });
     setAttempt((n) => n + 1);
   }, []);
 
   const value = useMemo(
-    () => ({ state, login, logout, logoutEverywhere, retry }),
-    [state, login, logout, logoutEverywhere, retry],
+    () => ({ state, login, logout, logoutEverywhere, updateProfile, deleteAccount, retry }),
+    [state, login, logout, logoutEverywhere, updateProfile, deleteAccount, retry],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
