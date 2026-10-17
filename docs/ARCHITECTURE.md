@@ -107,13 +107,15 @@ Alle schreibenden Endpunkte: Session-Cookie + CSRF-Token, serverseitige Validier
 | `day_types` | id, user_id, name, kcal, protein (nullable = Protein-Standard), carbs, sugar_ref, is_training, sort, deleted_at |
 | `week_template` | user_id, weekday, day_type_id, training_start, duration_min |
 | `days` | id, user_id, date (logischer Tag, unique je User), day_type_id, day_type_name_snapshot, training_start, duration_min, Soll-Schnappschuss |
-| `foods` | id, user_id, type (product/reference/ingredient), name, brand, barcode (unique je User), category, basis (per_100g/per_100ml/per_unit), Nährwerte, package_amount, household_units, source, usage_count, last_amount, last_unit, is_quick (Shakes) |
+| `foods` | id, user_id, type (product/reference/ingredient), name, brand, barcode (unique je User), category, basis (per_100g/per_100ml/per_unit), Nährwerte, package_amount (Einheit der Basis), source, usage_count, last_amount, last_unit, is_quick (Shakes) |
 | `off_cache` | barcode, payload, fetched_at |
 | `dishes` | id, user_id, name, cooked_at, portions_total, portions_left (DECIMAL, Schritte 0,5), Summen, status (active/archived/discarded) |
-| `dish_ingredients` | id, dish_id, food_id (nullable), name_snapshot, amount, unit, grams, Nährwerte |
-| `entries` | id, user_id, date (logischer Tag), eaten_at (Datum + Uhrzeit, Europe/Berlin), food_id/dish_id (nullable), name_snapshot, amount, unit, Nährwert-Schnappschuss |
+| `dish_ingredients` | id, dish_id, food_id (nullable), name_snapshot, amount + unit (wie eingegeben: g/ml/EL/TL/Packung/Stück), grams_or_ml (umgerechnet; bei Basis Stück: Stückzahl), Nährwerte |
+| `entries` | id, user_id, date (logischer Tag), eaten_at (Datum + Uhrzeit, Europe/Berlin), food_id/dish_id (nullable), name_snapshot, amount + unit (wie eingegeben), grams_or_ml (umgerechnet; bei Basis Stück: Stückzahl, bei Gerichten: Portionen), Nährwert-Schnappschuss |
 
 Der **logische Tag** endet um 02:00 (`day_boundary`); ein Eintrag um 00:30 am 21.10. gehört zum Tag 20.10. Tage werden beim ersten Zugriff aus der Wochenvorlage angelegt (mit Soll-Schnappschuss). Damit vergangene Tage fest bleiben, werden **vor jeder Änderung** an Wochenvorlage, Tagesarten oder Protein-Standard alle vergangenen Tage seit Kontoanlage ohne Datensatz mit den bisherigen Werten angelegt (wenige hundert Zeilen pro Jahr, in einer Transaktion).
+
+Haushaltsmaße sind Konstanten (1 EL = 15 g/ml, 1 TL = 5 g/ml) in `frontend/src/domain/` und spiegelbildlich in der API (Schnappschuss-Berechnung); ein Test sichert die Gleichheit beider Seiten.
 
 Einträge und Gerichtszutaten speichern **Schnappschüsse**, damit spätere Produktänderungen die Vergangenheit nicht verändern.
 

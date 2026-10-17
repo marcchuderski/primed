@@ -104,9 +104,10 @@ Bewertet wird nur die **kcal-Bilanz gegen das Tagessoll, Toleranz ±5 %**. Drei 
 **Bottom-Sheets** für Hinzufügen, Suche, Menge, Tagesart, Vorschläge: Griff oben, Titel links, Schließen rechts, Primärbutton unten.
 
 **Eingaben**
-- Mengen: große Zahl mit −/+ und Schnellwahl-Chips, letzte Menge vorausgefüllt.
+- Mengen: Einheiten-Segment **g · ml · EL · TL · Packung** über der Zahl; nur zur Produkt-Basis passende Einheiten sind aktiv (100 g: g/EL/TL/Packung · 100 ml: ml/EL/TL/Packung · Stück: Stück/Packung). Große Zahl mit −/+, darunter die Umrechnung („2 EL = 30 g · 1 EL = 15 g“), Schnellwahl-Chips passend zur Einheit (z. B. 1 / 2 / 3 EL), letzte Menge vorausgefüllt. Gleiches Muster für Meal-Prep-Zutaten (Screen 17).
+- Haushaltsmaße fest: 1 EL = 15 g/ml, 1 TL = 5 g/ml.
 - Uhrzeit: Scroll-Rad wie iOS-Wecker, **15-Minuten-Schritte**, „Jetzt“-Button.
-- Produkt anlegen: Stepper-Liste, Schrittweite pro Wert (kcal ±20, Protein/KH/Zucker ±1, Fett ±0,5, Packung ±50), Zahl antippen = Tastatur.
+- Produkt anlegen: Segment „Nährwerte angeben pro 100 g · 100 ml · Stück“ mit Hinweis „So, wie es auf der Packung steht.“, darunter Stepper-Liste, Schrittweite pro Wert (kcal ±20, Protein/KH/Zucker ±1, Fett ±0,5, Packung ±50), Packungsgröße in der Einheit der Basis, Zahl antippen = Tastatur. Keine Haushaltsmaße pro Produkt.
 
 **Segment-Schalter** auf tonalem Track, aktives Segment auf `--surface`.
 
@@ -153,8 +154,8 @@ Statische Referenz-Mockups mit Beispieldaten (keine echten Werte), je Light und 
 | 03 | Heute | Tag, Tagesart, Balken, Einträge |
 | 04 | Hinzufügen | Suche, Scan, Vorrat, Shakes, Häufig |
 | 05 | Suche | Bibliothek, Online-Treffer, Richtwerte, Neu anlegen |
-| 06 | Menge | Menge, Uhrzeit, „Danach offen“ |
-| 07 | Produkt anlegen | Stepper-Liste |
+| 06 | Menge | Einheit, Menge, Uhrzeit, „Danach offen“ |
+| 07 | Produkt anlegen | Basis-Wahl, Stepper-Liste |
 | 08 | Tagesart | Tagesart, Trainingszeit, Dauer |
 | 09 | Vorschläge | Zauberstab, regelbasiert |
 | 10 | Essen · Vorrat | Meal-Prep-Portionen |
@@ -162,3 +163,5 @@ Statische Referenz-Mockups mit Beispieldaten (keine echten Werte), je Light und 
 | 12 | Meal Prep | Gericht anlegen, Portionen |
 | 13–15 | Verlauf | Woche, Monat, Jahr |
 | 16 | Menü | Profil, Darstellung, Einstellungen |
+| 17 | Meal Prep · Zutat | Zutat-Menge mit Einheiten-Umschalter |
+| 18 | PWA-Installation | Anleitung Homescreen (nur Light) |

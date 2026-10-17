@@ -100,7 +100,16 @@ Toleranz „im Rahmen“: **±5 %** vom kcal-Soll.
 
 ## Richtwert-Grundliste ⚠
 
-Quelle: Bundeslebensmittelschlüssel (BLS), Lizenz wird vor Nutzung geprüft. Umfang: diese 14 Lebensmittel, Werte vor dem Seed bestätigen: Bäckerbrötchen (Weizen), Magerquark, Skyr natur, Hähnchenbrust, Reis (roh), Nudeln (roh), Haferflocken, Banane, Apfel, Zwiebel, Paprika, Olivenöl (1 EL = 10 g), Butter, Eier.
+Quelle: Bundeslebensmittelschlüssel (BLS), Lizenz wird vor Nutzung geprüft. Umfang: diese 14 Lebensmittel, Werte vor dem Seed bestätigen: Bäckerbrötchen (Weizen), Magerquark, Skyr natur, Hähnchenbrust, Reis (roh), Nudeln (roh), Haferflocken, Banane, Apfel, Zwiebel, Paprika, Olivenöl, Butter, Eier.
+
+## Haushaltsmaße (fest im Code)
+
+| Maß | Basis 100 g | Basis 100 ml |
+|---|---|---|
+| 1 EL | 15 g | 15 ml |
+| 1 TL | 5 g | 5 ml |
+
+Nicht änderbar, nicht pro Produkt; bei Basis Stück nicht verfügbar.
 
 ## Kategorien
 

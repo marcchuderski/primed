@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-17 – Design: Einheiten und Haushaltsmaße
+- Screens 06 (Menge) und 07 (Produkt anlegen) ersetzt, 17 (Meal-Prep-Zutat) und 18 (PWA-Installation) neu; Screen-Index ergänzt.
+- Haushaltsmaße global fest (1 EL = 15 g/ml, 1 TL = 5 g/ml), Einheiten-Umschalter bei der Mengeneingabe (D-073); BRIEFING, DEFAULTS, ARCHITECTURE, DESIGN angepasst.
+
 ## 2026-10-17 – 0.2 Frontend-Gerüst
 - `frontend/` mit Vite, React, TypeScript (strict), ESLint, Prettier, Vitest, Testing Library angelegt; Node 22 über `.nvmrc`.
 - Erste Fachfunktion `roundUpToQuarterHour` (D-047) mit Tests.

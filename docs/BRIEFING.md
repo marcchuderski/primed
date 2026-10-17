@@ -67,7 +67,18 @@ Darstellung: Auf den Balken für kcal, Protein und KH sitzt ein Marker an der Po
 - Ein Eintrag besteht aus: Lebensmittel **oder** Gerichtsportion, Menge + Einheit, Datum, Uhrzeit.
 - **Keine Mahlzeiten-Slots** (kein Frühstück/Mittag/Abend). Die Tagesliste ist chronologisch.
 - Uhrzeit: Standard „jetzt“, **aufgerundet auf die nächste Viertelstunde** (14:08 → 14:15), Auswahl per Scroll-Rad im **15-Minuten-Raster**.
-- Einheiten: g **oder** ml (je nach Basis des Produkts, nie beides), Stück, Packung, Haushaltsmaße (EL/TL, Umrechnung pro Produkt hinterlegt). Zwischen g und ml wird nicht umgerechnet.
+- **Einheiten-Umschalter** bei jeder Mengeneingabe (Menge-Sheet und Meal-Prep-Zutat): g · ml · EL · TL · Packung. Aktiv sind nur die Einheiten, die zur Basis des Produkts passen:
+
+  | Basis | aktive Einheiten |
+  |---|---|
+  | 100 g | g · EL · TL · Packung |
+  | 100 ml | ml · EL · TL · Packung |
+  | Stück | Stück · Packung (kein EL/TL) |
+
+- **Haushaltsmaße sind global und fest:** 1 EL = 15 g bzw. 15 ml, 1 TL = 5 g bzw. 5 ml. Fest im Code, weder in den Einstellungen noch pro Produkt änderbar (bewusste Vereinfachung, z. B. Öl real ca. 13–14 g/EL).
+- Unter der Zahl steht die Umrechnung, z. B. „2 EL“ → „= 30 g · 1 EL = 15 g“. Schnellwahl-Chips passen sich der Einheit an (z. B. 1 / 2 / 3 EL).
+- Zwischen g und ml wird nicht umgerechnet.
+- Der Nährwert-Schnappschuss wird immer aus der **umgerechneten Menge in g bzw. ml** (bei Basis Stück: Stückzahl) berechnet; Menge und Einheit wie eingegeben werden mitgespeichert.
 - **Letzte verwendete Menge** eines Lebensmittels ist vorausgefüllt.
 - Jeder Eintrag speichert einen **Nährwert-Schnappschuss**. Spätere Änderungen am Produkt verändern vergangene Einträge nicht.
 - Nachtragen für **vergangene** Tage ist möglich (Datum wechseln), Einträge für zukünftige Tage nicht. Checkpoints rechnen mit der eingetragenen Uhrzeit.
@@ -80,7 +91,7 @@ Darstellung: Auf den Balken für kcal, Protein und KH sitzt ein Marker an der Po
 **Kategorien:** Snacks & Riegel · Milchprodukte & Quark · Brot & Backwaren · Obst & Gemüse · Getränke & Shakes
 
 **Regeln**
-- Nährwerte **pro 100 g, pro 100 ml oder pro Stück** (genau eine Basis je Produkt), plus optional Packungsgröße und Haushaltsmaße.
+- Nährwerte **pro 100 g, pro 100 ml oder pro Stück** (genau eine Basis je Produkt), plus optional Packungsgröße in der Einheit der Basis (g, ml oder Stück). Haushaltsmaße werden **nicht** pro Produkt gepflegt (siehe Einträge).
 - Ein Barcode existiert nur einmal (keine Duplikate).
 - Sortierung nach Häufigkeit. „Häufig um diese Zeit“: Einträge der letzten 60 Tage in einem Fenster um die aktuelle Uhrzeit, die 5 häufigsten absteigend nach Häufigkeit, ohne Shakes (Fenstergröße siehe Offene Punkte).
 - Gelöschte Produkte verschwinden aus Bibliothek und Suche; vergangene Einträge bleiben dank Schnappschuss unverändert.
@@ -93,13 +104,14 @@ Darstellung: Auf den Balken für kcal, Protein und KH sitzt ein Marker an der Po
 
 1. **„+“** öffnet den Schnell-Eintrag (Bottom-Sheet): Suche mit Scan-Button, Vorrat, Shakes, „Häufig um diese Zeit“.
 2. **Suche** zeigt drei Gruppen: eigene Bibliothek · Online-Treffer (Open Food Facts) · Richtwerte. Fest unten: „Barcode scannen“ und „Neu anlegen“.
-3. **Menge:** große Zahl mit −/+ und Schnellwahl (z. B. 100 g, 150 g, Packung), Nährwerte dieser Portion, Uhrzeit-Rad, getrennte Karte „Danach offen“ mit Mini-Balken.
+3. **Menge:** Einheiten-Umschalter (g · ml · EL · TL · Packung, siehe Einträge), große Zahl mit −/+, Umrechnungszeile, Schnellwahl passend zur Einheit (z. B. 100 g / 150 g / Packung oder 1 / 2 / 3 EL), Nährwerte dieser Portion, Uhrzeit-Rad, getrennte Karte „Danach offen“ mit Mini-Balken.
 4. **Scan:** Produkt gefunden → Menge. Nicht gefunden → Produkt anlegen.
-5. **Produkt anlegen:** Name, Kategorie, Werte pro 100 g als **Stepper-Liste** mit eigener Schrittweite pro Wert (kcal ±20, Protein/KH/Zucker ±1, Fett ±0,5, Packung ±50). Zahl antippen öffnet die Tastatur. Gescannter Barcode wird verknüpft. Danach direkt zur Menge.
+5. **Produkt anlegen:** Name, Kategorie, Segment „Nährwerte angeben pro 100 g · 100 ml · Stück“ („So, wie es auf der Packung steht“), Werte als **Stepper-Liste** mit eigener Schrittweite pro Wert (kcal ±20, Protein/KH/Zucker ±1, Fett ±0,5, Packung ±50; Packungseinheit folgt der Basis). Zahl antippen öffnet die Tastatur. Gescannter Barcode wird verknüpft. Danach direkt zur Menge.
 
 ## 8. Meal Prep und Vorrat
 
-- **Neues Gericht:** Name, Zutaten (Scan, Suche, Richtwert; Standard „ganze Packung“; Soßen/Öl per EL), Live-Summe.
+- **Neues Gericht:** Name, Zutaten (Scan, Suche, Richtwert; Standard „ganze Packung“), Live-Summe.
+- **Zutat-Menge** (Screen 17): gleicher Einheiten-Umschalter wie beim Essen (g · ml · EL · TL · Packung), z. B. Öl „2 EL = 30 g“; Button „Zur Zutatenliste hinzufügen“. Zutaten speichern Menge + Einheit wie eingegeben und die umgerechnete Menge.
 - **Portionen:** gleichmäßige Aufteilung durch N, Werte pro Portion werden sofort angezeigt.
 - **Speichern** legt das Gericht im **Vorrat** an, mit Zähler („3 von 4“).
 - Tap auf eine Vorrats-Portion im Schnell-Eintrag trägt eine Portion ein, Zähler −1. **Halbe Portionen** sind möglich (Schritte von 0,5, z. B. „2,5 von 4“). Der Zähler fällt nie unter 0.
@@ -200,6 +212,6 @@ Alle ursprünglich offenen Punkte wurden am 17.10.2026 mit dem Nutzer geklärt u
 1. **„Häufig um diese Zeit“:** Fenster ±90 min (3 h gesamt) oder ±3 h? Vorläufig ±90 min. Vor Phase 3 klären.
 2. **ESN Designer Whey, Milk Chocolate:** Nährwerte pro 30 g werden recherchiert und vor dem Seed bestätigt.
 3. **BLS-Lizenz** und Werte der 14 Richtwerte vor dem Seed (Phase 3) prüfen und bestätigen.
-4. **Neue Mockups** für „Produkt anlegen“ (Basis-Wahl, Haushaltsmaße) liefert der Nutzer.
+4. ~~Neue Mockups für „Produkt anlegen“~~ – geliefert (06, 07, 17, 18), siehe D-073.
 5. **Screenshot zur PWA-Installation** liefert der Nutzer (für die Nutzer-Doku).
 6. **Shake-Regeln:** konkrete Reihenfolge bei „Protein hat Vorrang“ in Phase 5 bestätigen.
