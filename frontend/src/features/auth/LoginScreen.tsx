@@ -33,7 +33,10 @@ export function LoginScreen() {
   return (
     <main className={styles['screen']}>
       {/* The logo plays its ring animation, then the content fades in (D-096). */}
-      <LogoLockup size={36} animated className={styles['brand']} />
+      <div className={styles['brand']}>
+        <LogoLockup size={36} animated />
+        <p className={`${styles['claim'] ?? ''} ${styles['reveal'] ?? ''}`}>Primed for performance.</p>
+      </div>
 
       <div className={`${styles['intro'] ?? ''} ${styles['reveal'] ?? ''}`}>
         <h1 className={styles['title']}>Willkommen zurück.</h1>

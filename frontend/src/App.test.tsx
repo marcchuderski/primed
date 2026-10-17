@@ -33,6 +33,7 @@ describe('App auth flow', () => {
 
     expect(screen.getByRole('main', { name: 'Primed lädt' })).toHaveAttribute('aria-busy', 'true');
     expect(await screen.findByRole('heading', { name: 'Willkommen zurück.' })).toBeInTheDocument();
+    expect(screen.getByText('Primed for performance.')).toBeInTheDocument();
     expect(screen.queryByText(/Passwort vergessen/)).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Einloggen' })).toBeDisabled();
   });

@@ -153,7 +153,7 @@ Statische Referenz-Mockups mit Beispieldaten (keine echten Werte), je Light und 
 | Nr. | Screen | Zweck |
 |---|---|---|
 | 01 | Loading | ~~Animiertes Logo~~ entfällt (D-096), Animation jetzt im Login |
-| 02 | Login | Username, Passwort |
+| 02 | Login | Lockup + Claim „Primed for performance.“ (wie Screen 18, `--accent-text`, 24 px), Username, Passwort |
 | 03 | Heute | Tag, Tagesart, Balken, Einträge |
 | 04 | Hinzufügen | Suche, Scan, Vorrat, Shakes, Häufig |
 | 05 | Suche | Bibliothek, Online-Treffer, Richtwerte, Neu anlegen |

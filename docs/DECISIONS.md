@@ -186,3 +186,5 @@ Neue Einträge unten anhängen. Getroffene Entscheidungen werden nicht gelöscht
 **D-095 · Logo-Lockup „P“ + „rimed“** – in allen Screens ersetzt das Zeichen das „p“ der Wortmarke (wie Screen 18), statt Zeichen + „primed“ nebeneinander. Komponente `LogoLockup`. · Nutzer · 2026-10-17
 
 **D-096 · Kein Loading-Screen, Logo-Animation im Login** (ersetzt D-065) – Während der Session-Prüfung nur Hintergrund; ohne Session Login-Screen mit animiertem Lockup, danach blenden Text und Felder ein; mit Session direkt in die App. `prefers-reduced-motion`: alles sofort sichtbar (auch Animations-Verzögerungen werden aufgehoben). · Nutzer (Verhalten bei bestehender Session: Claude, ohne Wartezeit) · 2026-10-17
+
+**D-097 · Claim im Login** – „Primed for performance.“ unter dem Logo-Lockup (Bricolage 800, 24 px, `--accent-text`), blendet mit dem Formular ein; nur auf dem Login-Screen. · Nutzer (Größe/Platzierung: Claude) · 2026-10-17

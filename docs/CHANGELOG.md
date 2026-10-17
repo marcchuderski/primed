@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-10-17 – Claim im Login
+- „Primed for performance.“ unter dem Logo auf dem Login-Screen (D-097).
+
 ## 2026-10-17 – Login statt Loading-Screen
 - Loading-Screen entfernt; Logo-Animation auf dem Login-Screen, Felder blenden danach ein; eingeloggte User ohne Wartezeit (D-096).
 
