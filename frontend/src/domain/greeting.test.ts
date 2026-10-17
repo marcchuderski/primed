@@ -51,7 +51,13 @@ describe('greetingLine', () => {
       'Noch 2½ Stunden bis zu deinem Pre-Workout.',
     );
     expect(greetingLine(trainingDay({ now: 16 * 60 + 40, entryCount: 2 }))).toBe(
-      'Noch gleich bis zu deinem Pre-Workout.',
+      'Gleich ist Zeit für dein Pre-Workout.',
+    );
+  });
+
+  it('3: says it starts soon in the last 30 minutes', () => {
+    expect(greetingLine(trainingDay({ now: 19 * 60 + 40, entryCount: 3 }))).toBe(
+      "Gleich geht's los mit der nächsten Einheit.",
     );
   });
 

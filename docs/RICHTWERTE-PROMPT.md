@@ -35,7 +35,7 @@ Berechnung:
 - Kohlenhydrate je Tagesart nach Belastung. Fett ergibt sich aus dem Rest und muss mindestens 0,6 g pro kg Körpergewicht betragen; falls nicht, Kohlenhydrate senken.
 - Zucker-Richtwert: höchstens 10 % der Kalorien.
 - Runden: Kalorien auf 50, Protein, Kohlenhydrate und Zucker auf 5 g.
-- Uhrzeiten nur in 15-Minuten-Schritten, frühestens 09:00. Trainingsdauer nur 60, 90 oder 120 Minuten.
+- Uhrzeiten nur in 15-Minuten-Schritten, frühestens 09:00. Trainingsdauer nur 30, 60, 90 oder 120 Minuten.
 
 Ausgabe: genau dieses Format, ohne Text davor oder danach. Erklärungen nur, wenn ich danach frage. Die erste Tabellenzeile muss immer die Tagesart „Ruhetag“ enthalten.
 
@@ -51,6 +51,6 @@ Wochenvorlage:
 
 | Wochentag | Tagesart | Uhrzeit | Dauer |
 |---|---|---|---|
-| Montag | [Tagesart] | [hh:mm oder –] | [60/90/120 min oder –] |
+| Montag | [Tagesart] | [hh:mm oder –] | [30/60/90/120 min oder –] |
 | … bis Sonntag | | | |
 ```

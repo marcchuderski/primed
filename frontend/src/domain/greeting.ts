@@ -58,11 +58,17 @@ export function greetingLine(input: GreetingInput): string {
     const end = start + (day.durationMin ?? 0);
     // 2. Before the checkpoint.
     if (checkpoint !== null && now < checkpoint.time) {
-      return `Noch ${formatRemaining(checkpoint.time - now)} bis zu deinem Pre-Workout.`;
+      const left = checkpoint.time - now;
+      return left < 30
+        ? 'Gleich ist Zeit für dein Pre-Workout.'
+        : `Noch ${formatRemaining(left)} bis zu deinem Pre-Workout.`;
     }
     // 3. Between checkpoint and training start.
     if (now < start) {
-      return `Noch ${formatRemaining(start - now)} bis zur nächsten Einheit.`;
+      const left = start - now;
+      return left < 30
+        ? "Gleich geht's los mit der nächsten Einheit."
+        : `Noch ${formatRemaining(left)} bis zur nächsten Einheit.`;
     }
     // 4. After the training.
     if (now >= end) {

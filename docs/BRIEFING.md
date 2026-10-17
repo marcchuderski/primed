@@ -81,7 +81,7 @@ Oben auf „Heute“: „Hey, [Display-Name].“ (fett, Textfarbe), direkt dahin
 
 - Einen eigenen Spieltag-Satz gibt es nicht (Nutzerentscheidung); Spieltage nutzen Regel 2/3.
 - Während des Trainings (Beginn bis Ende) greifen die Regeln ab 5.
-- [Zeit] auf halbe Stunden gerundet: „gleich“ (< 30 min), „30 Minuten“, „1 Stunde“, „1½ Stunden“, „2 Stunden“ …
+- [Zeit] auf halbe Stunden gerundet: „30 Minuten“, „1 Stunde“, „1½ Stunden“, „2 Stunden“ … Unter 30 Minuten eigene Sätze: Regel 2 „Gleich ist Zeit für dein Pre-Workout.“, Regel 3 „Gleich geht's los mit der nächsten Einheit.“
 - [Tagesart] als Kurzform für die Start-Tagesarten: „Ruhetag“, „leichtes Training“, „Fitness“, „Basketball“, „Spieltag“; eigene oder umbenannte Tagesarten mit ihrem Namen.
 - Zahlen deutsch formatiert, Protein ganzzahlig. Ton neutral-motivierend, nie tadelnd, keine Emojis; höchstens zwei Zeilen auf 390 px.
 
@@ -212,7 +212,7 @@ Aus Vorrat und Bibliothek die Optionen wählen, die die offenen Werte (bis Check
 - Darstellung: System · Hell · Dunkel (überschreibt Geräteeinstellung)
 - Tagesarten & Sollwerte · Wochenvorlage · Shakes · Checkpoints · Vorschläge (Schwellen) · Bewertung (Toleranz)
 - **Tagesarten & Sollwerte** (Screen 19): Protein-Standard als Stepper, Liste der Tagesarten (Icon Training/Ruhe, Name, kcal · Protein · KH; Tap = bearbeiten), Button „Neue Tagesart“, darunter immer sichtbar die Zeile „Hilfe beim Ermitteln deiner Richtwerte“ (Icon CircleHelp).
-- **Modal „Richtwerte ermitteln“** (Screen 20, Bottom-Sheet in voller Höhe, D-108): Titel, ein Satz Erklärung, Schließen. Vier Schritte: Fragebogen kopieren · KI deiner Wahl öffnen und einfügen · Fragen beantworten · Ergebnis hier eintragen. Vorschau des Fragebogens (nach unten ausgeblendet) mit Link „Ganzen Fragebogen anzeigen“; Primärbutton „Fragebogen kopieren“ (Zwischenablage nur auf Klick, danach kurz „Kopiert“; Fallback: markierbarer Text). „Dann einfügen in“: ChatGPT, Claude, Copilot, Gemini (neuer Tab, `rel="noopener noreferrer"`; Logos/Link-Ziele siehe Offene Punkte). Ganz unten, durch eine Linie abgesetzt, wörtlich:
+- **Modal „Richtwerte ermitteln“** (Screen 20, Bottom-Sheet in voller Höhe, D-108): Titel, ein Satz Erklärung, Schließen. Vier Schritte: Fragebogen kopieren · KI deiner Wahl öffnen und einfügen · Fragen beantworten · Ergebnis hier eintragen. Vorschau des Fragebogens (nach unten ausgeblendet) mit Link „Ganzen Fragebogen anzeigen“; Primärbutton „Fragebogen kopieren“ (Zwischenablage nur auf Klick, danach kurz „Kopiert“; Fallback: markierbarer Text). „Dann einfügen in“: ChatGPT, Claude, Copilot, Gemini (nur Startseiten, Text vorher kopieren; Anzeige: Name + Lucide ExternalLink, keine Logos; neuer Tab, `rel="noopener noreferrer"`, D-109). Ganz unten, durch eine Linie abgesetzt, wörtlich:
   - „Hinweis: Kein Ersatz für ärztliche oder ernährungsfachliche Beratung. Die Werte sind unverbindliche Richtwerte, die eine KI aus deinen Angaben berechnet; Primed übernimmt dafür keine Gewähr. Bei Erkrankungen, Schwangerschaft, Stillzeit oder Essstörungen sprich bitte mit einer Ärztin, einem Arzt oder einer Ernährungsfachkraft.“
   - „Deine Antworten gehen an den Anbieter, den du wählst. Primed sendet dabei nichts.“
 - Der Fragebogen-Text stammt ausschließlich aus `docs/RICHTWERTE-PROMPT.md` und liegt als Konstante im Frontend (keine API, keine Nutzerdaten).
@@ -239,10 +239,10 @@ Alle ursprünglich offenen Punkte wurden am 17.10.2026 mit dem Nutzer geklärt u
 ## 16. Offene Punkte
 
 1. ~~„Häufig um diese Zeit“~~ – ±1,5 h (D-083).
-2. **ESN Designer Whey, Milk Chocolate:** Nährwerte pro 30 g werden recherchiert und vor dem Seed bestätigt.
-3. **BLS-Lizenz** und Werte der 14 Richtwerte vor dem Seed (Phase 3) prüfen und bestätigen.
+2. ~~ESN Designer Whey~~ – Werte recherchiert, ohne Einzelbestätigung freigegeben (D-110).
+3. ~~BLS-Lizenz und Richtwerte~~ – ohne Einzelbestätigung freigegeben (D-110).
 4. ~~Neue Mockups für „Produkt anlegen“~~ – geliefert (06, 07, 17, 18), siehe D-073.
 5. ~~Screenshot zur PWA-Installation~~ – Screen 18 (nur Nutzer-Doku).
 6. **Shake-Regeln:** konkrete Reihenfolge bei „Protein hat Vorrang“ in Phase 5 bestätigen.
-7. **Richtwerte-Modal:** Link-Ziele (nur Startseite oder vorbefüllt per URL-Parameter) und Anbieter-Logos (offizielle Brand-Ressourcen, Nutzungsbedingungen) – Optionen liegen dem Nutzer vor.
-8. **Fragebogen** nennt als Dauer „60/90/120 min“; seit D-107 gibt es auch 30 min – Anpassung des Fragebogens durch den Nutzer.
+7. ~~Richtwerte-Modal: Link-Ziele und Logos~~ – nur Startseiten, Name + ExternalLink-Icon (D-109).
+8. ~~Fragebogen-Dauer~~ – 30 min ergänzt.
