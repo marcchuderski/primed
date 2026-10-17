@@ -110,6 +110,12 @@ describe('greetingLine', () => {
     );
   });
 
+  it('6/7: use the tolerance from the settings', () => {
+    const over8 = { entryCount: 6, eaten: { ...zero, kcal: 2160, protein: 152 } };
+    expect(greetingLine(rest(over8))).toBe("Kalorien sind durch. Morgen geht's weiter.");
+    expect(greetingLine(rest({ ...over8, tolerancePct: 10 }))).toBe('Alles im Rahmen. Stark gemacht.');
+  });
+
   it('7: calories are done when more than 5 % over', () => {
     expect(greetingLine(rest({ entryCount: 6, eaten: { ...zero, kcal: 2200, protein: 120 } }))).toBe(
       "Kalorien sind durch. Morgen geht's weiter.",

@@ -105,6 +105,7 @@ export function TodayScreen({ displayName }: { displayName: string }) {
     targets: day.targets,
     eaten,
     entryCount: entries.length,
+    tolerancePct: settings.tolerancePct,
   });
   const ChipIcon = day.isTraining ? Dumbbell : Moon;
   const chipText =

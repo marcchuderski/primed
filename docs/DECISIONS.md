@@ -245,7 +245,7 @@ Neue Einträge unten anhängen. Getroffene Entscheidungen werden nicht gelöscht
 
 **D-125 · Umbenennung Archiv-Hinweis** – „vergangene Gerichte“ statt „aufgegessene Gerichte“ (Screen 10 angepasst). Entschieden: Nutzer.
 
-**D-126 · Reihenfolge Phase 7** – 7.1 und 7.3 vor Phase 6; 7.2, 7.5 und 7.6 erst nach dem ersten Deploy-Check. Entschieden: Nutzer.
+**D-126 · Reihenfolge Phase 7** – 7.1 und 7.3 vor Phase 6; nach Phase 6 Deploy-Vorbereitung und erster Deploy-Check. Danach 7.4 als Erstes, dann 7.2, 7.5 und 7.6 (nichts davon vor dem Deploy-Check). Entschieden: Nutzer.
 
 **D-127 · Einstellungen speichern automatisch** – Stepper-Seiten (Protein-Standard, Shakes, Checkpoints, Vorschläge, Bewertung) speichern 0,5 s nach der letzten Änderung (Teil-Update, D-123), beim Verlassen sofort; Status „Gespeichert“ bzw. Fehler unten. Formulare mit Texteingabe (Profil, Passwort) und Sheets (Tagesart, Wochentag) haben einen eigenen Speichern-Button. · Screen 19 zeigt keinen Speichern-Button; viele kleine Änderungen per Tipp. · überall Speichern-Button. · Claude · 2026-10-17
 

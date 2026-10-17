@@ -1,4 +1,4 @@
-/** Day rating: only kcal vs. target, tolerance ±5 % (D-009). */
+/** Day rating: only kcal vs. target; tolerance from the settings, default ±5 % (D-009). */
 export type KcalRating = 'ok' | 'low' | 'high';
 
 export const DEFAULT_TOLERANCE_PCT = 5;

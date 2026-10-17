@@ -3,7 +3,7 @@
 ## 2026-10-17 – 7.1 Menü und Einstellungen
 - Menü (Screen 16): Profilkarte, Darstellung System/Hell/Dunkel, Einstellungsliste mit Zusammenfassungen, Abmelden, „Überall abmelden“.
 - Seiten: Profil (Name, Username, Passwort ändern, Konto löschen), Tagesarten & Sollwerte (Screen 19, Protein-Standard, Tagesart anlegen/bearbeiten/löschen, Ruhetag fest), Modal „Richtwerte ermitteln“ (Screen 20), Wochenvorlage, Shakes, Checkpoints, Vorschläge, Bewertung.
-- Vorschläge nutzen die Schwellen aus den Einstellungen.
+- Vorschläge nutzen die Schwellen aus den Einstellungen; die Begrüßung („Alles im Rahmen“, „Kalorien sind durch“) nutzt die Toleranz aus „Bewertung“.
 
 ## 2026-10-17 – 7.1 Einstellungen (API)
 - Migration `009_settings` (Toleranz, Vorschlags-Schwellen).
