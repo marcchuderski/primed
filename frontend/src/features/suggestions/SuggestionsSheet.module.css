@@ -1,0 +1,70 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 18px;
+  border-radius: var(--r-card);
+  background: var(--surface);
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.when {
+  color: var(--accent-text);
+}
+
+.effect {
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.title {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.reason {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.done {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--status-ok-fg);
+}
+
+.empty,
+.note {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.note {
+  font-size: 12px;
+}
+
+.error {
+  color: var(--status-high-fg);
+  font-size: 14px;
+  font-weight: 600;
+}

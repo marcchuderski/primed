@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-17 – Phase 5 Vorschläge
+- Zauberstab aktiv: regelbasierte Vorschläge (Shake-Regeln, Pre-Workout, KH-Snack-Fenster, Essen nach Protein) mit Begründung, Effekt und „Eintragen“.
+- Nur realistische Vorschläge: bereits gegessene Lebensmittel in ihrer Menge, Gerichte; nie Proteinpulver/Milch einzeln.
+
 ## 2026-10-17 – Phase 4 Gerichte
 - Migration `008_dishes`; API für Gerichte (Zutaten-Schnappschüsse, Portionen in ½-Schritten, abgeleiteter Zähler, Archiv, Rest entsorgen, „Nochmal kochen“) und Portionen-Einträge.
 - Essen-Tab „Gerichte“ (statt „Vorrat“) mit Karten, Editor, Archiv; „+“-Sheet mit Gerichten und „Gericht zubereiten“ · „Produkt anlegen“.

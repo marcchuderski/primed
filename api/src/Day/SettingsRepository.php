@@ -20,7 +20,8 @@ final class SettingsRepository
     {
         $statement = $this->pdo->prepare(
             'SELECT theme, protein_default, default_duration_min, earliest_training_min, checkpoint_offset_min,
-                    checkpoint_pct, earliest_checkpoint_min, day_boundary_min
+                    checkpoint_pct, earliest_checkpoint_min, day_boundary_min,
+                    protein_powder_food_id, shake_milk_low_food_id, shake_milk_high_food_id
                FROM user_settings WHERE user_id = ?',
         );
         $statement->execute([$userId]);
@@ -38,6 +39,9 @@ final class SettingsRepository
             Row::int($row, 'checkpoint_pct'),
             Row::int($row, 'earliest_checkpoint_min'),
             Row::int($row, 'day_boundary_min'),
+            ($row['protein_powder_food_id'] ?? null) === null ? null : Row::int($row, 'protein_powder_food_id'),
+            ($row['shake_milk_low_food_id'] ?? null) === null ? null : Row::int($row, 'shake_milk_low_food_id'),
+            ($row['shake_milk_high_food_id'] ?? null) === null ? null : Row::int($row, 'shake_milk_high_food_id'),
         );
     }
 

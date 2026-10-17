@@ -22,6 +22,7 @@ import { entryAmountText } from '../entries/entryText.ts';
 import { quantityFoodForEntry } from '../entries/entryQuantity.ts';
 import { QuantitySheet } from '../entries/QuantitySheet.tsx';
 import { AddFlow } from '../add/AddFlow.tsx';
+import { SuggestionsSheet } from '../suggestions/SuggestionsSheet.tsx';
 import { DayTypeSheet } from './DayTypeSheet.tsx';
 import { useNow } from './useNow.ts';
 import styles from './TodayScreen.module.css';
@@ -47,6 +48,7 @@ export function TodayScreen({ displayName }: { displayName: string }) {
   const [pickerOpen, setPickerOpen] = useState(false);
   const [editing, setEditing] = useState<Entry | null>(null);
   const [adding, setAdding] = useState(false);
+  const [suggesting, setSuggesting] = useState(false);
   const [deleting, setDeleting] = useState<Entry | null>(null);
   const [deleteBusy, setDeleteBusy] = useState(false);
   const now = useNow();
@@ -141,7 +143,15 @@ export function TodayScreen({ displayName }: { displayName: string }) {
             Heute
           </h2>
           <div className={styles['actions']}>
-            <button type="button" className={styles['iconButton']} aria-label="Vorschläge" disabled>
+            <button
+              type="button"
+              className={styles['iconButton']}
+              aria-label="Vorschläge"
+              aria-haspopup="dialog"
+              onClick={() => {
+                setSuggesting(true);
+              }}
+            >
               <WandSparkles size={20} strokeWidth={2} aria-hidden="true" />
             </button>
             <button
@@ -169,6 +179,27 @@ export function TodayScreen({ displayName }: { displayName: string }) {
       </section>
 
       <Footer />
+
+      {suggesting && (
+        <SuggestionsSheet
+          day={day}
+          settings={settings}
+          now={minuteNow}
+          checkpoint={checkpoint}
+          eaten={eaten}
+          eatenUntilCheckpoint={checkpoint === null ? null : eatenUntil(entries, checkpoint.time)}
+          onClose={() => {
+            setSuggesting(false);
+          }}
+          onAdded={() => {
+            fetchEntries(day.date)
+              .then(replaceEntries)
+              .catch(() => {
+                // The list refreshes on the next load.
+              });
+          }}
+        />
+      )}
 
       {adding && (
         <AddFlow

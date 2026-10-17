@@ -10,6 +10,7 @@ const settings: Settings = {
   earliestTrainingMin: 540,
   checkpoint: { offsetMin: 180, pct: 70, earliestMin: 360 },
   dayBoundaryMin: 120,
+  shakeFoods: { proteinPowder: null, milkLow: null, milkHigh: null },
 };
 
 const day: Day = {

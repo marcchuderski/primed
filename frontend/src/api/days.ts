@@ -20,6 +20,8 @@ export interface Settings {
   earliestTrainingMin: number;
   checkpoint: { offsetMin: number; pct: number; earliestMin: number };
   dayBoundaryMin: number;
+  /** Foods used by the quick shakes (never suggested on their own). */
+  shakeFoods: { proteinPowder: number | null; milkLow: number | null; milkHigh: number | null };
 }
 
 export interface DayType {
@@ -109,6 +111,18 @@ export function parseSettings(value: unknown): Settings {
     earliestTrainingMin: num(s['earliestTrainingMin']),
     checkpoint: { offsetMin: num(c['offsetMin']), pct: num(c['pct']), earliestMin: num(c['earliestMin']) },
     dayBoundaryMin: num(s['dayBoundaryMin']),
+    shakeFoods: parseShakeFoods(s['shakeFoods']),
+  };
+}
+
+function parseShakeFoods(value: unknown): Settings['shakeFoods'] {
+  if (!isRecord(value)) {
+    return { proteinPowder: null, milkLow: null, milkHigh: null };
+  }
+  return {
+    proteinPowder: nullableNum(value['proteinPowder'] ?? null),
+    milkLow: nullableNum(value['milkLow'] ?? null),
+    milkHigh: nullableNum(value['milkHigh'] ?? null),
   };
 }
 

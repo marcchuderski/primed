@@ -170,7 +170,9 @@ Drei vordefinierte Shakes als Schnellbuttons (Zusammensetzung in `docs/DEFAULTS.
 | kcal bereits überschritten | nur bei ≥ 30 g Protein offen: **Klein 1,5 %**, sonst nichts |
 
 - „Nach dem Training“ beginnt bei Trainingsbeginn + Dauer.
-- Passen mehrere Regeln, hat **Protein Vorrang**. Die konkrete Reihenfolge wird in Phase 5 festgelegt und bestätigt.
+- Passen mehrere Regeln, hat **Protein Vorrang**. Reihenfolge (D-121): 1) Protein offen < 25 g → kein Shake · 2) kcal überschritten → Klein 1,5 % nur ab 30 g Protein offen · 3) Trainingstag vor Trainingsbeginn → kein Shake (KH-Fokus) · 4) während des Trainings → nichts · 5) nach dem Training → ≥ 700 kcal und ≥ 100 g KH offen: leichte Mahlzeit + kleiner Shake; sonst Groß bei ≥ 35 g P und ≥ 500 kcal, sonst Klein (3,5 % ab 400 kcal offen, sonst 1,5 %) · 6) Ruhetag ab 19:00 → Klein 3,5 % ab 400 kcal offen, sonst 1,5 %.
+- **Realistische Vorschläge (D-122):** nur Gerichte mit mindestens einer Portion und Lebensmittel, die schon einmal eingetragen wurden, in der zuletzt verwendeten Menge; nie Zutaten, nie Proteinpulver oder Shake-Milch einzeln; höchstens 900 kcal pro Vorschlag und höchstens 10 % über dem offenen kcal-Rest.
+- Vorschläge mit Zeitfenster (KH-Snack, Shake nach dem Training) werden zu dieser Uhrzeit eingetragen, sonst „jetzt“.
 - Keine Merkliste („Für später merken“ aus dem Mockup entfällt).
 
 Grundsätze aus dem Ernährungsplan:

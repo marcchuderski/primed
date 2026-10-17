@@ -55,8 +55,8 @@ Nach jedem Item: Tests, Security Audit (`agent-skills:security-and-hardening`), 
 
 | ID | Item | Status |
 |---|---|---|
-| 5.1 | Fachlogik Shake-Regeln + Essens-Vorschläge (+ Tests) | geplant |
-| 5.2 | Zauberstab-Sheet | geplant |
+| 5.1 | Fachlogik Shake-Regeln + Essens-Vorschläge (+ Tests) | fertig (Regel-Reihenfolge D-121, Bestätigung ausstehend) |
+| 5.2 | Zauberstab-Sheet | fertig |
 
 ## Phase 6 – Verlauf
 

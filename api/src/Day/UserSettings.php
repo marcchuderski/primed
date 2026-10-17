@@ -15,6 +15,9 @@ final class UserSettings
         public readonly int $checkpointPct,
         public readonly int $earliestCheckpointMin,
         public readonly int $dayBoundaryMin,
+        public readonly ?int $proteinPowderFoodId = null,
+        public readonly ?int $shakeMilkLowFoodId = null,
+        public readonly ?int $shakeMilkHighFoodId = null,
     ) {
     }
 
@@ -34,6 +37,11 @@ final class UserSettings
                 'earliestMin' => $this->earliestCheckpointMin,
             ],
             'dayBoundaryMin' => $this->dayBoundaryMin,
+            'shakeFoods' => [
+                'proteinPowder' => $this->proteinPowderFoodId,
+                'milkLow' => $this->shakeMilkLowFoodId,
+                'milkHigh' => $this->shakeMilkHighFoodId,
+            ],
         ];
     }
 }
