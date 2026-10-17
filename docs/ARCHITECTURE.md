@@ -1,6 +1,6 @@
 # Architektur
 
-Stand: 16.10.2026 · Entwurf vor Implementierung. Wird von Claude Code laufend aktualisiert.
+Stand: 17.10.2026 · Entwurf vor Implementierung. Wird von Claude Code laufend aktualisiert.
 
 ## Überblick
 
@@ -31,9 +31,10 @@ Stand: 16.10.2026 · Entwurf vor Implementierung. Wird von Claude Code laufend a
 | Icons | lucide-react |
 | Styling | CSS-Variablen aus `design/tokens.css`; Umschaltung über `data-theme` |
 | Schriften | Bricolage Grotesque, Inter, **selbst gehostet** (kein Google-CDN, Datenschutz + strenge CSP) |
-| Barcode | JS-Bibliothek (z. B. ZXing), Kamera nur über HTTPS |
-| API | PHP (Version laut Plesk, ≥ 8.2 angestrebt), Composer, PSR-12, `strict_types` |
-| Datenbank | MySQL oder MariaDB, `utf8mb4`, InnoDB |
+| Barcode | ZXing (iOS/WebKit hat keine BarcodeDetector-API), Kamera nur über HTTPS |
+| API | PHP 8.3 (Server 8.3.8), Composer (nur lokal, `vendor/` wird hochgeladen), PSR-12, `strict_types` |
+| Datenbank | MariaDB 10.11, `utf8mb4`, InnoDB |
+| Lokale Entwicklung | DDEV (PHP 8.3, MariaDB 10.11, Apache), Node 22 via nvm (`.nvmrc`) |
 | Tests | Vitest (Frontend, v. a. `domain/`), PHPUnit (API) |
 | Deployment | lokal bauen, per SFTP hochladen (siehe `DEPLOYMENT.md`) |
 
@@ -41,7 +42,7 @@ Stand: 16.10.2026 · Entwurf vor Implementierung. Wird von Claude Code laufend a
 
 ```
 /
-├── CLAUDE.md, README.md, START_PROMPT.md
+├── CLAUDE.md, README.md
 ├── docs/                 Briefing, Architektur, Entscheidungen, Roadmap, Security, Deployment
 ├── design/               Design-Richtlinien, Tokens, Kitchen Sink, Screens, Brand-Assets
 ├── frontend/
@@ -64,7 +65,7 @@ Stand: 16.10.2026 · Entwurf vor Implementierung. Wird von Claude Code laufend a
 ## Server-Layout (Plesk)
 
 ```
-/var/www/vhosts/<domain>/
+/var/www/vhosts/<webspace>/   (Domain: primed.dev-pfeffermond.de)
 ├── httpdocs/                 öffentlich
 │   ├── index.html, assets/   Frontend-Build
 │   ├── api/index.php         lädt nur ../../primed-app/bootstrap.php
@@ -100,23 +101,25 @@ Alle schreibenden Endpunkte: Session-Cookie + CSRF-Token, serverseitige Validier
 | Tabelle | Wichtige Felder |
 |---|---|
 | `users` | id, username (unique), display_name, password_hash, password_changed_at |
-| `sessions` | id, user_id, token_hash (unique), created_at, last_seen_at, expires_at, revoked_at |
-| `login_attempts` | id, username, ip_hash, attempted_at, success |
-| `user_settings` | user_id, theme (system/light/dark), tolerance_pct, Shake-Schwellen, Checkpoint-Vorlage |
-| `day_types` | id, user_id, key, name, kcal, protein, carbs, sugar_ref, default_duration_min, sort |
+| `sessions` | id, user_id, token_hash (unique), created_at, last_seen_at, expires_at (gleitend 30 Tage), absolute_expires_at (90 Tage), revoked_at |
+| `login_attempts` | id, username, ip_hash (HMAC), attempted_at, success · Löschung nach 30 Tagen |
+| `user_settings` | user_id, theme (system/light/dark), tolerance_pct, protein_default, protein_powder_food_id, Shake-Schwellen, Checkpoint-Vorlage (inkl. frühester Checkpoint/Trainingsbeginn), day_boundary (02:00) |
+| `day_types` | id, user_id, name, kcal, protein (nullable = Protein-Standard), carbs, sugar_ref, is_training, sort, deleted_at |
 | `week_template` | user_id, weekday, day_type_id, training_start, duration_min |
-| `days` | id, user_id, date (unique je User), day_type_id, training_start, duration_min, Soll-Schnappschuss |
-| `foods` | id, user_id, type (product/reference/ingredient), name, brand, barcode (unique je User), category, basis (per_100g/per_unit), Nährwerte, package_g, household_units, source, usage_count, last_amount, last_unit, is_quick (Shakes) |
+| `days` | id, user_id, date (logischer Tag, unique je User), day_type_id, day_type_name_snapshot, training_start, duration_min, Soll-Schnappschuss |
+| `foods` | id, user_id, type (product/reference/ingredient), name, brand, barcode (unique je User), category, basis (per_100g/per_100ml/per_unit), Nährwerte, package_amount, household_units, source, usage_count, last_amount, last_unit, is_quick (Shakes) |
 | `off_cache` | barcode, payload, fetched_at |
-| `dishes` | id, user_id, name, cooked_at, portions_total, portions_left, Summen, status (active/archived) |
+| `dishes` | id, user_id, name, cooked_at, portions_total, portions_left (DECIMAL, Schritte 0,5), Summen, status (active/archived/discarded) |
 | `dish_ingredients` | id, dish_id, food_id (nullable), name_snapshot, amount, unit, grams, Nährwerte |
-| `entries` | id, user_id, date, time, food_id/dish_id (nullable), name_snapshot, amount, unit, Nährwert-Schnappschuss |
+| `entries` | id, user_id, date (logischer Tag), eaten_at (Datum + Uhrzeit, Europe/Berlin), food_id/dish_id (nullable), name_snapshot, amount, unit, Nährwert-Schnappschuss |
+
+Der **logische Tag** endet um 02:00 (`day_boundary`); ein Eintrag um 00:30 am 21.10. gehört zum Tag 20.10. Tage werden beim ersten Zugriff aus der Wochenvorlage angelegt (mit Soll-Schnappschuss). Damit vergangene Tage fest bleiben, werden **vor jeder Änderung** an Wochenvorlage, Tagesarten oder Protein-Standard alle vergangenen Tage seit Kontoanlage ohne Datensatz mit den bisherigen Werten angelegt (wenige hundert Zeilen pro Jahr, in einer Transaktion).
 
 Einträge und Gerichtszutaten speichern **Schnappschüsse**, damit spätere Produktänderungen die Vergangenheit nicht verändern.
 
 ## Wichtige Abläufe
 
-**Login:** Username + Passwort → Argon2id-Prüfung → zufälliger Session-Token (nur Hash in DB) → Cookie `HttpOnly; Secure; SameSite=Strict`, Laufzeit 30 Tage → CSRF-Token an den Client.
+**Login:** Username + Passwort → Rate-Limit-Prüfung → Argon2id-Prüfung → zufälliger Session-Token (nur Hash in DB) → Cookie `HttpOnly; Secure; SameSite=Strict`, gleitend 30 Tage, max. 90 Tage → CSRF-Token an den Client.
 
 **Barcode:** Kamera liest EAN → `GET /off/barcode/{ean}` → API prüft eigene Bibliothek, dann `off_cache`, dann Open Food Facts (Timeout, User-Agent mit Kontakt) → normalisierte Werte zurück → Nutzer bestätigt → Produkt in Bibliothek.
 

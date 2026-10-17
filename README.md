@@ -8,7 +8,6 @@ Tagesarten mit eigenen Sollwerten, Meal-Prep-Vorrat, Barcode-Scan, regelbasierte
 | Datei | Inhalt |
 |---|---|
 | [`CLAUDE.md`](CLAUDE.md) | Arbeitsregeln für Claude Code (zuerst lesen) |
-| [`START_PROMPT.md`](START_PROMPT.md) | Prompt zum Loslegen in Claude Code |
 | [`docs/BRIEFING.md`](docs/BRIEFING.md) | Funktionsumfang und Fachlogik |
 | [`docs/DEFAULTS.md`](docs/DEFAULTS.md) | Voreinstellungen und Startdaten |
 | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Technik, Struktur, Datenmodell |

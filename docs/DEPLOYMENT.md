@@ -4,12 +4,13 @@ Wird von Claude Code mit jedem Schritt präzisiert (Befehle, Dateilisten, Migrat
 
 ## Einmalig einrichten
 
-1. Domain/Subdomain in Plesk anlegen, **Let's Encrypt** aktivieren, HTTPS-Weiterleitung an.
-2. PHP-Version wählen (siehe offene Punkte), `display_errors` aus.
-3. Datenbank + eigener DB-User mit minimalen Rechten anlegen.
+1. Subdomain `primed.dev-pfeffermond.de` in Plesk anlegen, **Let's Encrypt** aktivieren, HTTPS-Weiterleitung an.
+2. PHP 8.3 wählen, `display_errors` aus. CLI per SSH immer mit `/opt/plesk/php/8.3/bin/php` (das Standard-`php` kann eine andere Version sein).
+3. Datenbank (MariaDB 10.11) + eigener DB-User mit minimalen Rechten anlegen. **Tägliches DB-Backup** in Plesk einrichten.
 4. Ordner `primed-app/` **neben** `httpdocs/` anlegen (nicht darin).
 5. `.env` aus `api/.env.example` erstellen, ausfüllen, nach `primed-app/.env` hochladen.
-6. SFTP-Zugang nutzen, **kein** unverschlüsseltes FTP.
+6. SFTP-Zugang nutzen, **kein** unverschlüsseltes FTP. SSH ist verfügbar, Composer nicht (wird lokal ausgeführt).
+7. Ersten User anlegen: `/opt/plesk/php/8.3/bin/php primed-app/bin/user-create` (Display-Name „Marc“, Username `marcch`, Passwort interaktiv).
 
 ## Jedes Release
 

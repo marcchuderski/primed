@@ -7,7 +7,7 @@ Nach jedem Item: Tests, Security Audit (`agent-skills:security-and-hardening`), 
 
 | ID | Item | Status |
 |---|---|---|
-| 0.1 | Offene Punkte aus `BRIEFING.md` klären | geplant |
+| 0.1 | Offene Punkte aus `BRIEFING.md` klären | fertig |
 | 0.2 | Frontend-Gerüst (Vite, React, TS strict, ESLint, Prettier, Vitest) | geplant |
 | 0.3 | API-Gerüst (Composer, PSR-12, Front-Controller, Router, PHPUnit) | geplant |
 | 0.4 | Design-Tokens, selbst gehostete Schriften, Basis-Komponenten | geplant |
@@ -26,7 +26,7 @@ Nach jedem Item: Tests, Security Audit (`agent-skills:security-and-hardening`), 
 
 | ID | Item | Status |
 |---|---|---|
-| 2.1 | Tagesarten, Wochenvorlage, Tage (mit Seed aus `DEFAULTS.md`) | geplant |
+| 2.1 | Tagesarten (anlegen/ändern/löschen), Protein-Standard, Wochenvorlage, Tage mit Tagesgrenze 02:00 (mit Seed aus `DEFAULTS.md`) | geplant |
 | 2.2 | Fachlogik: Sollwerte, Fett-Richtwert, Checkpoints, Offen-Werte (+ Tests) | geplant |
 | 2.3 | Heute-Screen: Tabs, Begrüßung, Tagesart-Chip, Balken mit Marker, Pop-up | geplant |
 | 2.4 | Tagesart-Picker (Tagesart, Uhrzeit-Rad, Dauer) | geplant |
@@ -76,6 +76,7 @@ Nach jedem Item: Tests, Security Audit (`agent-skills:security-and-hardening`), 
 | 7.3 | PWA: Manifest, Icons, Service Worker (nur App-Shell) | geplant |
 | 7.4 | Animationen (Sheets, Balken), `prefers-reduced-motion` | geplant |
 | 7.5 | Barrierefreiheit-Check, abschließendes Security Audit | geplant |
+| 7.6 | Admin-Doku (Betrieb, Deployment, User-CLI) und Nutzer-Doku (inkl. PWA-Installation) | geplant |
 
 ## Später / vielleicht
 

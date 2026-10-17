@@ -68,3 +68,67 @@ Neue Einträge unten anhängen. Getroffene Entscheidungen werden nicht gelöscht
 **D-037 · Schriften selbst hosten** · Datenschutz (keine IP-Übertragung an Google), strengere CSP. · Google Fonts CDN. · Empfehlung, ohne Trade-off · 2026-10-16
 
 **D-038 · Fachlogik als reine Funktionen in `frontend/src/domain/`** mit Unit-Tests. · testbar, UI-unabhängig. · Empfehlung · 2026-10-16
+
+## Klärung offener Punkte (2026-10-17)
+
+**D-040 · Proteinpulver als Einstellung** – „Aktuelles Proteinpulver“ wählt ein Bibliotheksprodukt; Shakes werden aus Milch + Pulver automatisch berechnet. Standard: ESN Designer Whey, Milk Chocolate. · Pulver wechselt gelegentlich, Werte sollen nicht doppelt gepflegt werden. · feste Shake-Werte. · Nutzer · 2026-10-17
+
+**D-041 · Milch als Bibliothekseintrag** – Milch 1,5 % / 3,5 % mit den Default-Werten als Richtwerte in der Bibliothek. · Defaults passen. · eigene Markenprodukte. · Nutzer · 2026-10-17
+
+**D-042 · Basis pro 100 ml und Einheit ml** – Jedes Produkt hat genau eine Basis (100 g, 100 ml oder Stück); ml nur bei ml-Basis; keine g↔ml-Umrechnung. · Packungsangaben bei Flüssigkeiten sind pro 100 ml; Fehler g=ml wäre ~3 % (Milch) bis ~8 % (Öl). · g für alles (einfacher, ungenauer), Umrechnung über Dichte. · Nutzer · 2026-10-17
+
+**D-043 · Richtwerte aus dem BLS** – 14 Lebensmittel aus `DEFAULTS.md`, Werte aus dem Bundeslebensmittelschlüssel, Lizenz wird vor Nutzung geprüft. · deutsche Referenzdaten. · USDA, eigene Handliste. · Nutzer · 2026-10-17
+
+**D-044 · Bilanz-Einordnung** – ±5 % ausgeglichen, −5 bis −15 % leichtes Defizit, < −15 % Defizit, +5 bis +10 % leichter Überschuss, > +10 % Überschuss; Basis ist die prozentuale Abweichung der Summe vom Soll des Zeitraums. · konsistent zur Toleranz. · absolute kcal-Schwellen. · Nutzer · 2026-10-17
+
+**D-045 · Protein-Standard mit Abweichung je Tagesart** – ein Standardwert (150 g), Tagesarten optional abweichend, Fallback immer Standard. · flexibel ohne Pflegeaufwand. · fester Wert je Tagesart, überall 150 g. · Nutzer · 2026-10-17
+
+**D-046 · Halbe Portionen aus dem Vorrat** – Schritte 0,5, Zähler nie < 0, Korrektur bei Löschen/Ändern, „Rest entsorgen“, Gerichte immer editierbar (auch Portionsanzahl). · Portionen werden teils geteilt oder abgegeben. · nur ganze Portionen, Sperre nach erstem Eintrag. · Nutzer · 2026-10-17
+
+**D-047 · „Jetzt“ auf die nächste Viertelstunde** · Nutzerwunsch. · auf die letzte Viertelstunde. · Nutzer · 2026-10-17
+
+**D-048 · Tagesgrenze 02:00** – Einträge bis 01:59 zählen zum Vortag, Zeitzone Europe/Berlin. · Shakes nach späten Spielen gehören zum Trainingstag. · Kalendertag (Mitternacht), 03:00. · Nutzer · 2026-10-17
+
+**D-049 · Nur heute und Vergangenheit** – keine Einträge für zukünftige Tage. · kein Vorab-Planen. · Nutzer · 2026-10-17
+
+**D-050 · Tagesarten frei verwaltbar** – anlegen, bearbeiten, löschen; die fünf Defaults sind nur Startbestand. Vergangene Tage behalten ihren Schnappschuss. · ersetzt die Annahme „fünf feste Stufen“ aus dem Menü-Mockup. · feste fünf Tagesarten. · Nutzer · 2026-10-17
+
+**D-051 · Einstellungsänderungen gelten ab heute** – vergangene Tage bleiben immer fest (Soll-Schnappschuss), auch bei geänderter Wochenvorlage. · Verlauf bleibt stabil. · rückwirkende Neuberechnung. · Nutzer · 2026-10-17
+
+**D-052 · Löschen mit Bestätigungsdialog** · Schutz vor Fehlbedienung beim Wischen. · Undo-Toast, sofort löschen. · Nutzer · 2026-10-17
+
+**D-053 · Bibliotheks-Details** – im Meal-Prep-Editor gescannte Produkte werden Zutat; gelöschte Produkte verschwinden aus Suche/Bibliothek, Einträge bleiben; OFF-Suche DE/Deutsch, max. 10 Treffer, ODbL-Hinweis; „Häufig um diese Zeit“: 5 häufigste, absteigend, ohne Shakes (Fenstergröße offen). · Nutzer · 2026-10-17
+
+**D-054 · Checkpoint-Grenzen** – frühester Trainingsbeginn 09:00, frühester Checkpoint 06:00; läge er früher, entfällt er. · unrealistische Checkpoints vermeiden. · Checkpoint auf 07:00 verschieben. · Nutzer · 2026-10-17
+
+**D-055 · Shake-Regel-Details** – „viele KH offen“ = ≥ 400 kcal aus KH (≥ 100 g KH); „nach dem Training“ ab Start + Dauer; bei mehreren passenden Regeln hat Protein Vorrang (Reihenfolge in Phase 5). „Für später merken“ entfällt. · Nutzer (Auslegung „400 kcal aus KH“: Claude, da die Zeile bereits ≥ 700 kcal gesamt voraussetzt; Bestätigung in Phase 5) · 2026-10-17
+
+**D-056 · Verlauf-Details** – Tage ohne Einträge: „/“, ausgegraut, nicht in Bewertung/Durchschnitt/Summe; laufender Tag „läuft“, bewertet ab Folgetag; KW nach ISO 8601. · Nutzer · 2026-10-17
+
+**D-057 · Mockups nur Beispiele** – Zahlen in den Screens sind Beispieldaten, maßgeblich sind BRIEFING/DEFAULTS. Screens ohne Mockup baut Claude aus vorhandenen Bausteinen und zeigt Screenshots. · Nutzer · 2026-10-17
+
+## Sicherheit & Betrieb (2026-10-17)
+
+**D-060 · Session gleitend 30 Tage, maximal 90 Tage** (ersetzt Laufzeit-Detail aus D-032). · Kompromiss: tägliche Nutzung ohne Re-Login, gestohlene Sessions laufen spätestens nach 90 Tagen aus. · fest 30 Tage, unbegrenzt gleitend. · Nutzer · 2026-10-17
+
+**D-061 · Login-Schutz kombiniert** – IP+Username 5/15 min → 15 min Sperre; Username ab 10 Fehlversuchen steigende Verzögerung (keine harte Sperre, damit kein gezieltes Aussperren); IP 30/h. IPs nur als HMAC mit Schlüssel aus `.env`, Löschung nach 30 Tagen. · Nutzer (HMAC/Löschfrist: Claude, sicherere Variante) · 2026-10-17
+
+**D-062 · Passwort-Regeln** – mindestens 12 Zeichen, keine Zeichenregeln, Abgleich mit lokaler Liste häufiger Passwörter (NIST SP 800-63B). · kein externer Dienst. · HIBP-Abgleich, nur Mindestlänge. · Nutzer · 2026-10-17
+
+**D-063 · Kein „Passwort vergessen“, User-Verwaltung per CLI** – `bin/user-create` (und Passwort-Reset) per SSH mit `/opt/plesk/php/8.3/bin/php`. · keine Mail-Infrastruktur, keine öffentliche Angriffsfläche. · Reset per E-Mail, Setup-Seite. · Nutzer · 2026-10-17
+
+**D-064 · „Überall abmelden“ als Textlink unter „Abmelden“** · Nutzer · 2026-10-17
+
+**D-065 · Loading-Screen läuft einmal komplett (~1,4 s)** · Markenmoment; Animation gegenüber Mockup (1,8 s) leicht gekürzt. · nur während Session-Prüfung, 0,8 s Minimum. · Nutzer · 2026-10-17
+
+**D-066 · Server** – PHP 8.3.8, MariaDB 10.11.4, SSH ohne Composer (vendor/ wird lokal gebaut und hochgeladen), Domain `primed.dev-pfeffermond.de`, Argon2id verfügbar. HSTS 1 Jahr ohne `preload`. · Nutzer (HSTS-Details: Claude) · 2026-10-17
+
+**D-067 · Lokale Entwicklung mit DDEV und nvm** – DDEV mit PHP 8.3 + MariaDB 10.11 + Apache (wie Produktion, `.htaccess` greift lokal); Node 22 über `.nvmrc`. · Parität zur Produktion. · eigenes docker compose, Homebrew-MySQL. · Nutzer · 2026-10-17
+
+**D-068 · Deployment durch den Nutzer** – Claude bereitet Release-Paket und Anleitung vor, der Nutzer lädt hoch und führt Migrationen aus. Backups richtet der Nutzer in Plesk ein. · kein Schreibzugriff von Claude auf den Live-Server. · SSH-Zugriff für Claude. · Nutzer · 2026-10-17
+
+**D-069 · Zielgerät iPhone (Chrome/PWA)** – Barcode-Scan über ZXing, da iOS-Browser (WebKit) keine BarcodeDetector-API haben. · Nutzer · 2026-10-17
+
+**D-070 · Arbeitsweise** – Plan für alle Phasen freigegeben; Claude arbeitet Schritt für Schritt durch und hält nur bei neuen Trade-offs, kritischen Security-Funden oder Nutzer-Aufgaben an. Direkt auf `main`, nur Commits, kein Push. · Nutzer · 2026-10-17
+
+**D-071 · Admin- und Nutzer-Doku zum Abschluss** – inkl. PWA-Installation (Screenshot vom Nutzer); kein eigener Installations-Hinweis in der App. · Nutzer · 2026-10-17
