@@ -46,6 +46,10 @@
   animation: slide 280ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
+.onBg {
+  background: var(--bg);
+}
+
 .handle {
   flex-shrink: 0;
   align-self: center;

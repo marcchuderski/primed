@@ -90,6 +90,8 @@ interface TimeWheelProps {
   minMinutes?: number;
   maxMinutes?: number;
   label?: string;
+  /** 'bg' (default, on surface cards) or 'surface' (on sheets with --bg background, screen 06). */
+  tone?: 'bg' | 'surface';
 }
 
 /** Hour and minute wheels in 15-minute steps (D-012). */
@@ -99,6 +101,7 @@ export function TimeWheel({
   minMinutes = 0,
   maxMinutes = 23 * 60 + 45,
   label = 'Uhrzeit',
+  tone = 'bg',
 }: TimeWheelProps) {
   const hour = Math.floor(value / 60);
   const minute = value % 60;
@@ -110,7 +113,11 @@ export function TimeWheel({
   const clamp = (minutesOfDay: number) => Math.min(maxMinutes, Math.max(minMinutes, minutesOfDay));
 
   return (
-    <div className={styles['wheel']} role="group" aria-label={label}>
+    <div
+      className={`${styles['wheel'] ?? ''} ${tone === 'surface' ? (styles['onBg'] ?? '') : ''}`}
+      role="group"
+      aria-label={label}
+    >
       <span className={styles['highlight']} aria-hidden="true" />
       <WheelColumn
         label={`${label} Stunde`}

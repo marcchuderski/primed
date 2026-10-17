@@ -10,6 +10,14 @@
   overflow: hidden;
 }
 
+.onBg {
+  background: var(--surface);
+}
+
+.onBg .highlight {
+  background: var(--bg);
+}
+
 .highlight {
   position: absolute;
   left: 8px;

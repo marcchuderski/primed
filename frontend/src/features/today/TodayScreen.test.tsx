@@ -16,7 +16,11 @@ function mockApi(day: Record<string, unknown>) {
     'fetch',
     vi.fn<typeof fetch>((input) => {
       const url = input instanceof Request ? input.url : input.toString();
-      const body = url.endsWith('/settings') ? { settings } : { day };
+      const body = url.endsWith('/settings')
+        ? { settings }
+        : url.endsWith('/entries')
+          ? { entries: [] }
+          : { day };
       return Promise.resolve(new Response(JSON.stringify(body), { status: 200 }));
     }),
   );

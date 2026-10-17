@@ -11,8 +11,9 @@ use Primed\Support\Row;
 
 final class EntryRepository
 {
-    private const COLUMNS = 'id, date, time_min, food_id, dish_id, name_snapshot, amount, unit, quantity,
-        kcal, protein, carbs, sugar, fat';
+    private const COLUMNS = 'e.id, e.date, e.time_min, e.food_id, e.dish_id, e.name_snapshot, e.amount, e.unit,
+        e.quantity, e.kcal, e.protein, e.carbs, e.sugar, e.fat, f.basis, f.package_amount';
+    private const FROM = ' FROM entries e LEFT JOIN foods f ON f.id = e.food_id AND f.user_id = e.user_id ';
 
     public function __construct(private readonly PDO $pdo)
     {
@@ -23,7 +24,7 @@ final class EntryRepository
      */
     public function forDate(int $userId, string $date): array
     {
-        $statement = $this->pdo->prepare('SELECT ' . self::COLUMNS . ' FROM entries WHERE user_id = ? AND date = ?');
+        $statement = $this->pdo->prepare('SELECT ' . self::COLUMNS . self::FROM . 'WHERE e.user_id = ? AND e.date = ?');
         $statement->execute([$userId, $date]);
 
         $entries = [];
@@ -38,7 +39,7 @@ final class EntryRepository
 
     public function find(int $userId, int $id): ?Entry
     {
-        $statement = $this->pdo->prepare('SELECT ' . self::COLUMNS . ' FROM entries WHERE user_id = ? AND id = ?');
+        $statement = $this->pdo->prepare('SELECT ' . self::COLUMNS . self::FROM . 'WHERE e.user_id = ? AND e.id = ?');
         $statement->execute([$userId, $id]);
         $row = $statement->fetch();
 
@@ -145,6 +146,8 @@ final class EntryRepository
                 'sugar' => Row::float($row, 'sugar'),
                 'fat' => Row::float($row, 'fat'),
             ],
+            Row::nullableString($row, 'basis'),
+            Row::nullableFloat($row, 'package_amount'),
         );
     }
 }

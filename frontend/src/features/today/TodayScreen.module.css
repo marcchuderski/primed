@@ -179,6 +179,15 @@
   color: var(--on-accent);
 }
 
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
 .empty {
   padding: 14px 16px;
   border-radius: var(--r-item);

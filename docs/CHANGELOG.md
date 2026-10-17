@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-17 – 2.5 Einträge
+- Migration `003_foods_entries`; Startbibliothek (Milch für alle, Startprodukte für den Betreiber).
+- API für Einträge mit serverseitigem Nährwert-Schnappschuss und Einheiten-Umrechnung (geteilte Testfälle Frontend/API).
+- Heute: Einträge-Liste, Bearbeiten im Mengen-Sheet (Einheiten-Umschalter, Stepper, Schnellwahl, Uhrzeit-Rad, „Danach offen“), Löschen per Wischen/Sheet mit Bestätigungsdialog.
+
 ## 2026-10-17 – 2.4 Tagesart-Picker
 - Bottom-Sheet-Komponente und Scroll-Rad (15-Minuten-Raster); Tagesart-Picker mit Tagesart-Liste, Trainingszeit (ab 09:00) und Dauer 60/90/120; Änderung gilt nur für diesen Tag.
 

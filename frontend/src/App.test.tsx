@@ -34,6 +34,9 @@ function withTodayRoutes(fetchMock: ReturnType<typeof vi.fn<typeof fetch>>, queu
     if (url.endsWith('/settings')) {
       return Promise.resolve(json(200, { settings }));
     }
+    if (url.endsWith('/entries')) {
+      return Promise.resolve(json(200, { entries: [] }));
+    }
     const next = queue.shift();
     return next === undefined ? Promise.reject(new Error(`unexpected ${url}`)) : Promise.resolve(next);
   });

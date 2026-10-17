@@ -30,7 +30,7 @@ Nach jedem Item: Tests, Security Audit (`agent-skills:security-and-hardening`), 
 | 2.2 | Fachlogik: Sollwerte, Fett-Richtwert, Checkpoints, Offen-Werte (+ Tests) | fertig (zusätzlich kcal-Bewertung, Formatierung, Begrüßung) |
 | 2.3 | Heute-Screen: Tabs, situative Begrüßung (BRIEFING §4a, Fachlogik + Tests), Tagesart-Chip, Balken mit Marker, Pop-up | fertig (Zauberstab/„+“ noch deaktiviert bis Phase 3/5; Einträge folgen mit 2.5) |
 | 2.4 | Tagesart-Picker (Tagesart, Uhrzeit-Rad, Dauer) | fertig |
-| 2.5 | Einträge: anlegen, bearbeiten, löschen, Schnappschuss, nachtragen | geplant |
+| 2.5 | Einträge: anlegen, bearbeiten, löschen, Schnappschuss, nachtragen | fertig (API inkl. Anlegen; Oberfläche: Liste, Bearbeiten im Mengen-Sheet, Löschen mit Bestätigung; Anlegen-Oberfläche mit 3.2/3.3, Nachtragen-Oberfläche mit Datumswechsel in 3.2) |
 
 ## Phase 3 – Hinzufügen & Bibliothek
 
@@ -38,7 +38,7 @@ Nach jedem Item: Tests, Security Audit (`agent-skills:security-and-hardening`), 
 |---|---|---|
 | 3.1 | Bibliothek mit Startprodukten und Richtwerten | geplant |
 | 3.2 | Schnell-Eintrag-Sheet (Suche, Vorrat, Shakes, Häufig um diese Zeit) | geplant |
-| 3.3 | Mengen-Sheet (Stepper, Schnellwahl, Uhrzeit, „Danach offen“) | geplant |
+| 3.3 | Mengen-Sheet (Stepper, Schnellwahl, Uhrzeit, „Danach offen“) | in Arbeit (Sheet fertig und im Bearbeiten-Modus genutzt; Hinzufügen-Modus mit 3.2) |
 | 3.4 | Open-Food-Facts-Proxy mit Cache (Barcode + Namenssuche) | geplant |
 | 3.5 | Barcode-Scan im Browser | geplant |
 | 3.6 | Produkt anlegen (Stepper-Liste) | geplant |

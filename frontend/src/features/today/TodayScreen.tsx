@@ -15,6 +15,12 @@ import {
   toLogicalMinute,
 } from '../../domain/time.ts';
 import type { EntryMacros } from '../../domain/types.ts';
+import { deleteEntry, fetchEntries, updateEntry, type Entry } from '../../api/entries.ts';
+import { ConfirmDialog } from '../../components/ConfirmDialog/ConfirmDialog.tsx';
+import { EntryItem } from '../entries/EntryItem.tsx';
+import { entryAmountText } from '../entries/entryText.ts';
+import { quantityFoodForEntry } from '../entries/entryQuantity.ts';
+import { QuantitySheet } from '../entries/QuantitySheet.tsx';
 import { DayTypeSheet } from './DayTypeSheet.tsx';
 import { useNow } from './useNow.ts';
 import styles from './TodayScreen.module.css';
@@ -26,8 +32,11 @@ const DEFAULT_DAY_BOUNDARY_MIN = 120;
 interface TodayData {
   day: Day;
   settings: Settings;
-  /** Entries arrive with roadmap 2.5. */
-  entries: EntryMacros[];
+  entries: Entry[];
+}
+
+function toEntryMacros(entries: readonly Entry[], dayBoundaryMin: number): EntryMacros[] {
+  return entries.map((e) => ({ ...e.nutrients, logicalMinute: toLogicalMinute(e.timeMin, dayBoundaryMin) }));
 }
 
 /** Screen 03 "Heute" (DESIGN.md §6, BRIEFING §4/§4a). */
@@ -35,6 +44,9 @@ export function TodayScreen({ displayName }: { displayName: string }) {
   const [data, setData] = useState<TodayData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [pickerOpen, setPickerOpen] = useState(false);
+  const [editing, setEditing] = useState<Entry | null>(null);
+  const [deleting, setDeleting] = useState<Entry | null>(null);
+  const [deleteBusy, setDeleteBusy] = useState(false);
   const now = useNow();
   // Reload whenever a new logical day starts while the app is open (day boundary 02:00).
   const dayKey = berlinLogicalDate(now, data?.settings.dayBoundaryMin ?? DEFAULT_DAY_BOUNDARY_MIN);
@@ -42,9 +54,10 @@ export function TodayScreen({ displayName }: { displayName: string }) {
   useEffect(() => {
     let cancelled = false;
     Promise.all([fetchToday(), fetchSettings()])
-      .then(([day, settings]) => {
+      .then(async ([day, settings]) => ({ day, settings, entries: await fetchEntries(day.date) }))
+      .then((loaded) => {
         if (!cancelled) {
-          setData({ day, settings, entries: [] });
+          setData(loaded);
           setError(null);
         }
       })
@@ -58,6 +71,10 @@ export function TodayScreen({ displayName }: { displayName: string }) {
     };
   }, [dayKey]);
 
+  function replaceEntries(entries: Entry[]) {
+    setData((current) => (current === null ? current : { ...current, entries }));
+  }
+
   const minuteNow = data === null ? 0 : toLogicalMinute(berlinWallMinute(now), data.settings.dayBoundaryMin);
 
   if (data === null) {
@@ -70,7 +87,8 @@ export function TodayScreen({ displayName }: { displayName: string }) {
     );
   }
 
-  const { day, settings, entries } = data;
+  const { day, settings } = data;
+  const entries = toEntryMacros(data.entries, settings.dayBoundaryMin);
   const eaten = sumMacros(entries);
   const checkpoint = checkpointFor(day, day.targets, settings.checkpoint);
   const greeting = greetingLine({
@@ -134,10 +152,83 @@ export function TodayScreen({ displayName }: { displayName: string }) {
             </button>
           </div>
         </div>
-        {entries.length === 0 && <p className={styles['empty']}>Noch nichts eingetragen.</p>}
+        {data.entries.length === 0 ? (
+          <p className={styles['empty']}>Noch nichts eingetragen.</p>
+        ) : (
+          <ul className={styles['list']}>
+            {[...data.entries].reverse().map((entry) => (
+              <EntryItem key={entry.id} entry={entry} onEdit={setEditing} onDelete={setDeleting} />
+            ))}
+          </ul>
+        )}
       </section>
 
       <Footer />
+
+      {editing !== null && (
+        <QuantitySheet
+          open
+          mode="edit"
+          food={quantityFoodForEntry(editing)}
+          initial={{
+            amount: editing.amount,
+            unit: editing.unit === 'portion' ? 'g' : editing.unit,
+            timeMin: editing.timeMin,
+          }}
+          targets={day.targets}
+          eatenBefore={sumMacros(
+            toEntryMacros(
+              data.entries.filter((e) => e.id !== editing.id),
+              settings.dayBoundaryMin,
+            ),
+          )}
+          onClose={() => {
+            setEditing(null);
+          }}
+          onDelete={() => {
+            setDeleting(editing);
+          }}
+          onSubmit={async ({ amount, unit, timeMin }) => {
+            const saved = await updateEntry(editing.id, { amount, unit, timeMin });
+            setEditing(null);
+            replaceEntries(data.entries.map((e) => (e.id === saved.id ? saved : e)));
+          }}
+        />
+      )}
+
+      <ConfirmDialog
+        open={deleting !== null}
+        title="Eintrag löschen?"
+        text={
+          deleting === null
+            ? ''
+            : `${deleting.name} · ${entryAmountText(deleting)} wird aus diesem Tag entfernt.`
+        }
+        confirmLabel="Löschen"
+        busy={deleteBusy}
+        onCancel={() => {
+          setDeleting(null);
+        }}
+        onConfirm={() => {
+          if (deleting === null) {
+            return;
+          }
+          setDeleteBusy(true);
+          deleteEntry(deleting.id)
+            .then(() => {
+              replaceEntries(data.entries.filter((e) => e.id !== deleting.id));
+              setEditing(null);
+              setDeleting(null);
+            })
+            .catch((e: unknown) => {
+              setError(e instanceof Error ? e.message : 'Löschen fehlgeschlagen.');
+              setDeleting(null);
+            })
+            .finally(() => {
+              setDeleteBusy(false);
+            });
+        }}
+      />
 
       {pickerOpen && (
         <DayTypeSheet

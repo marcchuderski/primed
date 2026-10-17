@@ -20,6 +20,9 @@ final class Entry
         public readonly string $unit,
         public readonly float $quantity,
         public readonly array $nutrients,
+        /** Basis and package size of the food (current values), for unit changes when editing. */
+        public readonly ?string $basis = null,
+        public readonly ?float $packageAmount = null,
     ) {
     }
 
@@ -39,6 +42,8 @@ final class Entry
             'unit' => $this->unit,
             'quantity' => $this->quantity,
             'nutrients' => $this->nutrients,
+            'basis' => $this->basis,
+            'packageAmount' => $this->packageAmount,
         ];
     }
 }
