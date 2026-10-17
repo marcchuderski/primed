@@ -15,19 +15,42 @@ final class DayRepository
     {
     }
 
+    private const COLUMNS = 'date, day_type_id, day_type_name, is_training, training_start, duration_min,
+                    target_kcal, target_protein, target_carbs, target_sugar, source';
+
     public function find(int $userId, string $date): ?Day
     {
-        $statement = $this->pdo->prepare(
-            'SELECT date, day_type_id, day_type_name, is_training, training_start, duration_min,
-                    target_kcal, target_protein, target_carbs, target_sugar, source
-               FROM days WHERE user_id = ? AND date = ?',
-        );
+        $statement = $this->pdo->prepare('SELECT ' . self::COLUMNS . ' FROM days WHERE user_id = ? AND date = ?');
         $statement->execute([$userId, $date]);
         $row = $statement->fetch();
-        if (!is_array($row)) {
-            return null;
+
+        return is_array($row) ? self::hydrate($row) : null;
+    }
+
+    /**
+     * @return list<Day> ordered by date
+     */
+    public function range(int $userId, string $from, string $to): array
+    {
+        $statement = $this->pdo->prepare(
+            'SELECT ' . self::COLUMNS . ' FROM days WHERE user_id = ? AND date BETWEEN ? AND ? ORDER BY date',
+        );
+        $statement->execute([$userId, $from, $to]);
+        $days = [];
+        foreach ($statement->fetchAll() as $row) {
+            if (is_array($row)) {
+                $days[] = self::hydrate($row);
+            }
         }
 
+        return $days;
+    }
+
+    /**
+     * @param array<mixed> $row
+     */
+    private static function hydrate(array $row): Day
+    {
         return new Day(
             Row::string($row, 'date'),
             ($row['day_type_id'] ?? null) === null ? null : Row::int($row, 'day_type_id'),

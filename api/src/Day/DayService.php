@@ -190,6 +190,31 @@ final class DayService
      * Stores every past day (since the account was created) that has no row yet, using the current values.
      * Must run before any change to the week template, day types or protein default.
      */
+    /**
+     * Days from max(from, account start) to min(to, today) for the history (6.1); past days are fixed first.
+     *
+     * @return array{days: list<Day>, today: string}
+     */
+    public function history(int $userId, string $from, string $to): array
+    {
+        $today = $this->today($userId);
+        $from = max($from, $this->accountStartDate($userId));
+        $to = min($to, $today);
+        if ($from > $to) {
+            return ['days' => [], 'today' => $today];
+        }
+        $this->materializePast($userId);
+        $days = array_values(array_filter(
+            $this->days->range($userId, $from, $to),
+            static fn (Day $day): bool => $day->date !== $today,
+        ));
+        if ($to === $today) {
+            $days[] = $this->refreshToday($userId);
+        }
+
+        return ['days' => $days, 'today' => $today];
+    }
+
     public function materializePast(int $userId): void
     {
         $today = $this->today($userId);

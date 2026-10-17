@@ -133,6 +133,7 @@ Implementiert: `GET /v1/health` → `{"status":"ok"}`.
 | `GET/PUT /v1/week-template` | Wochenvorlage (genau 7 Einträge) |
 | `GET /v1/days/today`, `GET /v1/days/{date}` | Tag mit Soll-Schnappschuss; Zukunft → 422 |
 | `PUT /v1/days/{date}` | Tagesart/Training für einen Tag setzen (auch rückwirkend, `source = manual`) |
+| `GET /v1/history?from=&to=` | Verlauf (6): je Tag Soll-Schnappschuss, Summen (kcal, Protein, KH, Fett, Zucker) und Anzahl Einträge; begrenzt auf Kontostart bis heute, höchstens 366 Tage (sonst 422); vergangene Tage werden vorher festgeschrieben. Bewertung/Bilanzen rechnet der Client (`domain/history.ts`). |
 
 - Logischer Tag: Europe/Berlin, endet um `day_boundary_min` (02:00) des Folgetags (`LogicalCalendar`).
 - Heute wird bei jedem Abruf aus den aktuellen Einstellungen neu berechnet; vergangene Tage bleiben fest. Vor jeder Änderung an Tagesarten, Wochenvorlage oder Protein-Standard werden alle vergangenen Tage ohne Datensatz (seit Kontoanlage) mit den bisherigen Werten gespeichert – in derselben Transaktion wie die Änderung.

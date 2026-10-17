@@ -18,6 +18,7 @@ use Primed\Auth\UserRepository;
 use Primed\Config\Config;
 use Primed\Controller\AuthController;
 use Primed\Controller\HealthController;
+use Primed\Controller\HistoryController;
 use Primed\Controller\WeekTemplateController;
 use Primed\Controller\SettingsController;
 use Primed\Controller\DayTypeController;
@@ -144,6 +145,7 @@ final class Kernel
         $router->add('GET', '/v1/days/today', $days->today(...));
         $router->add('GET', '/v1/days/{date}', $days->show(...));
         $router->add('PUT', '/v1/days/{date}', $days->update(...));
+        $router->add('GET', '/v1/history', (new HistoryController($c))->index(...));
 
         $foods = new FoodController($c);
         $router->add('GET', '/v1/foods', $foods->index(...));

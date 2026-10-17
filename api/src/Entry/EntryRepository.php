@@ -37,6 +37,36 @@ final class EntryRepository
         return $entries;
     }
 
+    /**
+     * Sums of the entry snapshots per logical day (history, 6.1).
+     *
+     * @return array<string, array{kcal: float, protein: float, carbs: float, fat: float, sugar: float, count: int}>
+     */
+    public function totalsByDate(int $userId, string $from, string $to): array
+    {
+        $statement = $this->pdo->prepare(
+            'SELECT date, SUM(kcal) AS kcal, SUM(protein) AS protein, SUM(carbs) AS carbs, SUM(fat) AS fat,
+                    SUM(sugar) AS sugar, COUNT(*) AS n
+               FROM entries WHERE user_id = ? AND date BETWEEN ? AND ? GROUP BY date',
+        );
+        $statement->execute([$userId, $from, $to]);
+        $totals = [];
+        foreach ($statement->fetchAll() as $row) {
+            if (is_array($row)) {
+                $totals[Row::string($row, 'date')] = [
+                    'kcal' => Row::float($row, 'kcal'),
+                    'protein' => Row::float($row, 'protein'),
+                    'carbs' => Row::float($row, 'carbs'),
+                    'fat' => Row::float($row, 'fat'),
+                    'sugar' => Row::float($row, 'sugar'),
+                    'count' => Row::int($row, 'n'),
+                ];
+            }
+        }
+
+        return $totals;
+    }
+
     public function find(int $userId, int $id): ?Entry
     {
         $statement = $this->pdo->prepare('SELECT ' . self::COLUMNS . self::FROM . 'WHERE e.user_id = ? AND e.id = ?');
