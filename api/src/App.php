@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Primed;
 
 use Primed\Http\HttpException;
+use Primed\Http\OriginGuard;
 use Primed\Http\Request;
 use Primed\Http\Response;
 use Primed\Http\Router;
@@ -20,6 +21,7 @@ final class App
         private readonly Router $router,
         private readonly Logger $logger,
         private readonly string $basePath = '/api',
+        private readonly ?OriginGuard $originGuard = null,
     ) {
     }
 
@@ -30,6 +32,8 @@ final class App
             if ($path === null) {
                 throw HttpException::notFound();
             }
+
+            $this->originGuard?->check($request);
 
             return $this->router->dispatch($request, $path);
         } catch (HttpException $e) {

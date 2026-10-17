@@ -17,7 +17,7 @@ Nach jedem Item: Tests, Security Audit (`agent-skills:security-and-hardening`), 
 | ID | Item | Status |
 |---|---|---|
 | 1.1 | Migrationen: Users, Sessions, Login-Versuche, Settings | fertig |
-| 1.2 | Login, Logout, Überall abmelden, Passwort ändern, Rate-Limit | geplant |
+| 1.2 | Login, Logout, Überall abmelden, Passwort ändern, Rate-Limit | fertig (API + CLI; Oberfläche in 1.4/7.1) |
 | 1.3 | Security-Header, CSP, HSTS, CSRF, `.htaccess`, Fehlerbehandlung ohne Datenlecks | geplant |
 | 1.4 | Loading-Screen, Login-Screen | geplant |
 | 1.5 | Erstes Test-Deployment auf Plesk nach `DEPLOYMENT.md` | geplant |

@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-17 – 1.2 Login & Sessions
+- Auth-API: Login, me, Logout, Überall abmelden, Passwort ändern; Rate-Limit nach D-061; gleitende Session 30/90 Tage; `__Host-`-Cookie; zustandslose CSRF-Tokens; Origin-/Content-Type-Prüfung.
+- Passwort-Regeln mit Liste häufiger Passwörter; Argon2id mit Rehash.
+- Admin-CLI `bin/user-create.php`, `bin/user-password.php`.
+- `.env`: `APP_KEY` statt `IP_HASH_KEY`, neu `ALLOWED_ORIGINS`.
+
 ## 2026-10-17 – 1.1 Migrationen
 - Migration `001_init`: users, sessions, login_attempts, user_settings, schema_migrations.
 - Migrator + `bin/migrate.php`; Integrationstests gegen MariaDB 10.11 (Constraints, Kaskaden-Löschung, Idempotenz).

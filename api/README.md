@@ -11,7 +11,26 @@ ddev composer check         # PHPCS (PSR-12), PHPStan (max + strict), PHPUnit
 curl -k https://primed.ddev.site/api/v1/health
 ```
 
-`api/.env` (nicht im Repo) enthält die lokalen Werte; Vorlage `.env.example`. Integrationstests nutzen die Datenbank `db_test` (wird beim Start von DDEV angelegt) und werden außerhalb von DDEV übersprungen.
+`api/.env` (nicht im Repo) enthält die lokalen Werte; Vorlage `.env.example`. Integrationstests nutzen die Datenbank `db_test` (wird beim Start von DDEV angelegt) und werden übersprungen, wenn keine Test-DB erreichbar ist.
+
+### Tests ohne DDEV
+
+Optionale `api/.env.testing` (nicht im Repo) überschreibt die DB-Verbindung für Tests, z. B. für einen Container aus dem DDEV-Image:
+
+```
+docker run -d --name primed-test-db --user "$(id -u):$(id -g)" -p 127.0.0.1:33306:3306 ddev/ddev-dbserver-mariadb-10.11:v1.25.2
+docker exec primed-test-db mysql -uroot -proot -e "CREATE DATABASE db_test CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci; GRANT ALL ON db_test.* TO 'db'@'%';"
+# .env.testing: DB_HOST=127.0.0.1, DB_PORT=33306, DB_USER=db, DB_PASS=db, DB_TEST_NAME=db_test
+vendor/bin/phpunit
+```
+
+## Admin-CLI
+
+| Befehl | Zweck |
+|---|---|
+| `php bin/migrate.php [--test]` | ausstehende Migrationen anwenden |
+| `php bin/user-create.php [--set-password]` | User anlegen (Standard: zufälliges Startpasswort, einmalig angezeigt) |
+| `php bin/user-password.php [--set-password]` | Passwort zurücksetzen, alle Sessions beenden |
 
 ## Aufbau
 
@@ -23,4 +42,8 @@ curl -k https://primed.ddev.site/api/v1/health
 | `src/Config/` | strenger `.env`-Parser, Config |
 | `src/Log/` | JSON-Zeilen-Logger mit Schwärzung sensibler Felder (`var/log/app.log`) |
 | `src/Database/` | PDO-Factory (Exceptions, echte Prepared Statements, UTC, strict SQL mode) |
-| `src/App.php`, `src/Kernel.php` | Dispatch, sichere Fehlerantworten, Routen |
+| `src/Auth/` | Login, Sessions, Rate-Limit, CSRF, Passwort-Regeln |
+| `src/Cli/` | Admin-CLI-Logik |
+| `src/App.php`, `src/Kernel.php` | Dispatch, Origin-Prüfung, sichere Fehlerantworten, Routen |
+| `migrations/` | SQL-Migrationen |
+| `resources/` | Liste häufiger Passwörter |

@@ -102,6 +102,22 @@ Migrationen: `api/migrations/NNN_name.sql`, nur vorwärts; lokal `php bin/migrat
 
 Implementiert: `GET /v1/health` → `{"status":"ok"}`.
 
+**Auth (1.2)**
+
+| Endpunkt | Anfrage | Antwort |
+|---|---|---|
+| `POST /v1/auth/login` | `{username, password}` | 200 `{user, csrfToken}` + Session-Cookie · 401 `invalid_credentials` · 429 `too_many_attempts` (+ `Retry-After`) |
+| `GET /v1/auth/me` | Cookie | 200 `{user, csrfToken}` (Cookie wird bei gleitender Verlängerung erneuert) · 401 |
+| `POST /v1/auth/logout` | Cookie + `X-CSRF-Token` | 204, Cookie gelöscht |
+| `POST /v1/auth/logout-all` | Cookie + `X-CSRF-Token` | 204, alle Sessions des Users widerrufen |
+| `POST /v1/auth/password` | `{currentPassword, newPassword}` + CSRF | 204, andere Sessions beendet · 422 `invalid_current_password` / `weak_password` |
+
+- Cookie `__Host-primed_session`: 32 Zufallsbytes (base64url), in der DB nur SHA-256.
+- CSRF-Token = HMAC(abgeleiteter Schlüssel, Token-Hash): zustandslos, an die Session gebunden, über `/auth/me` jederzeit neu abrufbar.
+- `OriginGuard` (alle schreibenden Methoden): `Origin` ∈ `APP_URL` + `ALLOWED_ORIGINS` (ohne `Origin` nur mit `Sec-Fetch-Site: same-origin`), `Content-Type: application/json` Pflicht.
+- Schlüssel: `APP_KEY` (`.env`) → abgeleitete Teilschlüssel für IP-HMAC und CSRF.
+- Admin-CLI (`bin/`, nur per SSH): `user-create.php` (zufälliges Startpasswort oder `--set-password`), `user-password.php` (Reset + alle Sessions beenden), `migrate.php`.
+
 Fehlerformat: `{"error":{"code":"…","message":"…"}}` mit deutscher, nutzbarer Meldung; interne Details nur im Log. Body max. 64 KB, JSON-Tiefe max. 32, Pfad-Parameter nur `[A-Za-z0-9_-]{1,64}`.
 
 Alle schreibenden Endpunkte: Session-Cookie + CSRF-Token, serverseitige Validierung, Zugriff nur auf eigene Daten (`user_id`).
@@ -132,7 +148,7 @@ Einträge und Gerichtszutaten speichern **Schnappschüsse**, damit spätere Prod
 
 ## Wichtige Abläufe
 
-**Login:** Username + Passwort → Rate-Limit-Prüfung → Argon2id-Prüfung → zufälliger Session-Token (nur Hash in DB) → Cookie `HttpOnly; Secure; SameSite=Strict`, gleitend 30 Tage, max. 90 Tage → CSRF-Token an den Client.
+**Login:** Username + Passwort → Bereinigung alter Versuche/Sessions → Rate-Limit-Prüfung → Argon2id-Prüfung → zufälliger Session-Token (nur Hash in DB) → Cookie `HttpOnly; Secure; SameSite=Strict`, gleitend 30 Tage, max. 90 Tage → CSRF-Token an den Client.
 
 **Barcode:** Kamera liest EAN → `GET /off/barcode/{ean}` → API prüft eigene Bibliothek, dann `off_cache`, dann Open Food Facts (Timeout, User-Agent mit Kontakt) → normalisierte Werte zurück → Nutzer bestätigt → Produkt in Bibliothek.
 

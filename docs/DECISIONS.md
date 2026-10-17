@@ -164,3 +164,13 @@ Neue Einträge unten anhängen. Getroffene Entscheidungen werden nicht gelöscht
 **D-084 · Migrationen als nummerierte SQL-Dateien** – nur vorwärts, jede Datei trägt sich in `schema_migrations` ein, damit `bin/migrate.php` (lokal/SSH) und phpMyAdmin (Produktion) denselben Stand führen. Eine Anweisung endet mit `;` am Zeilenende. · einfach, ohne Migrations-Framework, nachvollziehbar. · Phinx, Doctrine Migrations. · Claude · 2026-10-17
 
 **D-085 · Integrationstests auch ohne DDEV** – optionale, nicht versionierte `api/.env.testing` zeigt auf eine Test-DB (z. B. Container aus dem DDEV-MariaDB-10.11-Image); Tests laufen zusätzlich unter PHP 8.3 im DDEV-Webserver-Image. · Produktionsparität (PHP 8.3, MariaDB 10.11) unabhängig vom DDEV-Start. · Claude · 2026-10-17
+
+**D-086 · Zustandslose CSRF-Tokens** – Token = HMAC(abgeleiteter Schlüssel, Session-Token-Hash), Übertragung im Header `X-CSRF-Token`. · Session-Token liegt nur gehasht in der DB, trotzdem kann `/auth/me` das CSRF-Token nach einem Neuladen wieder ausliefern; keine zusätzliche Spalte. · Token in der DB, Double-Submit-Cookie. · Claude · 2026-10-17
+
+**D-087 · Ein `APP_KEY`, abgeleitete Teilschlüssel** – ersetzt `IP_HASH_KEY`; IP-HMAC und CSRF nutzen getrennte, per HMAC abgeleitete Schlüssel. · ein Geheimnis zu verwalten, trotzdem Zweckbindung. · mehrere Einzel-Schlüssel. · Claude · 2026-10-17
+
+**D-088 · Origin- und Content-Type-Prüfung für alle schreibenden Requests** (inkl. Login) zusätzlich zu SameSite=Strict und CSRF-Token. · Schutz vor Login-CSRF und Formular-Angriffen, Defense in Depth. · Claude · 2026-10-17
+
+**D-089 · Liste häufiger Passwörter** – aus SecLists „100k-most-used-passwords-NCSC“ (MIT), nur Einträge ≥ 12 Zeichen, klein geschrieben (~1.200 Einträge, `api/resources/common-passwords.txt`); zusätzlich darf das Passwort den Username nicht enthalten. · lokal, kein externer Dienst (D-062). · HIBP-API. · Claude · 2026-10-17
+
+**D-090 · Startpasswörter** – 4 Gruppen à 5 Zeichen aus einem Alphabet ohne verwechselbare Zeichen (~114 Bit), einmalig in der CLI angezeigt. · sicher und abtippbar. · Claude · 2026-10-17
