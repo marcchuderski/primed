@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-17 – 0.2 Frontend-Gerüst
+- `frontend/` mit Vite, React, TypeScript (strict), ESLint, Prettier, Vitest, Testing Library angelegt; Node 22 über `.nvmrc`.
+- Erste Fachfunktion `roundUpToQuarterHour` (D-047) mit Tests.
+- Dev-Proxy `/api` → DDEV.
+
 ## 2026-10-17 – 0.1 Offene Punkte geklärt
 - Alle offenen Punkte aus dem Briefing mit dem Nutzer geklärt und in BRIEFING, DEFAULTS, ARCHITECTURE, SECURITY, DEPLOYMENT eingearbeitet.
 - Entscheidungen D-040 bis D-071 dokumentiert.

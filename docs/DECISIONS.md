@@ -132,3 +132,7 @@ Neue Einträge unten anhängen. Getroffene Entscheidungen werden nicht gelöscht
 **D-070 · Arbeitsweise** – Plan für alle Phasen freigegeben; Claude arbeitet Schritt für Schritt durch und hält nur bei neuen Trade-offs, kritischen Security-Funden oder Nutzer-Aufgaben an. Direkt auf `main`, nur Commits, kein Push. · Nutzer · 2026-10-17
 
 **D-071 · Admin- und Nutzer-Doku zum Abschluss** – inkl. PWA-Installation (Screenshot vom Nutzer); kein eigener Installations-Hinweis in der App. · Nutzer · 2026-10-17
+
+## Umsetzung
+
+**D-072 · Frontend-Werkzeuge (0.2)** – Vite 8, React 19, **TypeScript 6.0.3** (nicht 7: typescript-eslint unterstützt nur < 6.1), ESLint 10 mit `strictTypeChecked` + `stylisticTypeChecked`, Prettier, Vitest 5 + jsdom, Testing Library (React, jest-dom, user-event) für Komponententests, `@types/node` 22. Alle Versionen exakt fixiert, Install-Skripte blockiert. Zusätzliche TS-Strenge: `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`. · Standardwerkzeuge, gut gepflegt; Testing Library prüft Komponenten über Rollen (Barrierefreiheit). · Jest, Biome statt ESLint/Prettier. · Claude · 2026-10-17
