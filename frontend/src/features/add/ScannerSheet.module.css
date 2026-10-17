@@ -1,0 +1,54 @@
+.viewport {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 3 / 4;
+  max-height: 55dvh;
+  border-radius: 22px;
+  background: #000;
+}
+
+.video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.frame {
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  top: 38%;
+  height: 24%;
+  border: 3px solid var(--accent);
+  border-radius: 14px;
+  pointer-events: none;
+}
+
+.status {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.manual {
+  display: flex;
+  gap: 8px;
+}
+
+.manual input {
+  flex: 1;
+  min-width: 0;
+  height: 52px;
+  padding: 0 16px;
+  border: 1px solid var(--input-border);
+  border-radius: var(--r-input);
+  background: var(--surface);
+  color: var(--text);
+  font: 500 16px var(--font-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.error {
+  color: var(--status-high-fg);
+  font-size: 14px;
+  font-weight: 600;
+}

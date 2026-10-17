@@ -21,6 +21,7 @@ import { EntryItem } from '../entries/EntryItem.tsx';
 import { entryAmountText } from '../entries/entryText.ts';
 import { quantityFoodForEntry } from '../entries/entryQuantity.ts';
 import { QuantitySheet } from '../entries/QuantitySheet.tsx';
+import { AddFlow } from '../add/AddFlow.tsx';
 import { DayTypeSheet } from './DayTypeSheet.tsx';
 import { useNow } from './useNow.ts';
 import styles from './TodayScreen.module.css';
@@ -45,6 +46,7 @@ export function TodayScreen({ displayName }: { displayName: string }) {
   const [error, setError] = useState<string | null>(null);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [editing, setEditing] = useState<Entry | null>(null);
+  const [adding, setAdding] = useState(false);
   const [deleting, setDeleting] = useState<Entry | null>(null);
   const [deleteBusy, setDeleteBusy] = useState(false);
   const now = useNow();
@@ -146,7 +148,10 @@ export function TodayScreen({ displayName }: { displayName: string }) {
               type="button"
               className={`${styles['iconButton'] ?? ''} ${styles['add'] ?? ''}`}
               aria-label="Hinzufügen"
-              disabled
+              aria-haspopup="dialog"
+              onClick={() => {
+                setAdding(true);
+              }}
             >
               <Plus size={20} strokeWidth={2.4} aria-hidden="true" />
             </button>
@@ -164,6 +169,26 @@ export function TodayScreen({ displayName }: { displayName: string }) {
       </section>
 
       <Footer />
+
+      {adding && (
+        <AddFlow
+          day={day}
+          eatenBefore={eaten}
+          onClose={() => {
+            setAdding(false);
+          }}
+          onAdded={(entry) => {
+            setAdding(false);
+            if (entry.date === day.date) {
+              fetchEntries(day.date)
+                .then(replaceEntries)
+                .catch(() => {
+                  replaceEntries([...data.entries, entry]);
+                });
+            }
+          }}
+        />
+      )}
 
       {editing !== null && (
         <QuantitySheet

@@ -14,3 +14,11 @@ export function categoryLabel(id: string, variant: 'label' | 'short' = 'short'):
   const category = CATEGORIES.find((c) => c.id === id);
   return category === undefined ? id : category[variant];
 }
+
+/** "Milram Skyr Natur", but not "Skyr Skyr Mocca": the brand is only prefixed if the name lacks it. */
+export function displayName(name: string, brand: string | null): string {
+  if (brand === null || brand.trim() === '' || name.toLowerCase().includes(brand.trim().toLowerCase())) {
+    return name;
+  }
+  return `${brand.trim()} ${name}`;
+}

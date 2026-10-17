@@ -39,7 +39,9 @@ interface QuantitySheetProps {
   targets: Targets;
   /** Eaten today without this entry. */
   eatenBefore: Macros;
-  onSubmit: (value: { amount: number; unit: Unit; timeMin: number }) => Promise<void>;
+  onSubmit: (value: { amount: number; unit: Unit; timeMin: number; date: string | null }) => Promise<void>;
+  /** Add mode: selectable days for logging later (Nachtragen); the first entry is today. */
+  dates?: { value: string; label: string }[] | undefined;
   onDelete?: () => void;
   onClose: () => void;
 }
@@ -66,10 +68,12 @@ export function QuantitySheet({
   onSubmit,
   onDelete,
   onClose,
+  dates,
 }: QuantitySheetProps) {
   const [unit, setUnit] = useState<Unit>(initial.unit);
   const [text, setText] = useState(formatDecimal(initial.amount));
   const [timeMin, setTimeMin] = useState(initial.timeMin);
+  const [date, setDate] = useState<string | null>(dates?.[0]?.value ?? null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -96,7 +100,7 @@ export function QuantitySheet({
     setBusy(true);
     setError(null);
     try {
-      await onSubmit({ amount, unit, timeMin });
+      await onSubmit({ amount, unit, timeMin, date });
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Speichern fehlgeschlagen.');
       setBusy(false);
@@ -212,6 +216,25 @@ export function QuantitySheet({
           </span>
         </div>
       </div>
+
+      {dates !== undefined && dates.length > 1 && (
+        <label className={styles['dayRow']}>
+          <span className={styles['label']}>Tag</span>
+          <select
+            className={styles['daySelect']}
+            value={date ?? ''}
+            onChange={(e) => {
+              setDate(e.target.value);
+            }}
+          >
+            {dates.map((d) => (
+              <option key={d.value} value={d.value}>
+                {d.label}
+              </option>
+            ))}
+          </select>
+        </label>
+      )}
 
       <div className={styles['group']}>
         <div className={styles['groupHead']}>

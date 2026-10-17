@@ -93,7 +93,13 @@ function oneOf<T extends string>(list: readonly T[], v: unknown): T {
 
 function nutrients(v: unknown): EntryNutrients {
   const n = rec(v);
-  return { kcal: num(n['kcal']), protein: num(n['protein']), carbs: num(n['carbs']), sugar: num(n['sugar']), fat: num(n['fat']) };
+  return {
+    kcal: num(n['kcal']),
+    protein: num(n['protein']),
+    carbs: num(n['carbs']),
+    sugar: num(n['sugar']),
+    fat: num(n['fat']),
+  };
 }
 
 export function parseFood(v: unknown): Food {

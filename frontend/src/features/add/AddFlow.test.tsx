@@ -1,0 +1,207 @@
+import { render, screen, waitFor, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import type { Day } from '../../api/days.ts';
+import { AddFlow } from './AddFlow.tsx';
+
+const day: Day = {
+  date: '2026-10-19',
+  isToday: true,
+  dayTypeId: 1,
+  dayTypeName: 'Ruhetag',
+  isTraining: false,
+  trainingStart: null,
+  durationMin: null,
+  source: 'template',
+  targets: { kcal: 2000, protein: 150, carbs: 200, sugar: 50 },
+};
+const zero = { kcal: 0, protein: 0, carbs: 0, fat: 0, sugar: 0 };
+
+const food = (over: Record<string, unknown>) => ({
+  id: 3,
+  type: 'product',
+  name: 'REWE Quarkcreme',
+  brand: null,
+  barcode: null,
+  category: 'dairy',
+  basis: 'per_100g',
+  nutrients: { kcal: 67, protein: 12.4, carbs: 3.2, sugar: 2.6, fat: 0.5 },
+  packageAmount: 200,
+  usageCount: 3,
+  lastAmount: 1,
+  lastUnit: 'packung',
+  ...over,
+});
+const quark = food({});
+const skyrRef = food({
+  id: 9,
+  type: 'reference',
+  name: 'Skyr natur',
+  packageAmount: null,
+  lastAmount: null,
+  lastUnit: null,
+});
+const offSkyr = {
+  barcode: '4006381333931',
+  name: 'Skyr Natur',
+  brand: 'Milram',
+  category: 'dairy',
+  basis: 'per_100g',
+  nutrients: { kcal: 64, protein: 11, carbs: 4, sugar: 4, fat: 0.2 },
+  packageAmount: 450,
+};
+const shakes = [
+  {
+    id: 'big',
+    name: 'Shake Groß',
+    label: 'Groß',
+    nutrients: { kcal: 300.2, protein: 35.2, carbs: 21, sugar: 20.8, fat: 7.6 },
+  },
+];
+const entry = (over: Record<string, unknown>) => ({
+  id: 50,
+  date: '2026-10-19',
+  timeMin: 870,
+  kind: 'food',
+  foodId: 3,
+  dishId: null,
+  name: 'REWE Quarkcreme',
+  amount: 1,
+  unit: 'packung',
+  quantity: 200,
+  nutrients: { kcal: 134, protein: 24.8, carbs: 6.4, sugar: 5.2, fat: 1 },
+  basis: 'per_100g',
+  packageAmount: 200,
+  ...over,
+});
+
+function urlOf(input: RequestInfo | URL): string {
+  return input instanceof Request ? input.url : input.toString();
+}
+
+describe('AddFlow', () => {
+  const fetchMock = vi.fn<typeof fetch>();
+  const respond = (body: unknown, status = 200) =>
+    Promise.resolve(new Response(JSON.stringify(body), { status }));
+
+  beforeEach(() => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(new Date('2026-10-19T12:38:00Z')); // 14:38 Berlin → 14:45
+    vi.stubGlobal('fetch', fetchMock);
+    fetchMock.mockReset();
+    fetchMock.mockImplementation((input, init) => {
+      const url = urlOf(input);
+      const method = init?.method ?? 'GET';
+      if (url.endsWith('/shakes')) return respond({ shakes });
+      if (url.endsWith('/foods/frequent')) return respond({ foods: [quark] });
+      if (url.includes('/foods?q=')) return respond({ foods: [quark, skyrRef] });
+      if (url.includes('/off/search')) return respond({ products: [offSkyr] });
+      if (url.includes('/foods/barcode/96385074'))
+        return respond({ error: { code: 'not_found', message: 'x' } }, 404);
+      if (url.endsWith('/foods') && method === 'POST')
+        return respond({ food: food({ id: 77, name: 'Skyr Natur', barcode: '4006381333931' }) }, 201);
+      if (url.endsWith('/entries/shake'))
+        return respond({ entry: entry({ kind: 'shake', name: 'Shake Groß', foodId: null }) }, 201);
+      if (url.endsWith('/entries') && method === 'POST') return respond({ entry: entry({}) }, 201);
+      return respond({ error: { code: 'x', message: `unexpected ${url}` } }, 500);
+    });
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.unstubAllGlobals();
+  });
+
+  function setup() {
+    const onAdded = vi.fn();
+    render(<AddFlow day={day} eatenBefore={zero} onClose={vi.fn()} onAdded={onAdded} />);
+    return onAdded;
+  }
+
+  function lastBody(path: string): unknown {
+    const call = [...fetchMock.mock.calls].reverse().find(([u]) => urlOf(u).endsWith(path));
+    const body = call?.[1]?.body;
+    return typeof body === 'string' ? (JSON.parse(body) as unknown) : null;
+  }
+
+  it('shows shakes and "Häufig um diese Zeit" with the last amount', async () => {
+    setup();
+    expect(
+      await screen.findByRole('button', { name: /Shake Groß eintragen: 300 kcal, 35 g Protein/ }),
+    ).toBeInTheDocument();
+    expect(await screen.findByText('134 kcal ·', { exact: false })).toHaveTextContent('1 Packung');
+  });
+
+  it('logs a shake with one tap at the rounded current time', async () => {
+    const onAdded = setup();
+    await userEvent.click(await screen.findByRole('button', { name: /Shake Groß eintragen/ }));
+    await waitFor(() => {
+      expect(onAdded).toHaveBeenCalledOnce();
+    });
+    expect(lastBody('/entries/shake')).toEqual({ date: '2026-10-19', timeMin: 885, shake: 'big' });
+  });
+
+  it('searches library, online and reference values and logs with the prefilled amount, also for yesterday', async () => {
+    const onAdded = setup();
+    await userEvent.type(screen.getByRole('searchbox', { name: 'Lebensmittel suchen' }), 'skyr');
+
+    const library = await screen.findByRole('region', { name: 'Deine Bibliothek' });
+    expect(await within(library).findByText('REWE Quarkcreme')).toBeInTheDocument();
+    expect(await screen.findByRole('region', { name: 'Richtwerte' })).toHaveTextContent('Skyr natur');
+    const onlineRegion = await screen.findByRole('region', { name: 'Online-Treffer' });
+    expect(
+      await within(onlineRegion).findByText('Milram Skyr Natur', {}, { timeout: 2000 }),
+    ).toBeInTheDocument();
+
+    await userEvent.click(within(library).getByRole('button', { name: /REWE Quarkcreme/ }));
+    const sheet = screen.getByRole('dialog', { name: 'REWE Quarkcreme' });
+    expect(within(sheet).getByLabelText(/Menge in/)).toHaveValue('1');
+    await userEvent.selectOptions(within(sheet).getByRole('combobox'), 'Gestern');
+    await userEvent.click(within(sheet).getByRole('button', { name: 'Hinzufügen · 14:45' }));
+
+    await waitFor(() => {
+      expect(onAdded).toHaveBeenCalledOnce();
+    });
+    expect(lastBody('/entries')).toEqual({
+      date: '2026-10-18',
+      timeMin: 885,
+      foodId: 3,
+      amount: 1,
+      unit: 'packung',
+    });
+  });
+
+  it('saves an online product to the library before logging it', async () => {
+    const onAdded = setup();
+    await userEvent.type(screen.getByRole('searchbox', { name: 'Lebensmittel suchen' }), 'skyr');
+    const online = await screen.findByRole('region', { name: 'Online-Treffer' }, { timeout: 2000 });
+    await userEvent.click(
+      await within(online).findByRole('button', { name: /Milram Skyr Natur/ }, { timeout: 2000 }),
+    );
+
+    const sheet = screen.getByRole('dialog', { name: 'Milram Skyr Natur' });
+    expect(within(sheet).getByText('Milchprodukte · Neu · wird gespeichert')).toBeInTheDocument();
+    await userEvent.click(within(sheet).getByRole('button', { name: /^Hinzufügen/ }));
+
+    await waitFor(() => {
+      expect(onAdded).toHaveBeenCalledOnce();
+    });
+    expect(lastBody('/foods')).toMatchObject({
+      barcode: '4006381333931',
+      source: 'off',
+      name: 'Skyr Natur',
+      brand: 'Milram',
+    });
+    expect(lastBody('/entries')).toMatchObject({ foodId: 77, amount: 100, unit: 'g' });
+  });
+
+  it('opens "Neues Produkt" with the barcode when a scanned product is unknown', async () => {
+    setup();
+    await userEvent.click(screen.getAllByRole('button', { name: /Barcode scannen/ }).at(0) ?? document.body);
+    await userEvent.type(screen.getByRole('textbox', { name: 'Barcode eintippen' }), '96385074');
+    await userEvent.click(screen.getByRole('button', { name: 'Suchen' }));
+
+    expect(await screen.findByRole('dialog', { name: 'Neues Produkt' })).toHaveTextContent(
+      'Barcode 96385074 wird verknüpft.',
+    );
+  });
+});

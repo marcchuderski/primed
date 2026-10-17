@@ -81,3 +81,8 @@ export function quickAmounts(unit: Unit): number[] {
       return [1, 2, 3];
   }
 }
+
+/** "pro 100 g", "pro 100 ml" or "pro Stück". */
+export function basisLabel(basis: Basis): string {
+  return basis === 'per_unit' ? 'pro Stück' : basis === 'per_100ml' ? 'pro 100 ml' : 'pro 100 g';
+}

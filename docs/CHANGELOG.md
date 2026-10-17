@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-17 – 3.2/3.3/3.5/3.6 Hinzufügen
+- „+“ aktiv: Schnell-Eintrag mit Shakes und „Häufig um diese Zeit“, Suche über Bibliothek, Open Food Facts und BLS-Richtwerte (mit Quellenangaben).
+- Mengen-Sheet im Hinzufügen-Modus mit Nachtragen (Tagesauswahl).
+- Barcode-Scanner (ZXing, lazy geladen) mit manueller Eingabe; „Neues Produkt“ (Stepper-Liste, Basis 100 g/100 ml/Stück).
+
 ## 2026-10-17 – 3.1/3.4 Bibliothek & Open Food Facts (API)
 - Migrationen `005_off_cache`, `006_basics_category`.
 - Bibliotheks-API (Suche, häufig um diese Zeit ±1,5 h, anlegen/ändern/löschen, Barcode-Lookup).

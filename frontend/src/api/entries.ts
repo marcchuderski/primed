@@ -14,6 +14,7 @@ export interface Entry {
   date: string;
   /** Wall clock minutes since midnight. */
   timeMin: number;
+  kind: 'food' | 'dish' | 'shake';
   foodId: number | null;
   dishId: number | null;
   name: string;
@@ -28,6 +29,7 @@ export interface Entry {
 
 const UNITS = ['g', 'ml', 'el', 'tl', 'packung', 'stueck', 'portion'] as const;
 const BASES = ['per_100g', 'per_100ml', 'per_unit'] as const;
+const KINDS = ['food', 'dish', 'shake'] as const;
 const invalid = () => new ApiError(200, 'invalid_response', 'Unerwartete Antwort vom Server.');
 
 function n(value: unknown): number {
@@ -53,6 +55,7 @@ function parseEntry(value: unknown): Entry {
     id: n(value['id']),
     date,
     timeMin: n(value['timeMin']),
+    kind: KINDS.find((k) => k === value['kind']) ?? 'food',
     foodId: foodId === null ? null : n(foodId),
     dishId: dishId === null ? null : n(dishId),
     name,
@@ -105,4 +108,53 @@ export async function updateEntry(
 
 export async function deleteEntry(id: number): Promise<void> {
   await apiRequest('DELETE', `/entries/${String(id)}`);
+}
+
+export type ShakeId = 'big' | 'small_low' | 'small_high';
+
+export interface Shake {
+  id: ShakeId;
+  name: string;
+  label: string;
+  nutrients: EntryNutrients;
+}
+
+const SHAKE_IDS = ['big', 'small_low', 'small_high'] as const;
+
+export async function fetchShakes(): Promise<Shake[]> {
+  const data = await apiRequest('GET', '/shakes');
+  if (!isRecord(data) || !Array.isArray(data['shakes'])) {
+    throw invalid();
+  }
+  return data['shakes'].map((value): Shake => {
+    if (!isRecord(value) || !isRecord(value['nutrients'])) {
+      throw invalid();
+    }
+    const id = SHAKE_IDS.find((s) => s === value['id']);
+    const { name, label } = value;
+    if (id === undefined || typeof name !== 'string' || typeof label !== 'string') {
+      throw invalid();
+    }
+    const nu = value['nutrients'];
+    return {
+      id,
+      name,
+      label,
+      nutrients: {
+        kcal: n(nu['kcal']),
+        protein: n(nu['protein']),
+        carbs: n(nu['carbs']),
+        sugar: n(nu['sugar']),
+        fat: n(nu['fat']),
+      },
+    };
+  });
+}
+
+export async function createShakeEntry(input: {
+  date: string;
+  timeMin: number;
+  shake: ShakeId;
+}): Promise<Entry> {
+  return entryOf(await apiRequest('POST', '/entries/shake', input));
 }
