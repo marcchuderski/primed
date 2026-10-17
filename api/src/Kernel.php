@@ -123,6 +123,8 @@ final class Kernel
         $router->add('POST', '/v1/auth/logout', $auth->logout(...));
         $router->add('POST', '/v1/auth/logout-all', $auth->logoutEverywhere(...));
         $router->add('POST', '/v1/auth/password', $auth->changePassword(...));
+        $router->add('PATCH', '/v1/profile', $auth->updateProfile(...));
+        $router->add('POST', '/v1/account/delete', $auth->deleteAccount(...));
 
         $settings = new SettingsController($c);
         $router->add('GET', '/v1/settings', $settings->show(...));

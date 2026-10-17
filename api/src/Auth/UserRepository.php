@@ -60,9 +60,27 @@ final class UserRepository
             ->execute([$passwordHash, Db::dateTime($changedAt), $userId]);
     }
 
+    public function updateProfile(int $userId, string $displayName, string $username): void
+    {
+        $this->pdo->prepare('UPDATE users SET display_name = ?, username = ? WHERE id = ?')
+            ->execute([$displayName, $username, $userId]);
+    }
+
+    /**
+     * Deletes the user and, via ON DELETE CASCADE, all their data. The week template goes first
+     * because it restricts deleting day types, which would otherwise abort the cascade.
+     */
     public function delete(int $userId): void
     {
-        $this->pdo->prepare('DELETE FROM users WHERE id = ?')->execute([$userId]);
+        $this->pdo->beginTransaction();
+        try {
+            $this->pdo->prepare('DELETE FROM week_template WHERE user_id = ?')->execute([$userId]);
+            $this->pdo->prepare('DELETE FROM users WHERE id = ?')->execute([$userId]);
+            $this->pdo->commit();
+        } catch (\Throwable $e) {
+            $this->pdo->rollBack();
+            throw $e;
+        }
     }
 
     private static function hydrate(mixed $row): ?User

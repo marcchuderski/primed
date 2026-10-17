@@ -8,6 +8,7 @@ use Primed\Auth\AuthContext;
 use Primed\Container;
 use Primed\Auth\SessionCookie;
 use Primed\Http\HttpException;
+use Primed\Http\Input;
 use Primed\Http\Request;
 use Primed\Http\Response;
 
@@ -79,6 +80,34 @@ final class AuthController
         );
 
         return Response::noContent();
+    }
+
+    /**
+     * @param array<string, string> $params
+     */
+    public function updateProfile(Request $request, array $params): Response
+    {
+        $context = $this->requireAuth($request);
+        $input = Input::fromRequest($request);
+        $user = $this->c->auth()->updateProfile(
+            $context,
+            $input->text('displayName', 1, 64, 'Display-Name'),
+            $input->text('username', 3, 32, 'Username'),
+        );
+
+        return Response::json(['user' => $user->toPublic()]);
+    }
+
+    /**
+     * @param array<string, string> $params
+     */
+    public function deleteAccount(Request $request, array $params): Response
+    {
+        $context = $this->requireAuth($request);
+        $body = $request->json();
+        $this->c->auth()->deleteAccount($context, self::stringField($body, 'password', 4096), $request->clientIp);
+
+        return SessionCookie::clear(Response::noContent());
     }
 
     private function requireAuth(Request $request): AuthContext

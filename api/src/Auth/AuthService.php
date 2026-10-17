@@ -159,6 +159,49 @@ final class AuthService
         $this->logger->log('info', 'Password changed', ['userId' => $user->id]);
     }
 
+    /**
+     * Changes display name and username (unique, D-079 rules).
+     */
+    public function updateProfile(AuthContext $context, string $displayName, string $username): User
+    {
+        $normalized = UsernameNormalizer::normalize($username);
+        if (!UsernameNormalizer::isValid($normalized)) {
+            throw new HttpException(
+                422,
+                'validation_failed',
+                'Username: 3–32 Zeichen, nur a–z, 0–9, Punkt, Bindestrich, Unterstrich.',
+            );
+        }
+        $existing = $this->users->findByUsername($normalized);
+        if ($existing !== null && $existing->id !== $context->user->id) {
+            throw new HttpException(409, 'username_taken', 'Dieser Username ist schon vergeben.');
+        }
+        $this->users->updateProfile($context->user->id, $displayName, $normalized);
+        $this->logger->log('info', 'Profile updated', ['userId' => $context->user->id]);
+
+        return $this->users->findById($context->user->id) ?? throw AuthException::unauthenticated();
+    }
+
+    /**
+     * Deletes the account and all its data (D-082) after re-entering the password.
+     */
+    public function deleteAccount(AuthContext $context, string $password, string $clientIp): void
+    {
+        $now = $this->clock->now();
+        $user = $context->user;
+        $ipHash = $this->ipHasher->hash($clientIp);
+        $retryAfter = $this->rateLimiter->retryAfter($user->username, $ipHash, $now);
+        if ($retryAfter !== null) {
+            throw AuthException::rateLimited($retryAfter);
+        }
+        if (strlen($password) > PasswordPolicy::MAX_BYTES || !$this->hasher->verify($password, $user->passwordHash)) {
+            $this->attempts->record($user->username, $ipHash, false, $now);
+            throw new HttpException(422, 'invalid_password', 'Das Passwort ist falsch.');
+        }
+        $this->users->delete($user->id);
+        $this->logger->log('notice', 'Account deleted', ['userId' => $user->id]);
+    }
+
     public static function tokenHash(string $token): string
     {
         return hash('sha256', $token, true);

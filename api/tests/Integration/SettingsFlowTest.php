@@ -1,0 +1,161 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Primed\Tests\Integration;
+
+/**
+ * Menu and settings (roadmap 7.1): settings groups, profile, account deletion.
+ */
+final class SettingsFlowTest extends ApiTestCase
+{
+    public function testSettingsGroupsAreValidatedAndStored(): void
+    {
+        $response = $this->call('PATCH', '/api/v1/settings', [
+            'checkpoint' => ['offsetMin' => 165, 'pct' => 75, 'earliestMin' => 390],
+            'earliestTrainingMin' => 570,
+            'tolerancePct' => 7,
+            'thresholds' => ['minProteinGap' => 30, 'restShakeFrom' => 1200],
+        ]);
+        self::assertSame(200, $response->status, $response->body);
+        $settings = self::json($response)['settings'];
+        self::assertIsArray($settings);
+        self::assertSame(['offsetMin' => 165, 'pct' => 75, 'earliestMin' => 390], $settings['checkpoint']);
+        self::assertSame(570, $settings['earliestTrainingMin']);
+        self::assertSame(7, $settings['tolerancePct']);
+        self::assertIsArray($settings['thresholds']);
+        self::assertSame(30, $settings['thresholds']['minProteinGap']);
+        self::assertSame(1200, $settings['thresholds']['restShakeFrom']);
+        self::assertSame(35, $settings['thresholds']['bigShakeProtein']);
+
+        // Partial updates keep everything else.
+        $after = self::json($this->call('PATCH', '/api/v1/settings', ['tolerancePct' => 5]))['settings'];
+        self::assertIsArray($after);
+        self::assertSame(570, $after['earliestTrainingMin']);
+    }
+
+    public function testSettingsRejectOutOfRangeAndOffStepValues(): void
+    {
+        foreach (
+            [
+                ['checkpoint' => ['offsetMin' => 170, 'pct' => 70, 'earliestMin' => 360]],
+                ['checkpoint' => ['offsetMin' => 180, 'pct' => 99, 'earliestMin' => 360]],
+                ['checkpoint' => ['offsetMin' => 180, 'pct' => 70, 'earliestMin' => 200]],
+                ['earliestTrainingMin' => 240],
+                ['tolerancePct' => 0],
+                ['tolerancePct' => 16],
+                ['thresholds' => ['minProteinGap' => -1]],
+                ['thresholds' => ['unknown' => 5]],
+                ['shake' => ['bigMl' => 2000]],
+                ['shake' => ['powderG' => 5]],
+                ['checkpoint' => 'x'],
+            ] as $body
+        ) {
+            self::assertSame(422, $this->call('PATCH', '/api/v1/settings', $body)->status, (string) json_encode($body));
+        }
+    }
+
+    public function testShakeFoodsMustBeOwnProductsWithPer100Basis(): void
+    {
+        $foods = self::json($this->call('GET', '/api/v1/foods?q=Milch'))['foods'];
+        self::assertIsArray($foods);
+        $milk = $foods[0] ?? null;
+        self::assertIsArray($milk);
+        $milkId = $milk['id'];
+        self::assertIsInt($milkId);
+
+        $ok = self::json($this->call('PATCH', '/api/v1/settings', [
+            'shake' => ['milkLowFoodId' => $milkId, 'bigMl' => 450, 'smallMl' => 250, 'powderG' => 30],
+        ]))['settings'];
+        self::assertIsArray($ok);
+        self::assertIsArray($ok['shakeFoods']);
+        self::assertSame($milkId, $ok['shakeFoods']['milkLow']);
+        self::assertSame(['bigMl' => 450, 'smallMl' => 250, 'powderG' => 30], $ok['shakeAmounts']);
+
+        // Another user's food is invisible.
+        self::assertSame(404, $this->call('PATCH', '/api/v1/settings', [
+            'shake' => ['milkLowFoodId' => $milkId],
+        ], 'freund')->status);
+
+        // Clearing is allowed.
+        $cleared = self::json($this->call('PATCH', '/api/v1/settings', [
+            'shake' => ['proteinPowderFoodId' => null],
+        ]))['settings'];
+        self::assertIsArray($cleared);
+        self::assertIsArray($cleared['shakeFoods']);
+        self::assertNull($cleared['shakeFoods']['proteinPowder']);
+    }
+
+    public function testProfileUpdateWithUniqueUsername(): void
+    {
+        self::assertSame(409, $this->call('PATCH', '/api/v1/profile', [
+            'displayName' => 'Marc',
+            'username' => 'Freund',
+        ])->status);
+        self::assertSame(422, $this->call('PATCH', '/api/v1/profile', [
+            'displayName' => 'Marc',
+            'username' => 'a b',
+        ])->status);
+        self::assertSame(422, $this->call('PATCH', '/api/v1/profile', [
+            'displayName' => '',
+            'username' => 'marcch',
+        ])->status);
+
+        $response = $this->call('PATCH', '/api/v1/profile', ['displayName' => 'Marc C.', 'username' => 'Marc.C']);
+        self::assertSame(200, $response->status, $response->body);
+        $user = self::json($response)['user'];
+        self::assertIsArray($user);
+        self::assertSame('Marc C.', $user['displayName']);
+        self::assertSame('marc.c', $user['username']);
+
+        // Keeping the own username is fine.
+        self::assertSame(200, $this->call('PATCH', '/api/v1/profile', [
+            'displayName' => 'Marc',
+            'username' => 'marc.c',
+        ])->status);
+    }
+
+    public function testAccountDeletionNeedsPasswordAndRemovesAllData(): void
+    {
+        $stmt = $this->pdo->prepare('SELECT id FROM users WHERE username = ?');
+        $stmt->execute(['freund']);
+        $freundId = (int) $stmt->fetchColumn();
+        self::assertGreaterThan(0, $freundId);
+        $this->call('POST', '/api/v1/entries/shake', [
+            'date' => '2026-10-20',
+            'timeMin' => 600,
+            'shake' => 'big',
+        ], 'freund');
+
+        $wrong = $this->call('POST', '/api/v1/account/delete', ['password' => 'falsch'], 'freund');
+        self::assertSame(422, $wrong->status);
+        self::assertSame(200, $this->call('GET', '/api/v1/auth/me', null, 'freund')->status);
+
+        $response = $this->call('POST', '/api/v1/account/delete', ['password' => self::PASSWORD], 'freund');
+        self::assertSame(204, $response->status, $response->body);
+        self::assertStringContainsString('Max-Age=0', (string) $response->header('Set-Cookie'));
+        self::assertSame(401, $this->call('GET', '/api/v1/auth/me', null, 'freund')->status);
+
+        foreach (['users', 'foods', 'entries', 'day_types', 'week_template', 'user_settings', 'sessions'] as $table) {
+            $column = $table === 'users' ? 'username' : 'user_id';
+            $value = $table === 'users' ? 'freund' : $freundId;
+            $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM {$table} WHERE {$column} = ?");
+            $stmt->execute([$value]);
+            self::assertSame(0, (int) $stmt->fetchColumn(), $table);
+        }
+
+        // The other account is untouched.
+        self::assertSame(200, $this->call('GET', '/api/v1/days/today')->status);
+    }
+
+    public function testAccountDeletionIsRateLimited(): void
+    {
+        for ($i = 0; $i < 10; $i++) {
+            $this->call('POST', '/api/v1/account/delete', ['password' => 'falsch'], 'freund');
+        }
+        self::assertSame(
+            429,
+            $this->call('POST', '/api/v1/account/delete', ['password' => self::PASSWORD], 'freund')->status,
+        );
+    }
+}

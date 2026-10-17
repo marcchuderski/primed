@@ -26,6 +26,18 @@ final class Input
         return array_key_exists($field, $this->data);
     }
 
+    /** Rejects any field outside the allowlist (for partial objects). */
+    public function only(string ...$fields): self
+    {
+        foreach (array_keys($this->data) as $key) {
+            if (!in_array($key, $fields, true)) {
+                throw self::invalid(sprintf('Unbekanntes Feld: %s.', $key));
+            }
+        }
+
+        return $this;
+    }
+
     public function isNull(string $field): bool
     {
         return ($this->data[$field] ?? null) === null;
@@ -113,6 +125,18 @@ final class Input
             }
         }
         throw self::invalid(sprintf('%s ist ungültig.', $label));
+    }
+
+    /** A nested JSON object. */
+    public function object(string $field, string $label): self
+    {
+        $value = $this->data[$field] ?? null;
+        if (!is_array($value) || ($value !== [] && array_is_list($value))) {
+            throw self::invalid(sprintf('%s ist ungültig.', $label));
+        }
+
+        /** @var array<string, mixed> $value */
+        return new self($value);
     }
 
     /**

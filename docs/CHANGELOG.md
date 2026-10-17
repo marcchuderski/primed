@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-17 – 7.1 Einstellungen (API)
+- Migration `009_settings` (Toleranz, Vorschlags-Schwellen).
+- `PATCH /v1/settings` für Checkpoint, frühestes Training, Toleranz, Schwellen und Shakes (Teil-Updates, Allowlist).
+- `PATCH /v1/profile` (Display-Name, Username) und `POST /v1/account/delete` (Passwort, Rate-Limit, löscht alle Daten).
+- Fix: Löschen eines Users scheiterte an der Wochenvorlage (FK RESTRICT) – betraf auch das User-CLI.
+- „vergangene Gerichte“ statt „aufgegessene Gerichte“.
+
 ## 2026-10-17 – Phase 5 Vorschläge
 - Zauberstab aktiv: regelbasierte Vorschläge (Shake-Regeln, Pre-Workout, KH-Snack-Fenster, Essen nach Protein) mit Begründung, Effekt und „Eintragen“.
 - Nur realistische Vorschläge: bereits gegessene Lebensmittel in ihrer Menge, Gerichte; nie Proteinpulver/Milch einzeln.

@@ -238,3 +238,11 @@ Neue Einträge unten anhängen. Getroffene Entscheidungen werden nicht gelöscht
 **D-121 · Reihenfolge der Shake-Regeln** – siehe BRIEFING §10: Protein-Lücke < 25 g → kein Shake; kcal überschritten → Klein 1,5 % nur ab 30 g; Training: davor kein Shake, währenddessen nichts, danach leichte Mahlzeit + kleiner Shake (≥ 700 kcal und ≥ 100 g KH offen) bzw. Groß (≥ 35 g P und ≥ 500 kcal) bzw. Klein; Ruhetag ab 19:00 Klein (3,5 % ab 400 kcal). Für „Klein“ nach dem Training gilt dieselbe Milch-Regel wie am Ruhetag (3,5 % ab 400 kcal offen). · setzt „Protein hat Vorrang“ (D-055) um. · Claude, Bestätigung durch Nutzer ausstehend · 2026-10-17
 
 **D-122 · Realistische Vorschläge** – nur Gerichte (≥ 1 Portion übrig) und bereits gegessene Lebensmittel in ihrer zuletzt verwendeten Menge; Proteinpulver und Shake-Milch nie einzeln (sie stecken in den Shakes), keine Zutaten; max. 900 kcal je Vorschlag. · „niemand isst 100 g Proteinpulver“. · Standardmengen (100 g) für alle Produkte. · Nutzer · 2026-10-17
+
+**D-123 · Einstellungen als Teil-Updates** – `PATCH /v1/settings` nimmt einzelne Gruppen und innerhalb von Schwellen/Shake einzelne Felder; Spalten nur über eine Allowlist im Repository, unbekannte Felder → 422, Schrittweiten serverseitig geprüft. Shake-Zutaten müssen eigene Lebensmittel mit Basis pro 100 g/ml sein (fremde → 404). Alternative: immer das komplette Objekt senden (fehleranfälliger im Client). Entschieden: Claude.
+
+**D-124 · Konto löschen** – `POST /v1/account/delete` mit Passwort; Fehlversuche zählen in dasselbe Rate-Limit wie der Login (D-061), danach 429. Gelöscht wird in einer Transaktion: zuerst die Wochenvorlage (deren FK auf Tagesarten ist RESTRICT und würde die Kaskade abbrechen), dann der User mit `ON DELETE CASCADE` für alle Daten; Login-Versuche verfallen regulär. Profiländerung `PATCH /v1/profile` normalisiert den Username wie beim Anlegen, Konflikt → 409. Entschieden: Claude.
+
+**D-125 · Umbenennung Archiv-Hinweis** – „vergangene Gerichte“ statt „aufgegessene Gerichte“ (Screen 10 angepasst). Entschieden: Nutzer.
+
+**D-126 · Reihenfolge Phase 7** – 7.1 und 7.3 vor Phase 6; 7.2, 7.5 und 7.6 erst nach dem ersten Deploy-Check. Entschieden: Nutzer.

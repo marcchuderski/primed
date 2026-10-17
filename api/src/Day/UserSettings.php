@@ -18,6 +18,11 @@ final class UserSettings
         public readonly ?int $proteinPowderFoodId = null,
         public readonly ?int $shakeMilkLowFoodId = null,
         public readonly ?int $shakeMilkHighFoodId = null,
+        /** @var array{bigMl: int, smallMl: int, powderG: int} */
+        public readonly array $shakeAmounts = ['bigMl' => 400, 'smallMl' => 200, 'powderG' => 30],
+        public readonly int $tolerancePct = 5,
+        /** @var array<string, int> */
+        public readonly array $thresholds = [],
     ) {
     }
 
@@ -42,6 +47,9 @@ final class UserSettings
                 'milkLow' => $this->shakeMilkLowFoodId,
                 'milkHigh' => $this->shakeMilkHighFoodId,
             ],
+            'shakeAmounts' => $this->shakeAmounts,
+            'tolerancePct' => $this->tolerancePct,
+            'thresholds' => $this->thresholds,
         ];
     }
 }

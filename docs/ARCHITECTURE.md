@@ -126,7 +126,9 @@ Implementiert: `GET /v1/health` → `{"status":"ok"}`.
 
 | Endpunkt | Zweck |
 |---|---|
-| `GET/PATCH /v1/settings` | Einstellungen lesen; ändern: `theme`, `proteinDefault` |
+| `GET/PATCH /v1/settings` | Einstellungen lesen; ändern (jede Gruppe optional, innerhalb von `thresholds`/`shake` auch einzelne Felder; unbekannte Felder → 422): `theme`, `proteinDefault`, `checkpoint {offsetMin 60–300/15, pct 50–95/5, earliestMin 240–600/15}`, `earliestTrainingMin` 300–720/15, `tolerancePct` 1–15, `thresholds {minProteinGap, bigShakeProtein, bigShakeKcal, lightMealKcal, restShakeFrom, richMilkKcal, overKcalProtein}`, `shake {proteinPowderFoodId, milkLowFoodId, milkHighFoodId (eigene Produkte, nicht pro Stück, null erlaubt), bigMl, smallMl, powderG}` |
+| `PATCH /v1/profile` | `{displayName, username}` + CSRF → `{user}` · 409 `username_taken` · 422 bei ungültigem Username |
+| `POST /v1/account/delete` | `{password}` + CSRF → 204, Cookie gelöscht, alle Daten des Users gelöscht (D-082) · 422 `invalid_password` · 429 (Login-Rate-Limit, D-124) |
 | `GET/POST /v1/day-types`, `PATCH/DELETE /v1/day-types/{id}` | Tagesarten verwalten (Löschen: nicht, wenn in der Wochenvorlage benutzt; mindestens eine bleibt; weich gelöscht) |
 | `GET/PUT /v1/week-template` | Wochenvorlage (genau 7 Einträge) |
 | `GET /v1/days/today`, `GET /v1/days/{date}` | Tag mit Soll-Schnappschuss; Zukunft → 422 |
@@ -151,7 +153,7 @@ Alle schreibenden Endpunkte: Session-Cookie + CSRF-Token, serverseitige Validier
 | `schema_migrations` | version, applied_at (jede Migration trägt sich selbst ein) |
 | `sessions` | id, user_id (FK, CASCADE), token_hash (BINARY(32), SHA-256, unique), created_at, last_seen_at, expires_at (gleitend 30 Tage), absolute_expires_at (90 Tage), revoked_at |
 | `login_attempts` | id, username, ip_hash (HMAC), attempted_at, success · Löschung nach 30 Tagen |
-| `user_settings` | user_id (FK, CASCADE), theme (system/light/dark), protein_default, default_duration_min, earliest_training_min, checkpoint_offset_min, checkpoint_pct, earliest_checkpoint_min, day_boundary_min, updated_at · protein_powder_food_id, shake_milk_low_food_id, shake_milk_high_food_id (FK SET NULL), shake_big_ml (400), shake_small_ml (200), shake_powder_g (30) · noch geplant: tolerance_pct, Shake-Schwellen, Pre-Workout-/KH-Snack-Fenster |
+| `user_settings` | user_id (FK, CASCADE), theme (system/light/dark), protein_default, default_duration_min, earliest_training_min, checkpoint_offset_min, checkpoint_pct, earliest_checkpoint_min, day_boundary_min, updated_at · protein_powder_food_id, shake_milk_low_food_id, shake_milk_high_food_id (FK SET NULL), shake_big_ml (400), shake_small_ml (200), shake_powder_g (30) · ab `009_settings`: tolerance_pct (5), sg_min_protein_gap (25), sg_big_shake_protein (35), sg_big_shake_kcal (500), sg_light_meal_kcal (700), sg_rest_shake_from (1140 = 19:00), sg_rich_milk_kcal (400), sg_over_kcal_protein (30) |
 | `day_types` | id, user_id, system_key (`rest` = fester Ruhetag, D-106), name, kcal, protein (nullable = Protein-Standard), carbs, sugar_ref, is_training, sort, deleted_at |
 | `week_template` | user_id, weekday (1–7, ISO), day_type_id (FK RESTRICT), training_start (Minuten), duration_min |
 | `days` | id, user_id, date (logischer Tag, unique je User), day_type_id (FK SET NULL), day_type_name (Schnappschuss), is_training, training_start, duration_min, target_kcal/protein/carbs/sugar (Schnappschuss), source (template/manual) |
