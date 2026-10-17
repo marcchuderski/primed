@@ -83,6 +83,8 @@ Stand: 17.10.2026 · Entwurf vor Implementierung. Wird von Claude Code laufend a
 
 Berechnungen laufen als reine Funktionen in `frontend/src/domain/` und sind vollständig unit-getestet:
 Sollwerte je Tagesart, Fett-Richtwert, Checkpoints, Offen-Werte, Shake- und Essens-Vorschläge, Bewertung (±5 %), Wochen-/Monats-/Jahresbilanzen.
+
+Umgesetzt (2.2): `targets.ts` (Fett-Richtwert, Summen, Offen-Werte), `checkpoint.ts` (Checkpoint, gegessen bis, Trainingsende), `rating.ts` (kcal ±5 %, Grenzen inklusive), `format.ts` (deutsche Zahlen, Restzeit in halben Stunden), `time.ts` (15-Minuten-Raster, logische Minute nach Tagesgrenze), `greeting.ts` (Begrüßung, BRIEFING §4a).
 Die API speichert, validiert und liefert Daten; sie berechnet Nährwert-Schnappschüsse beim Speichern eines Eintrags serverseitig, damit gespeicherte Werte konsistent sind.
 
 ## API (Entwurf, `/api/v1`, JSON)

@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-10-17 – 2.2 Fachlogik
+- `frontend/src/domain/`: Fett-Richtwert, Offen-Werte, Checkpoints, kcal-Bewertung, Formatierung, logische Tageszeit, situative Begrüßung – mit 48 neuen Unit-Tests.
+
 ## 2026-10-17 – Konzept: situative Begrüßung
 - BRIEFING §4a, DESIGN (Heute), Roadmap 2.3 um die regelbasierte Begrüßung ergänzt (D-101).
 
