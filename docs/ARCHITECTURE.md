@@ -27,7 +27,7 @@ Stand: 17.10.2026 · Entwurf vor Implementierung. Wird von Claude Code laufend a
 
 | Bereich | Wahl |
 |---|---|
-| Frontend | Vite, React, TypeScript (strict), PWA (Manifest + Service Worker nur für App-Shell, kein Offline-Datenbetrieb) |
+| Frontend | Vite, React, TypeScript (strict), PWA (Manifest + Service Worker nur für App-Shell, kein Offline-Datenbetrieb; `frontend/tools/sw.js` + `tools/pwa.ts`, Icons unter `/pwa/`, D-133) |
 | Icons | lucide-react |
 | Styling | CSS-Module + CSS-Variablen aus `design/tokens.css` (direkt importiert, keine Kopie); Umschaltung über `data-theme` |
 | Schriften | Bricolage Grotesque (opsz+wght), Inter (wght) als Variable Fonts, **selbst gehostet** via `@fontsource-variable` (nur Latin + Latin Ext), kein Google-CDN |

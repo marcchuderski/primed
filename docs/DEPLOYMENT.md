@@ -20,7 +20,13 @@ Wird von Claude Code mit jedem Schritt präzisiert (Befehle, Dateilisten, Migrat
 2. Frontend bauen: `npm run build` → Inhalt von `frontend/dist/` nach `httpdocs/`.
 3. API: `composer install --no-dev --optimize-autoloader` lokal, dann `src/`, `vendor/`, `bin/`, `resources/`, `bootstrap.php` nach `primed-app/` (dort zusätzlich leeres, für PHP schreibbares `var/log/`); `public/index.php` und `public/.htaccess` nach `httpdocs/api/`.
 4. Vorher Datenbank-Backup in Plesk. Neue Migrationen (`api/migrations/NNN_*.sql`) **in Reihenfolge** über phpMyAdmin ausführen (Datei-Inhalt im SQL-Tab). Jede Migration trägt sich selbst in `schema_migrations` ein; Stand prüfen mit `SELECT * FROM schema_migrations`.
-5. Smoke-Test: Login, Heute laden, Eintrag anlegen/löschen, Barcode-Suche.
+5. Smoke-Test: Login, Heute laden, Eintrag anlegen/löschen, Barcode-Suche; `scripts/check-headers.sh https://primed.dev-pfeffermond.de` (inkl. PWA-Dateien).
+   - Zum `dist/`-Inhalt gehören seit 7.3 auch `sw.js`, `manifest.webmanifest` und `pwa/` (Icons). Alles komplett ersetzen; alte `assets/` dürfen weg.
+   - **Notfall: Service Worker abschalten.** `httpdocs/sw.js` durch diesen Inhalt ersetzen, dann entfernt er sich beim nächsten Aufruf selbst und löscht seine Caches:
+     ```js
+     self.addEventListener('install', () => self.skipWaiting());
+     self.addEventListener('activate', (e) => e.waitUntil(caches.keys().then((ks) => Promise.all(ks.map((k) => caches.delete(k)))).then(() => self.registration.unregister())));
+     ```
 6. `CHANGELOG.md` mit Version und Datum ergänzen.
 
 ## Ausgeführte Migrationen

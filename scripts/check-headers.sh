@@ -30,6 +30,13 @@ for h in "Strict-Transport-Security:max-age=31536000" "Content-Security-Policy:d
   check_header "$BASE/" "${h%%:*}" "${h#*:}"
 done
 
+echo "PWA"
+check_header "$BASE/sw.js" "Cache-Control" "no-cache"
+check_header "$BASE/sw.js" "Content-Type" "javascript"
+check_header "$BASE/manifest.webmanifest" "Content-Type" "application/manifest+json"
+check_header "$BASE/pwa/icon-192.png" "Content-Type" "image/png"
+check_status "$BASE/pwa/missing.png" 404
+
 echo "API"
 check_status "$BASE/api/v1/health" 200
 check_header "$BASE/api/v1/health" "Cache-Control" "no-store"

@@ -17,7 +17,7 @@ DirectoryIndex index.html
     RewriteRule ^api(/|$) - [L]
 
     # SPA fallback: unknown paths load the app shell (missing build assets stay 404).
-    RewriteCond %{REQUEST_URI} !^/assets/
+    RewriteCond %{REQUEST_URI} !^/(assets|pwa)/
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^ index.html [L]
@@ -38,7 +38,7 @@ DirectoryIndex index.html
 
 # Caching: the app shell must always be revalidated, hashed assets are immutable.
 <IfModule mod_headers.c>
-    <FilesMatch "\.html$">
+    <FilesMatch "\.(html|webmanifest)$|^sw\.js$">
         Header set Cache-Control "no-cache"
     </FilesMatch>
     <FilesMatch "^.+-[A-Za-z0-9_-]{8}\.(js|css|woff2|svg|png)$">

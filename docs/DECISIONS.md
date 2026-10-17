@@ -258,3 +258,7 @@ Neue Einträge unten anhängen. Getroffene Entscheidungen werden nicht gelöscht
 **D-131 · Fragebogen-Sync per Test** – `GUIDANCE_PROMPT` ist eine Frontend-Konstante; ein Vitest-Test vergleicht sie mit dem Codeblock in `docs/RICHTWERTE-PROMPT.md`. Vite darf `docs/` nur während Vitest lesen. · eine Quelle, keine Drift, kein Laufzeit-Import aus `docs/`. · Claude · 2026-10-17
 
 **D-132 · Vorschlags-Schwellen aus den Einstellungen** – der Zauberstab nutzt die Schwellen aus „Vorschläge“; Pre-Workout-/KH-Snack-Werte und die größte realistische Mahlzeit bleiben fest (DEFAULTS). Wochenvorlage-Zusammenfassung im Menü: „Di + Do Basketball 20:00“, sonst „n Trainingstage“. · Claude · 2026-10-17
+
+**D-133 · Eigener Service Worker statt vite-plugin-pwa** – ~60 Zeilen (`frontend/tools/sw.js`) plus kleines Vite-Plugin (`tools/pwa.ts`), das die Precache-Liste und eine Version einträgt und die Icons aus `design/brand/` ausgibt. Precache: alle gebündelten Assets außer nachgeladenen Chunks (Scanner). Seitenaufrufe Network-first mit Shell-Fallback offline; `/assets/` und `/pwa/` Cache-first; `/api` nie. `skipWaiting` + `clients.claim`. · keine neue Abhängigkeit (Workbox), volle Kontrolle darüber, was gecacht wird. · vite-plugin-pwa. · Claude · 2026-10-17
+
+**D-134 · Icons unter `/pwa/`** – nicht `/icons/`, weil Apache dort standardmäßig ein Alias auf seine Autoindex-Symbole hat. · Claude · 2026-10-17

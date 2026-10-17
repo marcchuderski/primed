@@ -45,5 +45,13 @@ export default tseslint.config(
     extends: [js.configs.recommended],
     languageOptions: { globals: globals.node },
   },
+  {
+    // Service worker template (filled in by tools/pwa.ts).
+    files: ['tools/sw.js'],
+    languageOptions: {
+      globals: { ...globals.serviceworker, __PRIMED_PRECACHE__: 'readonly' },
+    },
+    rules: { 'no-eval': 'error', 'no-implied-eval': 'error' },
+  },
   prettier,
 );
