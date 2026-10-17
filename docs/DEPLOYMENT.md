@@ -5,7 +5,7 @@ Wird von Claude Code mit jedem Schritt präzisiert (Befehle, Dateilisten, Migrat
 ## Einmalig einrichten
 
 1. Subdomain `primed.dev-pfeffermond.de` in Plesk anlegen, **Let's Encrypt** aktivieren, HTTPS-Weiterleitung an.
-2. PHP 8.3 wählen, `display_errors` aus. CLI per SSH immer mit `/opt/plesk/php/8.3/bin/php` (das Standard-`php` kann eine andere Version sein).
+2. PHP 8.3 wählen, `display_errors` aus (auch serverseitig nötig: Parse-Fehler entstehen, bevor `bootstrap.php` es abschalten kann). CLI per SSH immer mit `/opt/plesk/php/8.3/bin/php` (das Standard-`php` kann eine andere Version sein).
 3. Datenbank (MariaDB 10.11) + eigener DB-User mit minimalen Rechten anlegen. **Tägliches DB-Backup** in Plesk einrichten.
 4. Ordner `primed-app/` **neben** `httpdocs/` anlegen (nicht darin).
 5. `.env` aus `api/.env.example` erstellen, ausfüllen, nach `primed-app/.env` hochladen.
@@ -16,7 +16,7 @@ Wird von Claude Code mit jedem Schritt präzisiert (Befehle, Dateilisten, Migrat
 
 1. Lokal: Tests grün (`npm test`, `composer test`), Security Audit dokumentiert.
 2. Frontend bauen: `npm run build` → Inhalt von `frontend/dist/` nach `httpdocs/`.
-3. API: `composer install --no-dev --optimize-autoloader` lokal, dann `src/`, `vendor/`, `bootstrap.php` nach `primed-app/`; `public/index.php` nach `httpdocs/api/`.
+3. API: `composer install --no-dev --optimize-autoloader` lokal, dann `src/`, `vendor/`, `bootstrap.php` nach `primed-app/` (dort zusätzlich leeres, für PHP schreibbares `var/log/`); `public/index.php` und `public/.htaccess` nach `httpdocs/api/`.
 4. Neue Migrationen (`api/migrations/NNN_*.sql`) **in Reihenfolge** über phpMyAdmin ausführen. Vorher Datenbank-Backup in Plesk.
 5. Smoke-Test: Login, Heute laden, Eintrag anlegen/löschen, Barcode-Suche.
 6. `CHANGELOG.md` mit Version und Datum ergänzen.

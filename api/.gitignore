@@ -1,0 +1,7 @@
+/vendor/
+/var/log/*
+!/var/log/.gitkeep
+/.phpunit.cache/
+/.env
+/.env.testing
+/.phpunit.result.cache

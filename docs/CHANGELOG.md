@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-17 – 0.3 API-Gerüst
+- `api/` mit Composer (PHP 8.3 gepinnt), Front-Controller, `.htaccess`, Bootstrap, Router, Request/Response, `.env`-Parser, Logger, PDO-Factory, `GET /api/v1/health`.
+- PHPUnit (Unit + Integration), PHPStan max, PHPCS PSR-12.
+- DDEV-Konfiguration mit Test-Datenbank.
+
 ## 2026-10-17 – Design: Einheiten und Haushaltsmaße
 - Screens 06 (Menge) und 07 (Produkt anlegen) ersetzt, 17 (Meal-Prep-Zutat) und 18 (PWA-Installation) neu; Screen-Index ergänzt.
 - Haushaltsmaße global fest (1 EL = 15 g/ml, 1 TL = 5 g/ml), Einheiten-Umschalter bei der Mengeneingabe (D-073); BRIEFING, DEFAULTS, ARCHITECTURE, DESIGN angepasst.

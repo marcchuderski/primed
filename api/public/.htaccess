@@ -1,0 +1,15 @@
+# Deployed to httpdocs/api/. Every request is handled by index.php.
+Options -Indexes -MultiViews
+DirectoryIndex index.php
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /api/
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+</IfModule>
+
+# Only the front controller may be executed or served from this directory.
+<FilesMatch "^(?!index\.php$).+">
+    Require all denied
+</FilesMatch>

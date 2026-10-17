@@ -53,9 +53,12 @@ Stand: 17.10.2026 · Entwurf vor Implementierung. Wird von Claude Code laufend a
 │       ├── features/     heute, hinzufuegen, essen, verlauf, menue, auth
 │       ├── components/   UI-Bausteine (Balken, Sheet, Stepper, Scroll-Rad, Segment …)
 │       └── styles/       tokens.css (aus design/), Basis-Styles
+├── .ddev/                DDEV (PHP 8.3, MariaDB 10.11, Apache; /api → api/public, Docroot frontend/dist)
 └── api/
-    ├── public/index.php  Front-Controller (wird nach httpdocs/api/ deployt)
-    ├── src/              Controller, Services, Repositories, Middleware
+    ├── public/           index.php + .htaccess (werden nach httpdocs/api/ deployt)
+    ├── bootstrap.php     außerhalb des Webroots, neben .env
+    ├── src/              Http (Router, Request, Response), Config, Log, Database, Controller
+    ├── var/log/          Logdateien (außerhalb des Webroots)
     ├── migrations/       001_init.sql, 002_…sql (nummeriert, nur vorwärts)
     ├── seeds/            Startdaten aus docs/DEFAULTS.md
     ├── tests/
@@ -72,6 +75,7 @@ Stand: 17.10.2026 · Entwurf vor Implementierung. Wird von Claude Code laufend a
 │   └── .htaccess             HTTPS, Security-Header, SPA-Fallback, /api-Routing
 └── primed-app/               NICHT öffentlich
     ├── src/, vendor/, bootstrap.php
+    ├── var/log/              Logs (schreibbar für PHP)
     └── .env
 ```
 
@@ -93,6 +97,10 @@ Die API speichert, validiert und liefert Daten; sie berechnet Nährwert-Schnapps
 | Open Food Facts | `GET /off/barcode/{ean}` · `GET /off/search?q=` (Proxy mit Cache) |
 | Meal Prep | `GET /dishes?status=active|archived` · `POST /dishes` · `PATCH /dishes/{id}` |
 | Verlauf | `GET /history/week?start=` · `GET /history/month?month=` · `GET /history/year?year=` |
+
+Implementiert: `GET /v1/health` → `{"status":"ok"}`.
+
+Fehlerformat: `{"error":{"code":"…","message":"…"}}` mit deutscher, nutzbarer Meldung; interne Details nur im Log. Body max. 64 KB, JSON-Tiefe max. 32, Pfad-Parameter nur `[A-Za-z0-9_-]{1,64}`.
 
 Alle schreibenden Endpunkte: Session-Cookie + CSRF-Token, serverseitige Validierung, Zugriff nur auf eigene Daten (`user_id`).
 
