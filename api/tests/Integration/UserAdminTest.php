@@ -10,6 +10,9 @@ use Primed\Auth\SessionRepository;
 use Primed\Auth\UserRepository;
 use Primed\Cli\UserAdmin;
 use Primed\Database\Migrator;
+use Primed\Day\DayTypeRepository;
+use Primed\Day\UserSeeder;
+use Primed\Day\WeekTemplateRepository;
 use Primed\Support\FixedClock;
 use RuntimeException;
 
@@ -20,6 +23,8 @@ final class UserAdminTest extends DatabaseTestCase
     private SessionRepository $sessions;
     private FixedClock $clock;
     private PasswordHasher $hasher;
+    private DayTypeRepository $dayTypes;
+    private WeekTemplateRepository $template;
 
     protected function setUp(): void
     {
@@ -35,7 +40,10 @@ final class UserAdminTest extends DatabaseTestCase
             $this->hasher,
             new PasswordPolicy(__DIR__ . '/../../resources/common-passwords.txt'),
             $this->clock,
+            new UserSeeder(new DayTypeRepository($pdo), new WeekTemplateRepository($pdo)),
         );
+        $this->dayTypes = new DayTypeRepository($pdo);
+        $this->template = new WeekTemplateRepository($pdo);
     }
 
     public function testCreatesUserWithNormalizedUsernameAndHashedPassword(): void
@@ -47,6 +55,27 @@ final class UserAdminTest extends DatabaseTestCase
         self::assertSame('Marc', $user->displayName);
         self::assertStringStartsWith('$argon2id$', $user->passwordHash);
         self::assertTrue($this->hasher->verify('Kaffee mit Hafermilch 2026', $user->passwordHash));
+    }
+
+    public function testNewUsersGetNeutralStartDataAndOwnerGetsPersonalTemplate(): void
+    {
+        $friend = $this->admin->create('freund', 'Freund', 'Kaffee mit Hafermilch 2026');
+        $owner = $this->admin->create('marcch', 'Marc', 'Kaffee mit Hafermilch 2026', true);
+
+        self::assertSame(
+            ['Ruhetag', 'Leichtes Training', 'Normal · Fitness', 'Normal · Basketball', 'Intensiv / Spiel'],
+            array_map(static fn ($t): string => $t->name, $this->dayTypes->all($friend)),
+        );
+        $friendTemplate = $this->template->all($friend);
+        self::assertCount(7, $friendTemplate);
+        foreach ($friendTemplate as $day) {
+            self::assertNull($day->trainingStart);
+        }
+
+        $ownerTemplate = $this->template->all($owner);
+        self::assertSame(1200, $ownerTemplate[2]->trainingStart);
+        self::assertSame(90, $ownerTemplate[4]->durationMin);
+        self::assertNull($ownerTemplate[1]->trainingStart);
     }
 
     public function testRejectsInvalidInput(): void

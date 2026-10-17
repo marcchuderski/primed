@@ -1,0 +1,39 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Primed\Day;
+
+final class UserSettings
+{
+    public function __construct(
+        public readonly string $theme,
+        public readonly int $proteinDefault,
+        public readonly int $defaultDurationMin,
+        public readonly int $earliestTrainingMin,
+        public readonly int $checkpointOffsetMin,
+        public readonly int $checkpointPct,
+        public readonly int $earliestCheckpointMin,
+        public readonly int $dayBoundaryMin,
+    ) {
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function toPublic(): array
+    {
+        return [
+            'theme' => $this->theme,
+            'proteinDefault' => $this->proteinDefault,
+            'defaultDurationMin' => $this->defaultDurationMin,
+            'earliestTrainingMin' => $this->earliestTrainingMin,
+            'checkpoint' => [
+                'offsetMin' => $this->checkpointOffsetMin,
+                'pct' => $this->checkpointPct,
+                'earliestMin' => $this->earliestCheckpointMin,
+            ],
+            'dayBoundaryMin' => $this->dayBoundaryMin,
+        ];
+    }
+}

@@ -29,8 +29,9 @@ vendor/bin/phpunit
 | Befehl | Zweck |
 |---|---|
 | `php bin/migrate.php [--test]` | ausstehende Migrationen anwenden |
-| `php bin/user-create.php [--set-password]` | User anlegen (Standard: zufälliges Startpasswort, einmalig angezeigt) |
+| `php bin/user-create.php [--set-password] [--owner-defaults]` | User mit Startdaten anlegen (Standard: zufälliges Startpasswort, einmalig angezeigt) |
 | `php bin/user-password.php [--set-password]` | Passwort zurücksetzen, alle Sessions beenden |
+| `php bin/user-seed.php [--owner-defaults]` | Startdaten für einen bestehenden User ohne Tagesarten |
 
 ## Aufbau
 

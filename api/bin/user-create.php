@@ -2,7 +2,8 @@
 
 declare(strict_types=1);
 
-// Creates a user. Usage: php bin/user-create.php [--set-password]
+// Creates a user with start data. Usage: php bin/user-create.php [--set-password] [--owner-defaults]
+// --owner-defaults: personal week template of the operator (D-080).
 // Without --set-password a random start password is generated and shown once (D-079).
 
 use Primed\Cli\Console;
@@ -19,11 +20,11 @@ try {
         if (Console::askHidden('Passwort wiederholen:') !== $password) {
             throw new RuntimeException('Die Passwörter stimmen nicht überein.');
         }
-        $admin->create($username, $displayName, $password);
+        $admin->create($username, $displayName, $password, Console::hasFlag('--owner-defaults'));
         Console::line('User angelegt.');
     } else {
         $password = Console::generatePassword();
-        $admin->create($username, $displayName, $password);
+        $admin->create($username, $displayName, $password, Console::hasFlag('--owner-defaults'));
         Console::line('User angelegt. Startpasswort (wird nur jetzt angezeigt):');
         Console::line('  ' . $password);
     }

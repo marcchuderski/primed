@@ -9,6 +9,7 @@ use Primed\Auth\PasswordPolicy;
 use Primed\Auth\SessionRepository;
 use Primed\Auth\UsernameNormalizer;
 use Primed\Auth\UserRepository;
+use Primed\Day\UserSeeder;
 use Primed\Support\Clock;
 use RuntimeException;
 
@@ -23,10 +24,14 @@ final class UserAdmin
         private readonly PasswordHasher $hasher,
         private readonly PasswordPolicy $policy,
         private readonly Clock $clock,
+        private readonly UserSeeder $seeder,
     ) {
     }
 
-    public function create(string $username, string $displayName, string $password): int
+    /**
+     * Creates the user with start data (D-080); $ownerDefaults adds the personal week template.
+     */
+    public function create(string $username, string $displayName, string $password, bool $ownerDefaults = false): int
     {
         $normalized = UsernameNormalizer::normalize($username);
         if (!UsernameNormalizer::isValid($normalized)) {
@@ -42,7 +47,21 @@ final class UserAdmin
         }
         $this->assertPassword($password, $normalized);
 
-        return $this->users->create($normalized, $displayName, $this->hasher->hash($password), $this->clock->now());
+        $now = $this->clock->now();
+        $id = $this->users->create($normalized, $displayName, $this->hasher->hash($password), $now);
+        $this->seeder->seed($id, $ownerDefaults, $now);
+
+        return $id;
+    }
+
+    /** Adds start data to an existing user that has none yet. */
+    public function seed(string $username, bool $ownerDefaults): void
+    {
+        $user = $this->users->findByUsername(UsernameNormalizer::normalize($username));
+        if ($user === null) {
+            throw new RuntimeException('User nicht gefunden.');
+        }
+        $this->seeder->seed($user->id, $ownerDefaults, $this->clock->now());
     }
 
     /** Sets a new password and ends all sessions of the user. */

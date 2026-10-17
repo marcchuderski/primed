@@ -5,19 +5,15 @@ declare(strict_types=1);
 namespace Primed\Controller;
 
 use Primed\Auth\AuthContext;
-use Primed\Auth\AuthException;
-use Primed\Auth\AuthService;
+use Primed\Container;
 use Primed\Auth\SessionCookie;
 use Primed\Http\HttpException;
 use Primed\Http\Request;
 use Primed\Http\Response;
-use Primed\Support\Clock;
 
 final class AuthController
 {
-    public const CSRF_HEADER = 'X-CSRF-Token';
-
-    public function __construct(private readonly AuthService $auth, private readonly Clock $clock)
+    public function __construct(private readonly Container $c)
     {
     }
 
@@ -30,11 +26,11 @@ final class AuthController
         $username = self::stringField($body, 'username', 64);
         $password = self::stringField($body, 'password', 4096);
 
-        $result = $this->auth->login($username, $password, $request->clientIp);
+        $result = $this->c->auth()->login($username, $password, $request->clientIp);
 
         $response = Response::json(['user' => $result->user->toPublic(), 'csrfToken' => $result->csrfToken]);
 
-        return SessionCookie::set($response, $result->sessionToken, $result->cookieExpiresAt, $this->clock->now());
+        return SessionCookie::set($response, $result->sessionToken, $result->cookieExpiresAt, $this->c->clock->now());
     }
 
     /**
@@ -42,7 +38,7 @@ final class AuthController
      */
     public function me(Request $request, array $params): Response
     {
-        $context = $this->requireAuth($request, false);
+        $context = $this->requireAuth($request);
         $response = Response::json(['user' => $context->user->toPublic(), 'csrfToken' => $context->csrfToken]);
 
         return $this->refreshCookie($request, $response, $context);
@@ -53,7 +49,7 @@ final class AuthController
      */
     public function logout(Request $request, array $params): Response
     {
-        $this->auth->logout($this->requireAuth($request, true));
+        $this->c->auth()->logout($this->requireAuth($request));
 
         return SessionCookie::clear(Response::noContent());
     }
@@ -63,7 +59,7 @@ final class AuthController
      */
     public function logoutEverywhere(Request $request, array $params): Response
     {
-        $this->auth->logoutEverywhere($this->requireAuth($request, true));
+        $this->c->auth()->logoutEverywhere($this->requireAuth($request));
 
         return SessionCookie::clear(Response::noContent());
     }
@@ -73,9 +69,9 @@ final class AuthController
      */
     public function changePassword(Request $request, array $params): Response
     {
-        $context = $this->requireAuth($request, true);
+        $context = $this->requireAuth($request);
         $body = $request->json();
-        $this->auth->changePassword(
+        $this->c->auth()->changePassword(
             $context,
             self::stringField($body, 'currentPassword', 4096),
             self::stringField($body, 'newPassword', 4096),
@@ -85,17 +81,9 @@ final class AuthController
         return Response::noContent();
     }
 
-    public function requireAuth(Request $request, bool $checkCsrf): AuthContext
+    private function requireAuth(Request $request): AuthContext
     {
-        $context = $this->auth->authenticate($request->cookie(SessionCookie::NAME));
-        if ($context === null) {
-            throw AuthException::unauthenticated();
-        }
-        if ($checkCsrf) {
-            $this->auth->verifyCsrf($context, $request->header(self::CSRF_HEADER));
-        }
-
-        return $context;
+        return $this->c->authenticator()->require($request);
     }
 
     private function refreshCookie(Request $request, Response $response, AuthContext $context): Response
@@ -105,7 +93,7 @@ final class AuthController
             return $response;
         }
 
-        return SessionCookie::set($response, $token, $context->refreshedCookieExpiry, $this->clock->now());
+        return SessionCookie::set($response, $token, $context->refreshedCookieExpiry, $this->c->clock->now());
     }
 
     /**

@@ -18,6 +18,10 @@ use Primed\Auth\UserRepository;
 use Primed\Config\Config;
 use Primed\Controller\AuthController;
 use Primed\Controller\HealthController;
+use Primed\Controller\WeekTemplateController;
+use Primed\Controller\SettingsController;
+use Primed\Controller\DayTypeController;
+use Primed\Controller\DayController;
 use Primed\Database\ConnectionFactory;
 use Primed\Http\HttpException;
 use Primed\Http\OriginGuard;
@@ -42,14 +46,10 @@ final class Kernel
     public static function create(Config $config, string $appRoot): self
     {
         $logger = new FileLogger($appRoot . '/var/log/app.log');
-        $pdo = null;
-        $connect = static function () use (&$pdo, $config): PDO {
-            return $pdo ??= ConnectionFactory::create($config);
-        };
-
         $clock = new SystemClock();
-        $router = self::routes(
-            static fn (): AuthService => self::authService($config, $connect(), $clock, $logger, $appRoot),
+        $container = new Container(
+            static fn (): PDO => ConnectionFactory::create($config),
+            static fn (PDO $pdo, Clock $c): AuthService => self::authService($config, $pdo, $c, $logger, $appRoot),
             $clock,
         );
 
@@ -60,7 +60,12 @@ final class Kernel
             }
         }
 
-        return new self(new App($router, $logger, $config->string('API_BASE_PATH', '/api'), new OriginGuard($origins)));
+        return new self(new App(
+            self::routes($container),
+            $logger,
+            $config->string('API_BASE_PATH', '/api'),
+            new OriginGuard($origins),
+        ));
     }
 
     public static function authService(
@@ -89,35 +94,41 @@ final class Kernel
         );
     }
 
-    /**
-     * @param (\Closure(): AuthService)|null $authFactory lazily builds the auth service (DB connection on demand)
-     */
-    public static function routes(?\Closure $authFactory = null, ?Clock $clock = null): Router
+    public static function routes(?Container $c = null): Router
     {
         $router = new Router();
         $health = new HealthController();
         $router->add('GET', '/v1/health', $health->show(...));
 
-        if ($authFactory !== null) {
-            $clock ??= new SystemClock();
-            $controller = null;
-            $auth = static function () use (&$controller, $authFactory, $clock): AuthController {
-                return $controller ??= new AuthController($authFactory(), $clock);
-            };
-            $router->add('POST', '/v1/auth/login', static fn (Request $r, array $p) => $auth()->login($r, $p));
-            $router->add('GET', '/v1/auth/me', static fn (Request $r, array $p) => $auth()->me($r, $p));
-            $router->add('POST', '/v1/auth/logout', static fn (Request $r, array $p) => $auth()->logout($r, $p));
-            $router->add(
-                'POST',
-                '/v1/auth/logout-all',
-                static fn (Request $r, array $p) => $auth()->logoutEverywhere($r, $p),
-            );
-            $router->add(
-                'POST',
-                '/v1/auth/password',
-                static fn (Request $r, array $p) => $auth()->changePassword($r, $p),
-            );
+        if ($c === null) {
+            return $router;
         }
+
+        $auth = new AuthController($c);
+        $router->add('POST', '/v1/auth/login', $auth->login(...));
+        $router->add('GET', '/v1/auth/me', $auth->me(...));
+        $router->add('POST', '/v1/auth/logout', $auth->logout(...));
+        $router->add('POST', '/v1/auth/logout-all', $auth->logoutEverywhere(...));
+        $router->add('POST', '/v1/auth/password', $auth->changePassword(...));
+
+        $settings = new SettingsController($c);
+        $router->add('GET', '/v1/settings', $settings->show(...));
+        $router->add('PATCH', '/v1/settings', $settings->update(...));
+
+        $dayTypes = new DayTypeController($c);
+        $router->add('GET', '/v1/day-types', $dayTypes->index(...));
+        $router->add('POST', '/v1/day-types', $dayTypes->create(...));
+        $router->add('PATCH', '/v1/day-types/{id}', $dayTypes->update(...));
+        $router->add('DELETE', '/v1/day-types/{id}', $dayTypes->delete(...));
+
+        $template = new WeekTemplateController($c);
+        $router->add('GET', '/v1/week-template', $template->show(...));
+        $router->add('PUT', '/v1/week-template', $template->replace(...));
+
+        $days = new DayController($c);
+        $router->add('GET', '/v1/days/today', $days->today(...));
+        $router->add('GET', '/v1/days/{date}', $days->show(...));
+        $router->add('PUT', '/v1/days/{date}', $days->update(...));
 
         return $router;
     }

@@ -6,6 +6,7 @@ namespace Primed\Tests\Integration;
 
 use PDO;
 use Primed\App;
+use Primed\Container;
 use Primed\Auth\AuthService;
 use Primed\Auth\CsrfTokens;
 use Primed\Auth\IpHasher;
@@ -64,8 +65,14 @@ final class AuthFlowTest extends DatabaseTestCase
             $this->logger,
         );
 
+        $pdo = $this->pdo;
+        $container = new Container(
+            static fn (): PDO => $pdo,
+            static fn (): AuthService => $service,
+            $this->clock,
+        );
         $this->app = new App(
-            Kernel::routes(static fn (): AuthService => $service, $this->clock),
+            Kernel::routes($container),
             $this->logger,
             '/api',
             new OriginGuard([self::ORIGIN]),

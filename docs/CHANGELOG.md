@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-17 – 2.1 Tagesarten, Wochenvorlage, Tage
+- Migration `002_days`: Einstellungen (Protein-Standard, Checkpoint-Vorlage, Tagesgrenze), `day_types`, `week_template`, `days`.
+- API: Einstellungen, Tagesarten (CRUD), Wochenvorlage, Tage (heute/Datum, manuell setzen); feste Vergangenheit (D-098); Tagesgrenze 02:00.
+- Startdaten für neue User; CLI `--owner-defaults`, `bin/user-seed.php`.
+
 ## 2026-10-17 – Claim im Login
 - „Primed for performance.“ unter dem Logo auf dem Login-Screen (D-097).
 

@@ -12,7 +12,7 @@ Wird von Claude Code mit jedem Schritt präzisiert (Befehle, Dateilisten, Migrat
 4. Ordner `primed-app/` **neben** `httpdocs/` anlegen (nicht darin).
 5. `.env` aus `api/.env.example` erstellen, ausfüllen, nach `primed-app/.env` hochladen (Rechte `600`). `APP_KEY` neu erzeugen: `php -r 'echo base64_encode(random_bytes(32)), PHP_EOL;'`. `ALLOWED_ORIGINS` leer lassen.
 6. SFTP-Zugang nutzen, **kein** unverschlüsseltes FTP. SSH ist verfügbar, Composer nicht (wird lokal ausgeführt).
-7. Ersten User anlegen: `/opt/plesk/php/8.3/bin/php primed-app/bin/user-create.php --set-password` (Username `marcch`, Display-Name „Marc“, Passwort verdeckt eingeben). Freunde: ohne `--set-password` → zufälliges Startpasswort wird einmalig angezeigt. Passwort zurücksetzen: `bin/user-password.php`.
+7. Ersten User anlegen: `/opt/plesk/php/8.3/bin/php primed-app/bin/user-create.php --set-password` (Username `marcch`, Display-Name „Marc“, Passwort verdeckt eingeben); für den Betreiber zusätzlich `--owner-defaults` (persönliche Wochenvorlage). Bestehende User ohne Startdaten: `bin/user-seed.php`. Freunde: ohne `--set-password` → zufälliges Startpasswort wird einmalig angezeigt. Passwort zurücksetzen: `bin/user-password.php`.
 
 ## Jedes Release
 

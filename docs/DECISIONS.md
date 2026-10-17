@@ -188,3 +188,9 @@ Neue Einträge unten anhängen. Getroffene Entscheidungen werden nicht gelöscht
 **D-096 · Kein Loading-Screen, Logo-Animation im Login** (ersetzt D-065) – Während der Session-Prüfung nur Hintergrund; ohne Session Login-Screen mit animiertem Lockup, danach blenden Text und Felder ein; mit Session direkt in die App. `prefers-reduced-motion`: alles sofort sichtbar (auch Animations-Verzögerungen werden aufgehoben). · Nutzer (Verhalten bei bestehender Session: Claude, ohne Wartezeit) · 2026-10-17
 
 **D-097 · Claim im Login** – „Primed for performance.“ unter dem Logo-Lockup (Bricolage 800, 24 px, `--accent-text`), blendet mit dem Formular ein; nur auf dem Login-Screen. · Nutzer (Größe/Platzierung: Claude) · 2026-10-17
+
+**D-098 · Feste Vergangenheit durch Materialisierung** – Tage werden beim Abruf angelegt; vor jeder Änderung an Tagesarten, Wochenvorlage oder Protein-Standard werden alle vergangenen Tage ohne Datensatz (seit Kontoanlage) mit den bisherigen Werten gespeichert, in derselben Transaktion. Heute wird immer aus den aktuellen Einstellungen berechnet (manuell gesetzte Tagesart bleibt). · erfüllt D-051 ohne Versionierung aller Einstellungen. · versionierte Einstellungen mit Gültigkeitsdatum, nächtlicher Job. · Claude · 2026-10-17
+
+**D-099 · Tagesarten weich löschen** – `deleted_at`; vergangene Tage behalten Name und Sollwerte (Schnappschuss). Löschen nicht möglich, solange die Tagesart in der Wochenvorlage steht oder es die letzte ist; `is_training` einer in der Vorlage benutzten Tagesart ist nicht änderbar. · konsistente Vorlage, keine verwaisten Verweise. · Claude · 2026-10-17
+
+**D-100 · Zeiten als Minuten seit Mitternacht** (Europe/Berlin, Wandzeit) für Training und später Einträge; Zeitstempel bleiben UTC. · einfach, DST-unabhängig für das 15-Minuten-Raster. · Claude · 2026-10-17
