@@ -62,6 +62,29 @@ Nur an Trainingstagen. Regel (Vorlage, änderbar):
 
 Darstellung: Auf den Balken für kcal, Protein und KH sitzt ein Marker an der Position des Checkpoint-Ziels (z. B. 70 %). Tap auf einen Balken zeigt ein Pop-up: „Bis 17:00: 1.092 von 1.820 kcal · noch 728. Gesamt heute: 2.600“.
 
+## 4a. Begrüßung (Heute)
+
+Oben auf „Heute“: „Hey, [Display-Name].“ (fett, Textfarbe), direkt dahinter ein kurzer situativer Satz (normale Stärke, gedämpft). Darunter wie bisher das Datum als H1. Regelbasiert, ohne KI, als reine Funktion in `frontend/src/domain/`. Der Satz aktualisiert sich beim Öffnen und nach jedem neuen Eintrag. Die erste passende Regel gewinnt:
+
+| # | Bedingung | Satz |
+|---|---|---|
+| 1 | Noch nichts eingetragen, zwischen 02:00 und 11:00 | „Guten Morgen. Heute ist [Tagesart].“ |
+| 2 | Trainingstag, vor dem Checkpoint | „Noch [Zeit] bis zu deinem Pre-Workout.“ |
+| 3 | Trainingstag, zwischen Checkpoint und Trainingsbeginn | „Noch [Zeit] bis zur nächsten Einheit.“ |
+| 4 | Trainingstag, nach Trainingsende | „Starke Einheit. Jetzt zählt die Regeneration.“ |
+| 5 | Protein offen > 0 und ≤ 15 g | „Nur noch [x] g Protein. Fast geschafft.“ |
+| 6 | kcal im Rahmen (±5 %) und Protein-Soll erreicht | „Alles im Rahmen. Stark gemacht.“ |
+| 7 | kcal über Soll (> +5 %) | „Kalorien sind durch. Morgen geht's weiter.“ |
+| 8a | Standard, Einträge vorhanden, Protein offen | „Noch [x] g Protein für heute.“ |
+| 8b | Standard, Einträge vorhanden, Protein-Soll erreicht | „Protein-Soll erreicht. Stark gemacht.“ |
+| 8c | Standard, noch nichts eingetragen | täglich wechselnd (stabil pro Datum): „Schön, dass du da bist.“ / „Ein guter Tag zum Dranbleiben.“ / „Schritt für Schritt.“ / „Bleib dran.“ |
+
+- Einen eigenen Spieltag-Satz gibt es nicht (Nutzerentscheidung); Spieltage nutzen Regel 2/3.
+- Während des Trainings (Beginn bis Ende) greifen die Regeln ab 5.
+- [Zeit] auf halbe Stunden gerundet: „gleich“ (< 30 min), „30 Minuten“, „1 Stunde“, „1½ Stunden“, „2 Stunden“ …
+- [Tagesart] als Kurzform für die Start-Tagesarten: „Ruhetag“, „leichtes Training“, „Fitness“, „Basketball“, „Spieltag“; eigene oder umbenannte Tagesarten mit ihrem Namen.
+- Zahlen deutsch formatiert, Protein ganzzahlig. Ton neutral-motivierend, nie tadelnd, keine Emojis; höchstens zwei Zeilen auf 390 px.
+
 ## 5. Einträge
 
 - Ein Eintrag besteht aus: Lebensmittel **oder** Gerichtsportion, Menge + Einheit, Datum, Uhrzeit.

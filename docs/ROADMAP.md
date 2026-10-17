@@ -28,7 +28,7 @@ Nach jedem Item: Tests, Security Audit (`agent-skills:security-and-hardening`), 
 |---|---|---|
 | 2.1 | Tagesarten (anlegen/ändern/löschen), Protein-Standard, Wochenvorlage, Tage mit Tagesgrenze 02:00 (mit Seed aus `DEFAULTS.md`) | fertig (API; Oberflächen in 2.3/2.4/7.1) |
 | 2.2 | Fachlogik: Sollwerte, Fett-Richtwert, Checkpoints, Offen-Werte (+ Tests) | geplant |
-| 2.3 | Heute-Screen: Tabs, Begrüßung, Tagesart-Chip, Balken mit Marker, Pop-up | geplant |
+| 2.3 | Heute-Screen: Tabs, situative Begrüßung (BRIEFING §4a, Fachlogik + Tests), Tagesart-Chip, Balken mit Marker, Pop-up | geplant |
 | 2.4 | Tagesart-Picker (Tagesart, Uhrzeit-Rad, Dauer) | geplant |
 | 2.5 | Einträge: anlegen, bearbeiten, löschen, Schnappschuss, nachtragen | geplant |
 

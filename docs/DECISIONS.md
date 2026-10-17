@@ -194,3 +194,5 @@ Neue Einträge unten anhängen. Getroffene Entscheidungen werden nicht gelöscht
 **D-099 · Tagesarten weich löschen** – `deleted_at`; vergangene Tage behalten Name und Sollwerte (Schnappschuss). Löschen nicht möglich, solange die Tagesart in der Wochenvorlage steht oder es die letzte ist; `is_training` einer in der Vorlage benutzten Tagesart ist nicht änderbar. · konsistente Vorlage, keine verwaisten Verweise. · Claude · 2026-10-17
 
 **D-100 · Zeiten als Minuten seit Mitternacht** (Europe/Berlin, Wandzeit) für Training und später Einträge; Zeitstempel bleiben UTC. · einfach, DST-unabhängig für das 15-Minuten-Raster. · Claude · 2026-10-17
+
+**D-101 · Situative Begrüßung** – regelbasierter Satz hinter „Hey, [Name].“ nach BRIEFING §4a (erste passende Regel gewinnt), reine Funktion mit Tests. Kein Spieltag-Satz; „Guten Morgen“ nur 02:00–11:00; bei erreichtem Protein-Soll im Standardfall „Protein-Soll erreicht. Stark gemacht.“; Kurzformen nur für die Start-Tagesarten. · Nutzer (Kurzform-Fallback und Komma nach „Hey“ wie im Mockup: Claude) · 2026-10-17

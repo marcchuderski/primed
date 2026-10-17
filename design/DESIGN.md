@@ -100,6 +100,8 @@ Bewertet wird nur die **kcal-Bilanz gegen das Tagessoll, Toleranz ±5 %**. Drei 
 - Oben drei Text-Tabs: Heute · Essen · Verlauf. Aktiver Tab fett mit Akzent-Unterstrich. Rechts Menü-Icon.
 - Keine Bottom-Navigation.
 
+**Begrüßung (Heute):** über dem Datum eine Zeile „Hey, [Name].“ (Inter 15 px, 700, `--text`) gefolgt vom situativen Satz (Inter 15 px, 400, `--text-muted`) im selben Absatz; bricht sauber auf höchstens zwei Zeilen um. Regeln in `docs/BRIEFING.md` §4a.
+
 **Tagesart-Chip** unter dem Titel, tonal, öffnet den Tagesart-Picker (Bottom-Sheet).
 
 **Listeneintrag:** Titel + Menge, darunter Makrozeile (Protein in `--accent-text`), Uhrzeit rechts. Wischen löscht, Tap bearbeitet. Keine Mahlzeiten-Slots.

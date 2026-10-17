@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-10-17 – Konzept: situative Begrüßung
+- BRIEFING §4a, DESIGN (Heute), Roadmap 2.3 um die regelbasierte Begrüßung ergänzt (D-101).
+
 ## 2026-10-17 – 2.1 Tagesarten, Wochenvorlage, Tage
 - Migration `002_days`: Einstellungen (Protein-Standard, Checkpoint-Vorlage, Tagesgrenze), `day_types`, `week_template`, `days`.
 - API: Einstellungen, Tagesarten (CRUD), Wochenvorlage, Tage (heute/Datum, manuell setzen); feste Vergangenheit (D-098); Tagesgrenze 02:00.
