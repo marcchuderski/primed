@@ -9,7 +9,7 @@ Nach jedem Item: Tests, Security Audit (`agent-skills:security-and-hardening`), 
 |---|---|---|
 | 0.1 | Offene Punkte aus `BRIEFING.md` klären | fertig |
 | 0.2 | Frontend-Gerüst (Vite, React, TS strict, ESLint, Prettier, Vitest) | fertig |
-| 0.3 | API-Gerüst (Composer, PSR-12, Front-Controller, Router, PHPUnit) | fertig (Tests unter PHP 8.3 + MariaDB 10.11 grün; Prüfung von `.htaccess` über Apache folgt mit DDEV) |
+| 0.3 | API-Gerüst (Composer, PSR-12, Front-Controller, Router, PHPUnit) | fertig |
 | 0.4 | Design-Tokens, selbst gehostete Schriften, Basis-Komponenten | fertig |
 
 ## Phase 1 – Fundament & Sicherheit
@@ -18,9 +18,9 @@ Nach jedem Item: Tests, Security Audit (`agent-skills:security-and-hardening`), 
 |---|---|---|
 | 1.1 | Migrationen: Users, Sessions, Login-Versuche, Settings | fertig |
 | 1.2 | Login, Logout, Überall abmelden, Passwort ändern, Rate-Limit | fertig (API + CLI; Oberfläche in 1.4/7.1) |
-| 1.3 | Security-Header, CSP, HSTS, CSRF, `.htaccess`, Fehlerbehandlung ohne Datenlecks | fertig (statisch getestet; Live-Prüfung per `scripts/check-headers.sh` in DDEV bzw. 1.5) |
-| 1.4 | Loading-Screen, Login-Screen | geplant |
-| 1.5 | Erstes Test-Deployment auf Plesk nach `DEPLOYMENT.md` | geplant |
+| 1.3 | Security-Header, CSP, HSTS, CSRF, `.htaccess`, Fehlerbehandlung ohne Datenlecks | fertig (live in DDEV mit `scripts/check-headers.sh` geprüft) |
+| 1.4 | Loading-Screen, Login-Screen | fertig (lokal in DDEV + `npm run dev` geprüft) |
+| 1.5 | Erstes Test-Deployment auf Plesk nach `DEPLOYMENT.md` | verworfen (Nutzer: lokal mit DDEV testen, D-092) |
 
 ## Phase 2 – Kern: Heute
 

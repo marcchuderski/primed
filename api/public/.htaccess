@@ -5,11 +5,10 @@ DirectoryIndex index.php
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteBase /api/
-    RewriteCond %{REQUEST_FILENAME} !-f
+
+    # Existing files other than the front controller are never served (defense in depth).
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule !^index\.php$ - [F,L]
+
     RewriteRule ^ index.php [L]
 </IfModule>
-
-# Only the front controller may be executed or served from this directory.
-<FilesMatch "^(?!index\.php$).+">
-    Require all denied
-</FilesMatch>

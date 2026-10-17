@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-17 – 1.4 Loading & Login
+- API-Client mit CSRF-Header und typisierten Fehlern; Auth-Provider (Session wiederherstellen, Login, Logout, Überall abmelden).
+- Loading-Screen (Ring-Animation ~1,4 s), Login-Screen nach Mockup (ohne „Passwort vergessen“), Fehler-/Retry-Screen, Platzhalter-Startseite mit Abmelden + „Überall abmelden“.
+- Fix: `api/.htaccess` sperrte alle API-Pfade; `check-headers.sh` live in DDEV grün.
+- Roadmap 1.5 verworfen (lokal testen).
+
 ## 2026-10-17 – 1.3 Härtung
 - `frontend/public/.htaccess`: HTTPS-Weiterleitung, Dotfile-Sperre, SPA-Fallback, CSP, HSTS, Permissions-Policy, COOP/CORP, Caching.
 - Build ohne Inline-Assets; Regressionstest für Header; Live-Prüfskript `scripts/check-headers.sh`.

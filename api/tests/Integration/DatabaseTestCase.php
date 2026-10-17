@@ -19,9 +19,10 @@ abstract class DatabaseTestCase extends TestCase
     protected static function connect(): PDO
     {
         try {
-            // .env.testing (optional, not committed) overrides .env, e.g. for a test DB outside DDEV.
+            // Outside DDEV an optional .env.testing (not committed) may point to another test DB.
             $testing = __DIR__ . '/../../.env.testing';
-            $config = Config::fromEnvFile(is_file($testing) ? $testing : __DIR__ . '/../../.env');
+            $useTesting = getenv('IS_DDEV_PROJECT') !== 'true' && is_file($testing);
+            $config = Config::fromEnvFile($useTesting ? $testing : __DIR__ . '/../../.env');
             $testDb = $config->string('DB_TEST_NAME');
             $pdo = ConnectionFactory::create($config, $testDb);
         } catch (ConfigException | PDOException) {

@@ -1,0 +1,41 @@
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  width: 100%;
+  max-width: 440px;
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding: 56px 22px 0;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 36px;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+}
+
+.lead {
+  color: var(--text-muted);
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  margin-top: auto;
+}
+
+.link {
+  min-height: var(--touch);
+  padding: 0 var(--space-3);
+  border: none;
+  background: none;
+  color: var(--text-muted);
+  font-size: 14px;
+  text-decoration: underline;
+  cursor: pointer;
+}

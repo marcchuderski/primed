@@ -41,7 +41,7 @@ check_status "$BASE/api/v1/nope" 404
 echo "Nothing private is reachable"
 for path in .env .htaccess api/.htaccess api/../.env .git/config primed-app/.env bootstrap.php api/bootstrap.php composer.json api/composer.json; do
   status=$("${CURL[@]}" -o /dev/null -w '%{http_code}' "$BASE/$path")
-  body=$("${CURL[@]}" "$BASE/$path" | head -c 200)
+  body=$("${CURL[@]}" "$BASE/$path" | head -c 4000)
   if [[ "$status" == "403" || "$status" == "404" ]] || [[ "$body" == *'<div id="root">'* ]]; then
     pass "/$path not exposed ($status)"
   else

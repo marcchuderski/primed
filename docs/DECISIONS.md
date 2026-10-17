@@ -176,3 +176,9 @@ Neue Einträge unten anhängen. Getroffene Entscheidungen werden nicht gelöscht
 **D-090 · Startpasswörter** – 4 Gruppen à 5 Zeichen aus einem Alphabet ohne verwechselbare Zeichen (~114 Bit), einmalig in der CLI angezeigt. · sicher und abtippbar. · Claude · 2026-10-17
 
 **D-091 · Security-Header im Web-Root-`.htaccess`** – CSP `default-src 'none'` mit expliziten `'self'`-Quellen, HSTS 1 Jahr (`includeSubDomains`, ohne `preload`, betrifft nur `*.primed.dev-pfeffermond.de`), `Permissions-Policy` mit Kamera nur `self`, COOP/CORP `same-origin`, `index.html` `no-cache`, gehashte Assets `immutable`. Die API setzt zusätzlich eigene Header (`no-store`, CSP `default-src 'none'`). · strengste Konfiguration, die das App-Konzept zulässt. · Header nur in PHP. · Claude · 2026-10-17
+
+**D-092 · Kein Test-Deployment in Phase 1** – Roadmap 1.5 verworfen; geprüft wird lokal mit DDEV (Apache, PHP 8.3, MariaDB 10.11) und `npm run dev`. · Nutzer · 2026-10-17
+
+**D-093 · Frontend-Auth-Zustand** – Session nur im `HttpOnly`-Cookie, CSRF-Token nur im Speicher (nach Reload über `/auth/me`); Loading-Screen wartet auf `/auth/me` und mindestens 1,4 s (bei `prefers-reduced-motion` ohne Mindestzeit); Bildschirmwechsel mit 150-ms-Crossfade. · Claude · 2026-10-17
+
+**D-094 · API-`.htaccess` per Rewrite statt `FilesMatch`** – existierende Dateien außer `index.php` → 403, alles andere → `index.php`. · `FilesMatch` sperrte auch virtuelle API-Pfade. · Claude · 2026-10-17

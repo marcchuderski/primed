@@ -42,7 +42,7 @@ export function LogoMark({ size = 40, animated = false, label }: LogoMarkProps) 
 
 interface WordmarkProps {
   size?: number;
-  className?: string;
+  className?: string | undefined;
 }
 
 /** "primed" in lowercase, the "p" in the accent color. */

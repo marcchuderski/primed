@@ -1,0 +1,32 @@
+.screen {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  min-height: 100dvh;
+  padding: var(--space-5);
+}
+
+.word {
+  animation: rise 0.7s ease-out 0.25s both;
+}
+
+.tagline {
+  position: absolute;
+  bottom: 56px;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
