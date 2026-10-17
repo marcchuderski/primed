@@ -91,5 +91,6 @@ final class FoodSeeder
                 'source' => $source,
             ], $now);
         }
+        $this->foods->linkShakeDefaults($userId);
     }
 }

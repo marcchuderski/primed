@@ -7,6 +7,7 @@ namespace Primed\Entry;
 use Primed\Day\DayService;
 use Primed\Day\SettingsRepository;
 use Primed\Food\FoodRepository;
+use Primed\Food\ShakeService;
 use Primed\Food\Units;
 use Primed\Http\HttpException;
 use Primed\Http\Input;
@@ -25,6 +26,7 @@ final class EntryService
         private readonly DayService $days,
         private readonly SettingsRepository $settings,
         private readonly Clock $clock,
+        private readonly ShakeService $shakes,
     ) {
     }
 
@@ -55,6 +57,7 @@ final class EntryService
             $userId,
             $date,
             $timeMin,
+            'food',
             $food->id,
             $food->name,
             $amount,
@@ -64,6 +67,29 @@ final class EntryService
             $now,
         );
         $this->foods->recordUse($userId, $food->id, $amount, $unit, $now);
+
+        return $this->entries->find($userId, $id) ?? throw HttpException::notFound();
+    }
+
+    /** Logs one of the quick shakes (BRIEFING §9); nutrients from milk + current protein powder. */
+    public function createShake(int $userId, string $date, int $timeMin, string $shakeId): Entry
+    {
+        $this->days->getDay($userId, $date);
+        self::assertTime($timeMin);
+        $shake = $this->shakes->get($userId, $shakeId);
+        $id = $this->entries->create(
+            $userId,
+            $date,
+            $timeMin,
+            'shake',
+            null,
+            $shake['name'],
+            1,
+            'stueck',
+            1,
+            $shake['nutrients'],
+            $this->clock->now(),
+        );
 
         return $this->entries->find($userId, $id) ?? throw HttpException::notFound();
     }

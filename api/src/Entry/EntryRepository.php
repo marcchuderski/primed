@@ -11,7 +11,7 @@ use Primed\Support\Row;
 
 final class EntryRepository
 {
-    private const COLUMNS = 'e.id, e.date, e.time_min, e.food_id, e.dish_id, e.name_snapshot, e.amount, e.unit,
+    private const COLUMNS = 'e.id, e.date, e.time_min, e.kind, e.food_id, e.dish_id, e.name_snapshot, e.amount, e.unit,
         e.quantity, e.kcal, e.protein, e.carbs, e.sugar, e.fat, f.basis, f.package_amount';
     private const FROM = ' FROM entries e LEFT JOIN foods f ON f.id = e.food_id AND f.user_id = e.user_id ';
 
@@ -53,6 +53,7 @@ final class EntryRepository
         int $userId,
         string $date,
         int $timeMin,
+        string $kind,
         ?int $foodId,
         string $name,
         float $amount,
@@ -62,13 +63,14 @@ final class EntryRepository
         DateTimeImmutable $now,
     ): int {
         $this->pdo->prepare(
-            'INSERT INTO entries (user_id, date, time_min, food_id, name_snapshot, amount, unit, quantity,
+            'INSERT INTO entries (user_id, date, time_min, kind, food_id, name_snapshot, amount, unit, quantity,
                                   kcal, protein, carbs, sugar, fat, created_at, updated_at)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
         )->execute([
             $userId,
             $date,
             $timeMin,
+            $kind,
             $foodId,
             $name,
             $amount,
@@ -133,6 +135,7 @@ final class EntryRepository
             Row::int($row, 'id'),
             Row::string($row, 'date'),
             Row::int($row, 'time_min'),
+            Row::string($row, 'kind'),
             ($row['food_id'] ?? null) === null ? null : Row::int($row, 'food_id'),
             ($row['dish_id'] ?? null) === null ? null : Row::int($row, 'dish_id'),
             Row::string($row, 'name_snapshot'),

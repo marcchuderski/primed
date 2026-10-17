@@ -220,3 +220,5 @@ Neue Einträge unten anhängen. Getroffene Entscheidungen werden nicht gelöscht
 **D-112 · OFF-Suche über search.openfoodfacts.org** – der Legacy-Endpunkt `cgi/search.pl` antwortet 503; Suche über den neuen Suchdienst (Lucene), Barcode weiter über `api/v2/product`. Begriffe werden auf Buchstaben/Ziffern reduziert, Länderfilter serverseitig. · im Live-Test festgestellt. · Claude · 2026-10-17
 
 **D-113 · Startbibliothek idempotent** – `FoodSeeder` ergänzt fehlende Standard-Lebensmittel (nach Name) auch bei bestehenden Usern (`bin/user-seed.php`); Startprodukte des Betreibers nur beim ersten Seed. · Claude · 2026-10-17
+
+**D-114 · Shakes als eigene Eintragsart** – Ein Shake ist ein Eintrag (`kind = shake`, ohne `food_id`) mit Schnappschuss aus Milch (Bibliothek) + aktuellem Proteinpulver; Zusammensetzung in `user_settings` (Milch-/Pulver-Produkt, 400/200 ml, 30 g), beim Seed verknüpft. Fehlt Milch oder Pulver (z. B. gelöscht), werden die Shake-Buttons ausgeblendet. Shakes zählen nicht zu „Häufig um diese Zeit“. · ein Eintrag pro Shake statt zwei; Werte folgen automatisch dem gewählten Pulver (D-040). · zwei Einzeleinträge, feste Shake-Werte. · Claude · 2026-10-17

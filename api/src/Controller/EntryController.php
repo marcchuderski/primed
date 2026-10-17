@@ -7,6 +7,7 @@ namespace Primed\Controller;
 use Primed\Container;
 use Primed\Entry\Entry;
 use Primed\Entry\EntryService;
+use Primed\Food\ShakeService;
 use Primed\Http\Input;
 use Primed\Http\Request;
 use Primed\Http\Response;
@@ -47,6 +48,33 @@ final class EntryController
         );
 
         return Response::json(['entry' => $entry->toPublic()], 201);
+    }
+
+    /**
+     * @param array<string, string> $params
+     */
+    public function createShake(Request $request, array $params): Response
+    {
+        $user = $this->c->authenticator()->require($request)->user;
+        $input = Input::fromRequest($request);
+        $entry = $this->c->entries()->createShake(
+            $user->id,
+            $input->text('date', 10, 10, 'Datum'),
+            $input->int('timeMin', 0, 1439, 'Uhrzeit'),
+            $input->enum('shake', array_keys(ShakeService::SHAKES), 'Shake'),
+        );
+
+        return Response::json(['entry' => $entry->toPublic()], 201);
+    }
+
+    /**
+     * @param array<string, string> $params
+     */
+    public function shakes(Request $request, array $params): Response
+    {
+        $user = $this->c->authenticator()->require($request)->user;
+
+        return Response::json(['shakes' => $this->c->shakes()->all($user->id)]);
     }
 
     /**

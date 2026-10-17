@@ -99,7 +99,7 @@ Die API speichert, validiert und liefert Daten; sie berechnet Nährwert-Schnapps
 | Bibliothek (umgesetzt 3.1/3.4) | `GET /foods?q=&category=&type=&context=mealprep` · `GET /foods/frequent` · `GET /foods/{id}` · `POST /foods` · `PATCH /foods/{id}` · `DELETE /foods/{id}` (weich) · `GET /foods/barcode/{ean}` (eigene Bibliothek, sonst OFF) |
 | Open Food Facts | `GET /off/search?q=` (Proxy mit Cache, max. 10 Treffer, DE) |
 | Meal Prep | `GET /dishes?status=active|archived` · `POST /dishes` · `PATCH /dishes/{id}` |
-| Einträge (umgesetzt 2.5) | `GET /days/{date}/entries` · `POST /entries` `{date, timeMin, foodId, amount, unit}` · `PATCH /entries/{id}` `{timeMin?, amount?, unit?}` · `DELETE /entries/{id}` |
+| Einträge (umgesetzt 2.5) | `GET /days/{date}/entries` · `POST /entries` `{date, timeMin, foodId, amount, unit}` · `POST /entries/shake` `{date, timeMin, shake: big/small_low/small_high}` · `GET /shakes` · `PATCH /entries/{id}` `{timeMin?, amount?, unit?}` · `DELETE /entries/{id}` |
 | Verlauf | `GET /history/week?start=` · `GET /history/month?month=` · `GET /history/year?year=` |
 
 Migrationen: `api/migrations/NNN_name.sql`, nur vorwärts; lokal `php bin/migrate.php [--test]`, Produktion per phpMyAdmin (siehe DEPLOYMENT). Implementiert ab 1.1: `001_init` (users, sessions, login_attempts, user_settings, schema_migrations). Alle Zeitstempel UTC.
@@ -149,7 +149,7 @@ Alle schreibenden Endpunkte: Session-Cookie + CSRF-Token, serverseitige Validier
 | `schema_migrations` | version, applied_at (jede Migration trägt sich selbst ein) |
 | `sessions` | id, user_id (FK, CASCADE), token_hash (BINARY(32), SHA-256, unique), created_at, last_seen_at, expires_at (gleitend 30 Tage), absolute_expires_at (90 Tage), revoked_at |
 | `login_attempts` | id, username, ip_hash (HMAC), attempted_at, success · Löschung nach 30 Tagen |
-| `user_settings` | user_id (FK, CASCADE), theme (system/light/dark), protein_default, default_duration_min, earliest_training_min, checkpoint_offset_min, checkpoint_pct, earliest_checkpoint_min, day_boundary_min, updated_at · noch geplant (spätere Migrationen): tolerance_pct, protein_powder_food_id, Shake-Schwellen, Pre-Workout-/KH-Snack-Fenster |
+| `user_settings` | user_id (FK, CASCADE), theme (system/light/dark), protein_default, default_duration_min, earliest_training_min, checkpoint_offset_min, checkpoint_pct, earliest_checkpoint_min, day_boundary_min, updated_at · protein_powder_food_id, shake_milk_low_food_id, shake_milk_high_food_id (FK SET NULL), shake_big_ml (400), shake_small_ml (200), shake_powder_g (30) · noch geplant: tolerance_pct, Shake-Schwellen, Pre-Workout-/KH-Snack-Fenster |
 | `day_types` | id, user_id, system_key (`rest` = fester Ruhetag, D-106), name, kcal, protein (nullable = Protein-Standard), carbs, sugar_ref, is_training, sort, deleted_at |
 | `week_template` | user_id, weekday (1–7, ISO), day_type_id (FK RESTRICT), training_start (Minuten), duration_min |
 | `days` | id, user_id, date (logischer Tag, unique je User), day_type_id (FK SET NULL), day_type_name (Schnappschuss), is_training, training_start, duration_min, target_kcal/protein/carbs/sugar (Schnappschuss), source (template/manual) |
@@ -158,7 +158,7 @@ Alle schreibenden Endpunkte: Session-Cookie + CSRF-Token, serverseitige Validier
 | `rate_limits` | user_id, bucket, window_start, hits (z. B. OFF-Barcode 30/min, OFF-Suche 10/min je User) |
 | `dishes` | id, user_id, name, cooked_at, portions_total, portions_left (DECIMAL, Schritte 0,5), Summen, status (active/archived/discarded) |
 | `dish_ingredients` | id, dish_id, food_id (nullable), name_snapshot, amount + unit (wie eingegeben: g/ml/EL/TL/Packung/Stück), grams_or_ml (umgerechnet; bei Basis Stück: Stückzahl), Nährwerte |
-| `entries` | id, user_id, date (logischer Tag), time_min (Wandzeit, 15-Min-Raster), food_id (FK SET NULL) / dish_id, name_snapshot, amount + unit (wie eingegeben: g/ml/el/tl/packung/stueck/portion), quantity (umgerechnet: g, ml, Stück oder Portionen), Nährwert-Schnappschuss kcal/protein/carbs/sugar/fat |
+| `entries` | id, user_id, date (logischer Tag), time_min (Wandzeit, 15-Min-Raster), kind (food/dish/shake), food_id (FK SET NULL) / dish_id, name_snapshot, amount + unit (wie eingegeben: g/ml/el/tl/packung/stueck/portion), quantity (umgerechnet: g, ml, Stück oder Portionen), Nährwert-Schnappschuss kcal/protein/carbs/sugar/fat |
 
 Der **logische Tag** endet um 02:00 (`day_boundary`); ein Eintrag um 00:30 am 21.10. gehört zum Tag 20.10. Tage werden beim ersten Zugriff aus der Wochenvorlage angelegt (mit Soll-Schnappschuss). Damit vergangene Tage fest bleiben, werden **vor jeder Änderung** an Wochenvorlage, Tagesarten oder Protein-Standard alle vergangenen Tage seit Kontoanlage ohne Datensatz mit den bisherigen Werten angelegt (wenige hundert Zeilen pro Jahr, in einer Transaktion).
 

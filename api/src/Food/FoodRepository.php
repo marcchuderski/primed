@@ -215,6 +215,21 @@ final class FoodRepository
         return $names;
     }
 
+    /** Links the seeded milks and protein powder to the shake settings where not set yet (D-040). */
+    public function linkShakeDefaults(int $userId): void
+    {
+        $this->pdo->prepare(
+            "UPDATE user_settings s
+                SET s.protein_powder_food_id = COALESCE(s.protein_powder_food_id, (SELECT f.id FROM foods f
+                        WHERE f.user_id = s.user_id AND f.barcode = '4250519647234' AND f.deleted_at IS NULL LIMIT 1)),
+                    s.shake_milk_low_food_id = COALESCE(s.shake_milk_low_food_id, (SELECT f.id FROM foods f
+                        WHERE f.user_id = s.user_id AND f.name = 'Milch 1,5 %' AND f.deleted_at IS NULL LIMIT 1)),
+                    s.shake_milk_high_food_id = COALESCE(s.shake_milk_high_food_id, (SELECT f.id FROM foods f
+                        WHERE f.user_id = s.user_id AND f.name = 'Milch 3,5 %' AND f.deleted_at IS NULL LIMIT 1))
+              WHERE s.user_id = ?",
+        )->execute([$userId]);
+    }
+
     public function hasAny(int $userId): bool
     {
         $statement = $this->pdo->prepare('SELECT 1 FROM foods WHERE user_id = ? LIMIT 1');

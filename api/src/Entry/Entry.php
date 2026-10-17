@@ -13,6 +13,8 @@ final class Entry
         public readonly int $id,
         public readonly string $date,
         public readonly int $timeMin,
+        /** food, dish or shake */
+        public readonly string $kind,
         public readonly ?int $foodId,
         public readonly ?int $dishId,
         public readonly string $name,
@@ -35,6 +37,7 @@ final class Entry
             'id' => $this->id,
             'date' => $this->date,
             'timeMin' => $this->timeMin,
+            'kind' => $this->kind,
             'foodId' => $this->foodId,
             'dishId' => $this->dishId,
             'name' => $this->name,

@@ -155,6 +155,8 @@ final class Kernel
         $entries = new EntryController($c);
         $router->add('GET', '/v1/days/{date}/entries', $entries->index(...));
         $router->add('POST', '/v1/entries', $entries->create(...));
+        $router->add('POST', '/v1/entries/shake', $entries->createShake(...));
+        $router->add('GET', '/v1/shakes', $entries->shakes(...));
         $router->add('PATCH', '/v1/entries/{id}', $entries->update(...));
         $router->add('DELETE', '/v1/entries/{id}', $entries->delete(...));
 

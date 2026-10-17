@@ -18,6 +18,7 @@ use Primed\Entry\EntryRepository;
 use Primed\Entry\EntryService;
 use Primed\Food\FoodRepository;
 use Primed\Food\FoodService;
+use Primed\Food\ShakeService;
 use Primed\Off\HttpFetcher;
 use Primed\Off\OffClient;
 use Primed\Off\OffUnavailable;
@@ -103,7 +104,13 @@ final class Container
             $this->days(),
             $this->settings(),
             $this->clock,
+            $this->shakes(),
         );
+    }
+
+    public function shakes(): ShakeService
+    {
+        return new ShakeService($this->pdo(), new FoodRepository($this->pdo()));
     }
 
     public function settings(): SettingsRepository
