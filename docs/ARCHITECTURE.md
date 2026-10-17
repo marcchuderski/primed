@@ -29,8 +29,8 @@ Stand: 17.10.2026 · Entwurf vor Implementierung. Wird von Claude Code laufend a
 |---|---|
 | Frontend | Vite, React, TypeScript (strict), PWA (Manifest + Service Worker nur für App-Shell, kein Offline-Datenbetrieb) |
 | Icons | lucide-react |
-| Styling | CSS-Variablen aus `design/tokens.css`; Umschaltung über `data-theme` |
-| Schriften | Bricolage Grotesque, Inter, **selbst gehostet** (kein Google-CDN, Datenschutz + strenge CSP) |
+| Styling | CSS-Module + CSS-Variablen aus `design/tokens.css` (direkt importiert, keine Kopie); Umschaltung über `data-theme` |
+| Schriften | Bricolage Grotesque (opsz+wght), Inter (wght) als Variable Fonts, **selbst gehostet** via `@fontsource-variable` (nur Latin + Latin Ext), kein Google-CDN |
 | Barcode | ZXing (iOS/WebKit hat keine BarcodeDetector-API), Kamera nur über HTTPS |
 | API | PHP 8.3 (Server 8.3.8), Composer (nur lokal, `vendor/` wird hochgeladen), PSR-12, `strict_types` |
 | Datenbank | MariaDB 10.11, `utf8mb4`, InnoDB |
@@ -51,8 +51,8 @@ Stand: 17.10.2026 · Entwurf vor Implementierung. Wird von Claude Code laufend a
 │       ├── domain/       reine Fachlogik + Tests (Sollwerte, Checkpoints, Shake-Regeln, Bewertung, Bilanzen)
 │       ├── api/          typisierter API-Client
 │       ├── features/     heute, hinzufuegen, essen, verlauf, menue, auth
-│       ├── components/   UI-Bausteine (Balken, Sheet, Stepper, Scroll-Rad, Segment …)
-│       └── styles/       tokens.css (aus design/), Basis-Styles
+│       ├── components/   UI-Bausteine als React + CSS-Module (Button, TextField, Logo, Footer; später Balken, Sheet, Stepper …)
+│       └── styles/       index.css (importiert design/tokens.css direkt), fonts.css, base.css
 ├── .ddev/                DDEV (PHP 8.3, MariaDB 10.11, Apache; /api → api/public, Docroot frontend/dist)
 └── api/
     ├── public/           index.php + .htaccess (werden nach httpdocs/api/ deployt)

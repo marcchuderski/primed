@@ -10,7 +10,7 @@ Nach jedem Item: Tests, Security Audit (`agent-skills:security-and-hardening`), 
 | 0.1 | Offene Punkte aus `BRIEFING.md` klären | fertig |
 | 0.2 | Frontend-Gerüst (Vite, React, TS strict, ESLint, Prettier, Vitest) | fertig |
 | 0.3 | API-Gerüst (Composer, PSR-12, Front-Controller, Router, PHPUnit) | in Arbeit (Code fertig, Verifikation in DDEV ausstehend: `ddev start` braucht einmalig sudo) |
-| 0.4 | Design-Tokens, selbst gehostete Schriften, Basis-Komponenten | geplant |
+| 0.4 | Design-Tokens, selbst gehostete Schriften, Basis-Komponenten | fertig |
 
 ## Phase 1 – Fundament & Sicherheit
 

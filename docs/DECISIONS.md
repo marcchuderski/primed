@@ -144,3 +144,7 @@ Neue Einträge unten anhängen. Getroffene Entscheidungen werden nicht gelöscht
 **D-075 · API-Werkzeuge** – PHPUnit 12 (13 braucht PHP 8.4, Server hat 8.3; Composer-Plattform auf 8.3.8 gepinnt), PHPStan Level max + strict-rules, PHP_CodeSniffer 4 (PSR-12 + verbotene Funktionen wie `eval`, `exec`, `var_dump`). · Standardwerkzeuge, strengste Prüfung. · Psalm, PHP-CS-Fixer. · Claude · 2026-10-17
 
 **D-076 · Lokale Struktur in DDEV** – Docroot `frontend/dist` (Build), Apache-Alias `/api` → `api/public` wie in Produktion; Test-Datenbank `db_test` per Hook. Der Front-Controller findet `bootstrap.php` über zwei feste Pfade (Produktion `../../primed-app/`, Repo `../`). · gleiche URL-Struktur und `.htaccess`-Wirkung wie auf Plesk. · Claude · 2026-10-17
+
+**D-077 · Styling mit CSS-Modulen, Tokens direkt aus `design/`** – Komponenten-Styles als CSS-Module (in Vite eingebaut, keine Laufzeit, CSP-freundlich); `design/tokens.css` wird direkt importiert statt kopiert (eine Quelle). Fehlende Mockup-Farben als Tokens ergänzt: `--input-border`, `--ring-track` (Werte 1:1 aus Login-/Loading-Mockup). · keine zusätzliche Abhängigkeit, keine Duplikate. · Tailwind, CSS-in-JS, Kopie mit Sync-Skript. · Claude · 2026-10-17
+
+**D-078 · Schriften über `@fontsource-variable`** – Bricolage Grotesque (Achsen opsz + wght, wie im Mockup) und Inter (wght), nur Latin + Latin Extended, eigene `@font-face` mit den Familiennamen aus `tokens.css`. · gepflegte npm-Pakete mit OFL-Lizenz, Dateien werden mitgebündelt (D-037). · manuell heruntergeladene Dateien. · Claude · 2026-10-17

@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-17 – 0.4 Tokens, Schriften, Basis-Komponenten
+- Tokens aus `design/tokens.css` direkt eingebunden, um `--input-border` und `--ring-track` ergänzt.
+- Bricolage Grotesque und Inter selbst gehostet.
+- Basis-Styles (Fokus sichtbar, `prefers-reduced-motion`), Komponenten Button, TextField, LogoMark (mit Lade-Animation ~1,4 s), Wordmark, Footer mit Version.
+
 ## 2026-10-17 – 0.3 API-Gerüst
 - `api/` mit Composer (PHP 8.3 gepinnt), Front-Controller, `.htaccess`, Bootstrap, Router, Request/Response, `.env`-Parser, Logger, PDO-Factory, `GET /api/v1/health`.
 - PHPUnit (Unit + Integration), PHPStan max, PHPCS PSR-12.

@@ -1,0 +1,37 @@
+.track {
+  stroke: var(--ring-track);
+}
+
+.arc {
+  stroke: var(--accent);
+}
+
+.stem {
+  fill: var(--text);
+}
+
+/* Loading animation (DESIGN.md §8, D-065): ring fills to ¾ once, ~1.4 s. */
+.animated .arc {
+  animation: fill 1.4s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes fill {
+  from {
+    stroke-dashoffset: 100;
+  }
+  to {
+    stroke-dashoffset: 28;
+  }
+}
+
+.wordmark {
+  font-family: var(--font-display);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.045em;
+  white-space: nowrap;
+}
+
+.wordmark .p {
+  color: var(--accent);
+}

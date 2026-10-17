@@ -43,6 +43,8 @@ Zwei Themes: **Light „Sand & Glut“** und **Dark „Night Court“**.
 | `--accent-text` | `#A8410F` | `#F59A73` | Protein-Zahlen als Schrift |
 | `--on-accent` | `#2E2721` | `#17191D` | Schrift auf Akzentfläche (nie Weiß) |
 | `--scrim` | `#B9AE9F` | `#07080A` | Hintergrund hinter Bottom-Sheets |
+| `--input-border` | Text 14 % | Text 14 % | Rahmen von Eingabefeldern (aus Login-Mockup) |
+| `--ring-track` | Text 12 % | Text 12 % | unbefüllter Teil des Logo-Rings (aus Mockups) |
 
 **Regeln**
 - Nur **Protein** bekommt einen farbigen Balken. Kalorien, KH, Fett, Zucker sind neutral.
@@ -164,4 +166,4 @@ Statische Referenz-Mockups mit Beispieldaten (keine echten Werte), je Light und 
 | 13–15 | Verlauf | Woche, Monat, Jahr |
 | 16 | Menü | Profil, Darstellung, Einstellungen |
 | 17 | Meal Prep · Zutat | Zutat-Menge mit Einheiten-Umschalter |
-| 18 | PWA-Installation | Anleitung Homescreen (nur Light) |
+| 18 | PWA-Installation | Anleitung Homescreen, nur für die Nutzer-Doku (wird nicht als App-Screen gebaut) |
