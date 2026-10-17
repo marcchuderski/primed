@@ -135,14 +135,14 @@ export function DishesView() {
       >
         Archiv
         <span>
-          aufgegessene Gerichte <ChevronRight size={16} strokeWidth={2.2} aria-hidden="true" />
+          vergangene Gerichte <ChevronRight size={16} strokeWidth={2.2} aria-hidden="true" />
         </span>
       </button>
 
       <Sheet
         open={archiveOpen}
         title="Archiv"
-        subtitle="Aufgegessen oder entsorgt · zählt weiter im Verlauf"
+        subtitle="Vergangene Gerichte · zählen weiter im Verlauf"
         onClose={() => {
           setArchiveOpen(false);
         }}
