@@ -271,13 +271,7 @@ describe('Menu and settings (7.1)', () => {
     const names = within(card ?? document.body)
       .getAllByRole('button')
       .map((b) => b.textContent);
-    const order = [
-      'Tagesarten & Sollwerte',
-      'Wochenvorlage',
-      'Checkpoints',
-      'Bewertung',
-      'Shakes',
-    ];
+    const order = ['Tagesarten & Sollwerte', 'Wochenvorlage', 'Checkpoints', 'Bewertung', 'Shakes'];
     expect(names).toHaveLength(order.length);
     expect(names.map((n, idx) => n.startsWith(order[idx] ?? '-'))).toEqual(order.map(() => true));
   });

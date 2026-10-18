@@ -32,11 +32,7 @@ const LIQUIDS: { key: keyof ShakeLiquids; label: string }[] = [
 const PER_UNIT_ERROR = 'Proteinpulver braucht Werte pro 100 g oder 100 ml.';
 
 /** Powder picker flow: library search → scan or create a product (both end in the library). */
-type Picker =
-  | { kind: 'search' }
-  | { kind: 'scan' }
-  | { kind: 'product'; initial: Partial<FoodDraft> }
-  | null;
+type Picker = { kind: 'search' } | { kind: 'scan' } | { kind: 'product'; initial: Partial<FoodDraft> } | null;
 
 /** "saving" wins over "error" over "saved", so two independent savers share one status line. */
 function combinedStatus(a: SaveStatus, b: SaveStatus): SaveStatus {
