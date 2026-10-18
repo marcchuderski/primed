@@ -238,3 +238,19 @@ li:last-child .row {
   font-size: 14px;
   font-weight: 600;
 }
+
+.addRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 52px;
+  padding: 0 16px;
+  border: none;
+  border-top: 1px solid var(--divider);
+  background: transparent;
+  color: var(--accent-text);
+  font: 600 15px var(--font-text);
+  text-align: left;
+  cursor: pointer;
+}

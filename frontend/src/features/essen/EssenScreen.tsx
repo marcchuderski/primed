@@ -1,13 +1,26 @@
-import { Search, SlidersHorizontal } from 'lucide-react';
+import { Plus, ScanBarcode, Search, SlidersHorizontal } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { deleteFood, searchFoods, updateFood, type Food, type FoodType } from '../../api/foods.ts';
+import {
+  createFood,
+  deleteFood,
+  draftFromOff,
+  lookupBarcode,
+  searchFoods,
+  searchOnline,
+  updateFood,
+  type Food,
+  type FoodDraft,
+  type FoodType,
+  type OffProduct,
+} from '../../api/foods.ts';
 import { Button } from '../../components/Button/Button.tsx';
 import { ConfirmDialog } from '../../components/ConfirmDialog/ConfirmDialog.tsx';
 import { Sheet } from '../../components/Sheet/Sheet.tsx';
-import { CATEGORIES, type Category } from '../../domain/categories.ts';
+import { CATEGORIES, displayName, type Category } from '../../domain/categories.ts';
 import { defaultAmount, nutrientsFor } from '../../domain/foodAmounts.ts';
 import { formatDecimal, formatInt } from '../../domain/format.ts';
 import { basisLabel, unitLabel } from '../../domain/units.ts';
+import { ScannerSheet } from '../add/ScannerSheet.tsx';
 import { DishesView } from '../dishes/DishesView.tsx';
 import { ProductSheet } from '../foods/ProductSheet.tsx';
 import styles from './EssenScreen.module.css';
@@ -59,7 +72,55 @@ function Library() {
   const [filterOpen, setFilterOpen] = useState(false);
   const [editing, setEditing] = useState<Food | null>(null);
   const [deleting, setDeleting] = useState<Food | null>(null);
+  const [scanning, setScanning] = useState(false);
+  /** New product: empty, prefilled from a scan, or with the search term as name. */
+  const [creating, setCreating] = useState<Partial<FoodDraft> | null>(null);
   const [reload, setReload] = useState(0);
+  const [online, setOnline] = useState<OffProduct[]>([]);
+  const trimmed = query.trim();
+
+  // Online hits as in "Zutat suchen": from 3 characters, a bit slower than the library search.
+  useEffect(() => {
+    if (trimmed.length < 3) {
+      return;
+    }
+    let cancelled = false;
+    const id = window.setTimeout(() => {
+      searchOnline(trimmed)
+        .then((list) => {
+          if (!cancelled) {
+            setOnline(list);
+          }
+        })
+        .catch(() => {
+          if (!cancelled) {
+            setOnline([]);
+          }
+        });
+    }, 600);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(id);
+    };
+  }, [trimmed]);
+
+  // Scan: known products open for editing, online hits and unknown codes open "Neues Produkt" to check first.
+  function onDetected(ean: string) {
+    setScanning(false);
+    lookupBarcode(ean)
+      .then((result) => {
+        if (result === null) {
+          setCreating({ barcode: ean });
+        } else if (result.source === 'library') {
+          setEditing(result.food);
+        } else {
+          setCreating(draftFromOff(result.product));
+        }
+      })
+      .catch((e: unknown) => {
+        setError(e instanceof Error ? e.message : 'Barcode konnte nicht geprüft werden.');
+      });
+  }
 
   useEffect(() => {
     let cancelled = false;
@@ -99,6 +160,9 @@ function Library() {
             value={query}
             onChange={(e) => {
               setQuery(e.target.value);
+              if (e.target.value.trim().length < 3) {
+                setOnline([]);
+              }
             }}
           />
         </label>
@@ -113,6 +177,17 @@ function Library() {
         >
           <SlidersHorizontal size={20} strokeWidth={2.2} aria-hidden="true" />
           {filtered && <span className={styles['dot']} aria-hidden="true" />}
+        </button>
+        <button
+          type="button"
+          className={styles['scan']}
+          aria-label="Barcode scannen"
+          aria-haspopup="dialog"
+          onClick={() => {
+            setScanning(true);
+          }}
+        >
+          <ScanBarcode size={22} strokeWidth={2.2} aria-hidden="true" />
         </button>
       </div>
 
@@ -190,6 +265,54 @@ function Library() {
           })}
         </ul>
       )}
+      {online.length > 0 && (
+        <section className={styles['online']} aria-label="Online-Treffer">
+          <h3 className={styles['onlineTitle']}>
+            Online-Treffer <small>Daten: Open Food Facts</small>
+          </h3>
+          <ul className={styles['list']}>
+            {online.map((product) => (
+              <li key={product.barcode}>
+                <button
+                  type="button"
+                  className={styles['onlineItem']}
+                  onClick={() => {
+                    setCreating(draftFromOff(product));
+                  }}
+                >
+                  <span className={styles['onlineName']}>{displayName(product.name, product.brand)}</span>
+                  <span className={styles['onlineMeta']}>
+                    {formatInt(product.nutrients.kcal)} kcal ·{' '}
+                    <span className={styles['protein']}>{formatInt(product.nutrients.protein)} g P</span> ·{' '}
+                    {basisLabel(product.basis)}
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      <div className={styles['actions']}>
+        <Button
+          variant="tonal"
+          onClick={() => {
+            setScanning(true);
+          }}
+        >
+          <ScanBarcode size={18} strokeWidth={2.2} aria-hidden="true" /> Scannen
+        </Button>
+        <Button
+          variant="tonal"
+          onClick={() => {
+            const name = query.trim();
+            setCreating(name === '' ? {} : { name });
+          }}
+        >
+          <Plus size={18} strokeWidth={2.2} aria-hidden="true" /> Produkt anlegen
+        </Button>
+      </div>
+
       <p className={styles['note']}>
         Richtwerte: Max Rubner-Institut (2025), Bundeslebensmittelschlüssel 4.0, CC BY 4.0, DOI
         10.25826/Data20251217-134202-0; Werte gerundet. Online-Produkte: Open Food Facts (ODbL).
@@ -224,6 +347,32 @@ function Library() {
           Fertig
         </Button>
       </Sheet>
+
+      {scanning && (
+        <ScannerSheet
+          open
+          onDetected={onDetected}
+          onClose={() => {
+            setScanning(false);
+          }}
+        />
+      )}
+
+      {creating !== null && (
+        <ProductSheet
+          open
+          initial={creating}
+          submitLabel="In Bibliothek speichern"
+          onClose={() => {
+            setCreating(null);
+          }}
+          onSubmit={async (draft) => {
+            await createFood(draft);
+            setCreating(null);
+            setReload((r) => r + 1);
+          }}
+        />
+      )}
 
       {editing !== null && (
         <ProductSheet

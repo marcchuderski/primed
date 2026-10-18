@@ -176,7 +176,11 @@ export function DishEditorSheet({
         </div>
 
         <ul className={styles['list']}>
-          {ingredients.length === 0 && <li className={styles['empty']}>Noch keine Zutaten.</li>}
+          {ingredients.length === 0 && (
+            <li className={styles['empty']}>
+              Noch keine Zutaten. Suche sie in deiner Bibliothek oder scanne die Packung.
+            </li>
+          )}
           {ingredients.map((i) => {
             const n = ingredientNutrients(i);
             return (
@@ -204,6 +208,17 @@ export function DishEditorSheet({
               </li>
             );
           })}
+          <li>
+            <button
+              type="button"
+              className={styles['addRow']}
+              onClick={() => {
+                setSub({ kind: 'search' });
+              }}
+            >
+              <Plus size={18} strokeWidth={2.2} aria-hidden="true" /> Zutat hinzufügen
+            </button>
+          </li>
         </ul>
 
         <div className={styles['summary']}>

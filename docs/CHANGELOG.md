@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-18 – Bibliothek anlegen/scannen, Fix Gericht-Editor
+- Fix: Zutatenliste im Gericht-Editor war auf kleinen Bildschirmen unsichtbar; neue Zeile „+ Zutat hinzufügen“ und Hinweis bei leerer Liste.
+- Essen › Bibliothek wie „Zutat suchen“: Scannen, Online-Treffer, „Produkt anlegen“ (unten fest).
+
 ## 2026-10-18 – Shake-Varianten
 - Migration `011_shake_liquids`: Größen fest (400/200 ml), Flüssigkeiten Milch 1,5 % / 3,5 % / Wasser wählbar, Milch-Produkte und Mengen-Einstellungen entfallen.
 - Bis zu sechs Shakes im „+“ (Groß/Klein je Flüssigkeit); der Zauberstab wählt die passende Flüssigkeit nach offenen Kalorien.

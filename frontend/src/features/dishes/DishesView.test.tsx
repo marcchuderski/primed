@@ -113,6 +113,10 @@ describe('Dishes UI', () => {
 
     await userEvent.click(screen.getByRole('button', { name: /Neues Gericht kochen/ }));
     const editor = screen.getByRole('dialog', { name: 'Neues Gericht' });
+    expect(
+      within(editor).getByText(/Noch keine Zutaten\. Suche sie in deiner Bibliothek/),
+    ).toBeInTheDocument();
+    expect(within(editor).getByRole('button', { name: 'Zutat hinzufügen' })).toBeInTheDocument();
     await userEvent.type(within(editor).getByRole('textbox', { name: /Name/ }), 'Reispfanne');
     await userEvent.click(within(editor).getByRole('button', { name: /Suchen/ }));
     await userEvent.click(await screen.findByRole('button', { name: /Reis, roh/ }));

@@ -45,6 +45,38 @@ describe('EssenScreen library', () => {
       if (method === 'PATCH') {
         return Promise.resolve(new Response(JSON.stringify({ food: foods[0] })));
       }
+      if (url.includes('/foods/barcode/96385074')) {
+        return Promise.resolve(
+          new Response(JSON.stringify({ error: { code: 'not_found', message: 'x' } }), { status: 404 }),
+        );
+      }
+      if (url.includes('/foods/barcode/')) {
+        return Promise.resolve(new Response(JSON.stringify({ source: 'library', food: foods[0] })));
+      }
+      if (url.includes('/off/search')) {
+        return Promise.resolve(
+          new Response(
+            JSON.stringify({
+              products: [
+                {
+                  barcode: '4006381333931',
+                  name: 'Hüttenkäse',
+                  brand: 'Milram',
+                  category: 'dairy',
+                  basis: 'per_100g',
+                  nutrients: { kcal: 98, protein: 12, carbs: 3, sugar: 3, fat: 4 },
+                  packageAmount: 200,
+                },
+              ],
+            }),
+          ),
+        );
+      }
+      if (method === 'POST') {
+        return Promise.resolve(
+          new Response(JSON.stringify({ food: { ...foods[0], id: 50 } }), { status: 201 }),
+        );
+      }
       const category = new URL(url, 'https://x').searchParams.get('category');
       const list = category === null ? foods : foods.filter((f) => f.category === category);
       return Promise.resolve(new Response(JSON.stringify({ foods: list })));
@@ -102,6 +134,49 @@ describe('EssenScreen library', () => {
     await userEvent.click(within(dialog).getByRole('button', { name: 'Löschen' }));
     await waitFor(() => {
       expect(fetchMock.mock.calls.some(([, init]) => init?.method === 'DELETE')).toBe(true);
+    });
+  });
+
+  it('scans into the library: unknown codes open "Neues Produkt", known ones open for editing', async () => {
+    render(<EssenScreen />);
+    await userEvent.click(screen.getByRole('button', { name: 'Bibliothek' }));
+    await screen.findByRole('button', { name: /REWE Quarkcreme/ });
+
+    await userEvent.click(screen.getByRole('button', { name: 'Barcode scannen' }));
+    await userEvent.type(screen.getByRole('textbox', { name: 'Barcode eintippen' }), '96385074');
+    await userEvent.click(screen.getByRole('button', { name: 'Suchen' }));
+    const sheet = await screen.findByRole('dialog', { name: 'Neues Produkt' });
+    expect(sheet).toHaveTextContent('Barcode 96385074 wird verknüpft.');
+    await userEvent.click(within(sheet).getByRole('button', { name: 'Schließen' }));
+
+    await userEvent.click(screen.getByRole('button', { name: 'Barcode scannen' }));
+    await userEvent.type(screen.getByRole('textbox', { name: 'Barcode eintippen' }), '4006381333931');
+    await userEvent.click(screen.getByRole('button', { name: 'Suchen' }));
+    expect(
+      await screen.findByRole('dialog', { name: /REWE Quarkcreme|Produkt bearbeiten/ }),
+    ).toBeInTheDocument();
+  });
+
+  it('creates a new product with the search term as name', async () => {
+    render(<EssenScreen />);
+    await userEvent.click(screen.getByRole('button', { name: 'Bibliothek' }));
+    await userEvent.type(screen.getByRole('searchbox', { name: 'In Bibliothek suchen' }), 'Hüttenkäse');
+    await userEvent.click(screen.getByRole('button', { name: 'Produkt anlegen' }));
+    const sheet = await screen.findByRole('dialog', { name: 'Neues Produkt' });
+    expect(within(sheet).getByRole('textbox', { name: /Name/ })).toHaveValue('Hüttenkäse');
+    expect(within(sheet).getByRole('button', { name: 'In Bibliothek speichern' })).toBeInTheDocument();
+  });
+
+  it('shows online hits like "Zutat suchen" and saves one into the library after checking', async () => {
+    render(<EssenScreen />);
+    await userEvent.click(screen.getByRole('button', { name: 'Bibliothek' }));
+    await userEvent.type(screen.getByRole('searchbox', { name: 'In Bibliothek suchen' }), 'Hütten');
+    const online = await screen.findByRole('region', { name: 'Online-Treffer' });
+    await userEvent.click(within(online).getByRole('button', { name: /Hüttenkäse/ }));
+    const sheet = await screen.findByRole('dialog', { name: 'Neues Produkt' });
+    await userEvent.click(within(sheet).getByRole('button', { name: 'In Bibliothek speichern' }));
+    await waitFor(() => {
+      expect(fetchMock.mock.calls.some(([, init]) => init?.method === 'POST')).toBe(true);
     });
   });
 });

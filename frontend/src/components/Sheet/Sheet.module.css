@@ -121,6 +121,12 @@
   overscroll-behavior: contain;
 }
 
+/* Content keeps its height and the body scrolls instead; otherwise boxes with overflow: hidden
+   (lists, cards) shrink to nothing on short screens. */
+.body > * {
+  flex-shrink: 0;
+}
+
 @keyframes slide {
   from {
     transform: translateY(100%);
