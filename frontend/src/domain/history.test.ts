@@ -1,5 +1,7 @@
 import {
   byMonth,
+  formatWeekRange,
+  tableDayTypeName,
   classifyBalance,
   dateRange,
   dayStatus,
@@ -93,5 +95,14 @@ describe('history (6.1)', () => {
       '2026-09',
       '2026-10',
     ]);
+  });
+
+  it('formats week ranges and short day type names', () => {
+    expect(formatWeekRange('2026-10-12', '2026-10-18')).toBe('12.–18. Oktober');
+    expect(formatWeekRange('2026-09-28', '2026-10-04')).toBe('28. September – 4. Oktober');
+    expect(formatWeekRange('2026-12-28', '2027-01-03')).toBe('28. Dezember 2026 – 3. Januar');
+    expect(tableDayTypeName('Normal · Basketball')).toBe('Basket.');
+    expect(tableDayTypeName('Yoga')).toBe('Yoga');
+    expect(tableDayTypeName('Kraft · Oberkörper')).toBe('Oberkö.');
   });
 });

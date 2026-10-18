@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-18 – Phase 6 Verlauf
+- `GET /v1/history`: Soll und Summen je Tag (Kontostart bis heute, max. 366 Tage).
+- Fachlogik: Tagesstatus (im Rahmen/unter/über, „/“, „läuft“), Bilanzen mit Einordnung, ISO-Wochen, Monatsgruppen (getestet).
+- Verlauf-Tab: Woche (Bilanzkarte, Tabelle mit Σ-Spalte), Monat (Kalender mit Status, Training, heute), Jahr (Monatsbalken, Monatsliste).
+
 ## 2026-10-17 – 7.3 PWA
 - Web-App-Manifest, App-Icons (aus `design/brand`), Theme-Farbe für Hell/Dunkel, Favicon.
 - Service Worker nur für die App-Shell: offline erscheint „Keine Verbindung“ statt einer Browser-Fehlerseite; API-Daten werden nie gecacht.

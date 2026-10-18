@@ -1,3 +1,4 @@
+import { formatInt } from './format.ts';
 import { rateKcal, type KcalRating } from './rating.ts';
 import type { Macros, Targets } from './types.ts';
 
@@ -14,6 +15,15 @@ export interface HistoryDay {
 
 /** "/" for days without entries, "läuft" for today (BRIEFING §11). */
 export type DayStatus = KcalRating | 'empty' | 'running';
+
+/** Screen-reader and legend texts per status. */
+export const STATUS_LABEL: Record<DayStatus, string> = {
+  ok: 'im Rahmen',
+  low: 'unter Soll',
+  high: 'über Soll',
+  empty: 'keine Einträge',
+  running: 'läuft',
+};
 
 export function dayStatus(day: HistoryDay, tolerancePct: number): DayStatus {
   if (day.isToday) {
@@ -175,4 +185,74 @@ export function byMonth(days: HistoryDay[]): Map<string, HistoryDay[]> {
     groups.set(key, list);
   }
   return groups;
+}
+
+const TABLE_NAMES: Readonly<Record<string, string>> = {
+  Ruhetag: 'Ruhe',
+  'Leichtes Training': 'Leicht',
+  'Normal · Fitness': 'Fitness',
+  'Normal · Basketball': 'Basket.',
+  'Intensiv / Spiel': 'Spiel',
+};
+
+/** Short day type name for the narrow week table (screen 13): "Basket.", "Ruhe" … */
+export function tableDayTypeName(name: string): string {
+  const known = TABLE_NAMES[name];
+  if (known !== undefined) {
+    return known;
+  }
+  const last = name.split(/ [·/] /).at(-1) ?? name;
+  return last.length > 7 ? `${last.slice(0, 6)}.` : last;
+}
+
+const MONTHS = [
+  'Januar',
+  'Februar',
+  'März',
+  'April',
+  'Mai',
+  'Juni',
+  'Juli',
+  'August',
+  'September',
+  'Oktober',
+  'November',
+  'Dezember',
+];
+
+export function monthName(date: string): string {
+  return MONTHS[Number(date.slice(5, 7)) - 1] ?? '';
+}
+
+/** "12.–18. Oktober", "28. September – 4. Oktober", across years with the year. */
+export function formatWeekRange(start: string, end: string): string {
+  const d1 = Number(start.slice(8, 10));
+  const d2 = Number(end.slice(8, 10));
+  if (start.slice(0, 7) === end.slice(0, 7)) {
+    return `${String(d1)}.–${String(d2)}. ${monthName(end)}`;
+  }
+  const y = start.slice(0, 4) === end.slice(0, 4) ? '' : ` ${start.slice(0, 4)}`;
+  return `${String(d1)}. ${monthName(start)}${y} – ${String(d2)}. ${monthName(end)}`;
+}
+
+/** "+1.250", "−210", "±0" (typographic minus). */
+export function formatSigned(value: number): string {
+  const rounded = Math.round(value);
+  if (rounded === 0) {
+    return '±0';
+  }
+  return rounded > 0 ? `+${formatInt(rounded)}` : `−${formatInt(-rounded)}`;
+}
+
+export interface MonthSummary {
+  /** "YYYY-MM" */
+  month: string;
+  summary: PeriodSummary;
+}
+
+export function monthSummaries(days: HistoryDay[], tolerancePct: number): MonthSummary[] {
+  return [...byMonth(days).entries()].map(([month, list]) => ({
+    month,
+    summary: summarize(list, tolerancePct),
+  }));
 }

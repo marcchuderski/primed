@@ -50,7 +50,7 @@ Stand: 17.10.2026 · Entwurf vor Implementierung. Wird von Claude Code laufend a
 │   └── src/
 │       ├── domain/       reine Fachlogik + Tests (Sollwerte, Checkpoints, Shake-Regeln, Bewertung, Bilanzen)
 │       ├── api/          typisierter API-Client (client.ts: fetch, CSRF-Header, ApiError; auth.ts; days.ts mit Laufzeit-Prüfung der Antworten)
-│       ├── features/     auth, shell (Tabs), today (Heute), entries (Mengen-Sheet), add (Hinzufügen, Suche, Scanner), foods (Produkt-Formular), essen (Bibliothek), menu (Menü und Einstellungsseiten, Richtwerte-Modal, `useAutoSave`, Theme), dishes, suggestions; später verlauf
+│       ├── features/     auth, shell (Tabs), today (Heute), entries (Mengen-Sheet), add (Hinzufügen, Suche, Scanner), foods (Produkt-Formular), essen (Bibliothek), menu (Menü und Einstellungsseiten, Richtwerte-Modal, `useAutoSave`, Theme), dishes, suggestions, history (Verlauf Woche/Monat/Jahr)
 │       ├── components/   UI-Bausteine als React + CSS-Module (Button, TextField, Logo, Footer, MacroBar, TopNav, Sheet, TimeWheel; später Stepper …)
 │       └── styles/       index.css (importiert design/tokens.css direkt), fonts.css, base.css
 ├── .ddev/                DDEV (PHP 8.3, MariaDB 10.11, Apache; /api → api/public, Docroot frontend/dist)

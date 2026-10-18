@@ -13,10 +13,6 @@
   animation: fade 150ms ease-out both;
 }
 
-.placeholder {
-  color: var(--text-muted);
-}
-
 @keyframes fade {
   from {
     opacity: 0;

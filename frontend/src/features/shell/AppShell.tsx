@@ -3,6 +3,7 @@ import type { User } from '../../api/auth.ts';
 import { fetchSettings } from '../../api/days.ts';
 import { TopNav, type Tab } from '../../components/TopNav/TopNav.tsx';
 import { EssenScreen } from '../essen/EssenScreen.tsx';
+import { HistoryScreen } from '../history/HistoryScreen.tsx';
 import { MenuScreen } from '../menu/MenuScreen.tsx';
 import { applyTheme } from '../menu/theme.ts';
 import { TodayScreen } from '../today/TodayScreen.tsx';
@@ -47,7 +48,7 @@ export function AppShell({ user }: { user: User }) {
       <div key={tab} className={styles['panel']}>
         {tab === 'heute' && <TodayScreen displayName={user.displayName} />}
         {tab === 'essen' && <EssenScreen />}
-        {tab === 'verlauf' && <p className={styles['placeholder']}>Verlauf folgt in Phase 6.</p>}
+        {tab === 'verlauf' && <HistoryScreen />}
       </div>
     </main>
   );

@@ -62,10 +62,10 @@ Nach jedem Item: Tests, Security Audit (`agent-skills:security-and-hardening`), 
 
 | ID | Item | Status |
 |---|---|---|
-| 6.1 | Fachlogik Bewertung (±5 %) und Bilanzen (+ Tests) | geplant |
-| 6.2 | Woche: Bilanzkarte, Tabelle mit Σ-Spalte | geplant |
-| 6.3 | Monat: Kalender | geplant |
-| 6.4 | Jahr: Monatsbalken | geplant |
+| 6.1 | Fachlogik Bewertung (±5 %) und Bilanzen (+ Tests) | fertig |
+| 6.2 | Woche: Bilanzkarte, Tabelle mit Σ-Spalte | fertig |
+| 6.3 | Monat: Kalender | fertig |
+| 6.4 | Jahr: Monatsbalken | fertig |
 
 ## Phase 7 – Feinschliff
 
