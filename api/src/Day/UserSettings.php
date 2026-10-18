@@ -23,6 +23,7 @@ final class UserSettings
         public readonly int $tolerancePct = 5,
         /** @var array<string, int> */
         public readonly array $thresholds = [],
+        public readonly bool $shakesEnabled = true,
     ) {
     }
 
@@ -49,6 +50,7 @@ final class UserSettings
             ],
             'shakeAmounts' => $this->shakeAmounts,
             'tolerancePct' => $this->tolerancePct,
+            'shakesEnabled' => $this->shakesEnabled,
             'thresholds' => $this->thresholds,
         ];
     }

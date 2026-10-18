@@ -91,8 +91,9 @@ final class EntryController
     public function shakes(Request $request, array $params): Response
     {
         $user = $this->c->authenticator()->require($request)->user;
+        $enabled = $this->c->settings()->get($user->id)->shakesEnabled;
 
-        return Response::json(['shakes' => $this->c->shakes()->all($user->id)]);
+        return Response::json(['shakes' => $enabled ? $this->c->shakes()->all($user->id) : []]);
     }
 
     /**

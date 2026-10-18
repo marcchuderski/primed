@@ -263,4 +263,37 @@ describe('Menu and settings (7.1)', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Profil speichern' }));
     expect(auth.updateProfile).toHaveBeenCalledWith('Marc C.', 'marcch');
   });
+
+  it('lists the settings in the agreed order', async () => {
+    renderMenu();
+    await screen.findByText('Di + Do Basketball 20:00');
+    const card = screen.getByRole('heading', { name: 'Einstellungen' }).parentElement;
+    const names = within(card ?? document.body)
+      .getAllByRole('button')
+      .map((b) => b.textContent);
+    const order = [
+      'Tagesarten & Sollwerte',
+      'Wochenvorlage',
+      'Checkpoints',
+      'Bewertung',
+      'Vorschläge',
+      'Shakes',
+    ];
+    expect(names.map((n, idx) => n.startsWith(order[idx] ?? '-'))).toEqual(order.map(() => true));
+  });
+
+  it('switches shakes off and hides their settings', async () => {
+    renderMenu();
+    await userEvent.click(await screen.findByRole('button', { name: /^Shakes/ }));
+    expect(screen.getByText(/Shakes sind Schnell-Einträge/)).toBeInTheDocument();
+    const toggle = screen.getByRole('switch', { name: 'Shakes verwenden' });
+    expect(toggle).toHaveAttribute('aria-checked', 'true');
+    expect(screen.getByText('Aktuelles Proteinpulver')).toBeInTheDocument();
+    await userEvent.click(toggle);
+    expect(toggle).toHaveAttribute('aria-checked', 'false');
+    expect(screen.queryByText('Aktuelles Proteinpulver')).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(body('/settings', 'PATCH')).toEqual({ shakesEnabled: false });
+    });
+  });
 });

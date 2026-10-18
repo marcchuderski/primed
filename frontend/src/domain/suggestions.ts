@@ -77,6 +77,8 @@ export interface SuggestionInput {
   shakes: ShakeOption[];
   candidates: Candidate[];
   thresholds?: SuggestionThresholds;
+  /** Shakes switched off in the settings: no shake rules, protein comes from food (default on). */
+  shakesEnabled?: boolean;
 }
 
 export type ShakeDecision =
@@ -180,6 +182,9 @@ export function formatEffect(n: Macros): string {
 export function suggest(input: SuggestionInput): Suggestion[] {
   const t = input.thresholds ?? DEFAULT_THRESHOLDS;
   const { day, now, checkpoint, targets, eaten } = input;
+  const shakesOn = input.shakesEnabled !== false;
+  const trainingEnd =
+    day.isTraining && day.trainingStart !== null ? day.trainingStart + (day.durationMin ?? 0) : null;
   const result: Suggestion[] = [];
   const open = {
     kcal: targets.kcal - eaten.kcal,
@@ -231,13 +236,15 @@ export function suggest(input: SuggestionInput): Suggestion[] {
   } else {
     // Rest of the day: protein first, without exceeding the calories.
     const meals = pickFoods(input.candidates, { ...open, focus: 'protein' }, 2, t.maxMealKcal);
-    for (const meal of meals) {
+    // Without shakes, the first protein meal after training takes the shake's place.
+    const afterTrainingSlot = !shakesOn && trainingEnd !== null && now >= trainingEnd;
+    for (const [i, meal] of meals.entries()) {
       if (open.protein <= 0 || open.kcal <= 0) {
         break;
       }
       result.push({
         key: `food-${String(meal.id)}`,
-        when: 'Jetzt',
+        when: afterTrainingSlot && i === 0 ? 'Nach dem Training' : 'Jetzt',
         title: `${meal.name}, ${meal.amountText}`,
         reason: `Danach fehlen noch ${formatInt(Math.max(0, open.protein - meal.nutrients.protein))} g Protein bei ${formatInt(open.kcal - meal.nutrients.kcal)} kcal Spielraum.`,
         nutrients: meal.nutrients,
@@ -245,6 +252,31 @@ export function suggest(input: SuggestionInput): Suggestion[] {
         at: now,
       });
     }
+  }
+
+  if (!shakesOn) {
+    // Before training: the protein meal after training replaces the shake there.
+    if (trainingEnd !== null && day.trainingStart !== null && now < day.trainingStart && open.protein > 0) {
+      const used = new Set(result.map((r) => r.key.split('-').at(-1)));
+      const meal = pickFoods(
+        input.candidates.filter((c) => !used.has(String(c.id))),
+        { ...open, focus: 'protein' },
+        1,
+        t.maxMealKcal,
+      )[0];
+      if (meal !== undefined) {
+        result.push({
+          key: `after-${String(meal.id)}`,
+          when: `Nach dem Training · in ${formatRemaining(trainingEnd - now)}`,
+          title: `${meal.name}, ${meal.amountText}`,
+          reason: 'Nach dem Training eine proteinreiche Mahlzeit für die Regeneration.',
+          nutrients: meal.nutrients,
+          action: foodAction(meal),
+          at: trainingEnd,
+        });
+      }
+    }
+    return result.slice(0, 3);
   }
 
   // The shake decision (after training, evening, or when calories are exhausted).

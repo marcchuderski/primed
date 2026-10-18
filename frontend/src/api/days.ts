@@ -26,6 +26,8 @@ export interface Settings {
   /** Rating tolerance in percent (history, D-044). */
   tolerancePct: number;
   thresholds: Thresholds;
+  /** Shakes and shake rules switched on (Einstellungen › Shakes). */
+  shakesEnabled: boolean;
 }
 
 /** Suggestion thresholds (BRIEFING §10), editable under "Vorschläge". */
@@ -57,6 +59,7 @@ export interface SettingsPatch {
   earliestTrainingMin?: number;
   checkpoint?: Settings['checkpoint'];
   tolerancePct?: number;
+  shakesEnabled?: boolean;
   thresholds?: Partial<Thresholds>;
   shake?: Partial<{
     proteinPowderFoodId: number | null;
@@ -176,6 +179,7 @@ export function parseSettings(value: unknown): Settings {
     shakeAmounts: parseShakeAmounts(s['shakeAmounts']),
     tolerancePct: s['tolerancePct'] === undefined ? 5 : num(s['tolerancePct']),
     thresholds: parseThresholds(s['thresholds']),
+    shakesEnabled: s['shakesEnabled'] !== false,
   };
 }
 

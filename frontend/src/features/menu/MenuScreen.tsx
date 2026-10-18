@@ -120,13 +120,21 @@ export function MenuScreen({ user, onClose }: { user: User; onClose: () => void 
             meta: `${String(data.types.length)} Tagesarten · kcal, Protein, KH`,
           },
           { id: 'week', name: 'Wochenvorlage', meta: weekSummary(data.template, data.types) },
-          { id: 'shakes', name: 'Shakes', meta: shakesSummary(data.settings) },
           { id: 'checkpoints', name: 'Checkpoints', meta: checkpointSummary(data.settings) },
-          { id: 'suggestions', name: 'Vorschläge', meta: 'Shake-Schwellen' },
           {
             id: 'rating',
             name: 'Bewertung',
             meta: `Toleranz ±${String(data.settings.tolerancePct)} % im Verlauf`,
+          },
+          {
+            id: 'suggestions',
+            name: 'Vorschläge',
+            meta: data.settings.shakesEnabled ? 'Shake-Schwellen' : 'Shakes aus · nur Essen',
+          },
+          {
+            id: 'shakes',
+            name: 'Shakes',
+            meta: data.settings.shakesEnabled ? shakesSummary(data.settings) : 'Aus',
           },
         ];
 

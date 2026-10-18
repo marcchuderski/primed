@@ -147,3 +147,41 @@ describe('suggest', () => {
     expect(list[0]).toMatchObject({ when: 'Nach dem Training', title: 'Shake Groß 1,5 %' });
   });
 });
+
+describe('suggest without shakes (settings)', () => {
+  it('never suggests a shake, also not in the evening', () => {
+    const list = suggest(input({ now: 20 * 60, eaten: m(1500, 100), shakesEnabled: false }));
+    expect(list.length).toBeGreaterThan(0);
+    expect(list.some((s) => s.action.kind === 'shake')).toBe(false);
+  });
+
+  it('suggests a protein meal after training instead of the shake', () => {
+    const before = suggest(
+      input({
+        day: training,
+        targets: trainingTargets,
+        now: 14 * 60 + 30,
+        eaten: m(600, 50, 80),
+        checkpoint: checkpointFor(training, trainingTargets, rule),
+        eatenUntilCheckpoint: eatenUntil([], 17 * 60),
+        shakesEnabled: false,
+      }),
+    );
+    const after = before.at(-1);
+    expect(after?.when).toBe('Nach dem Training · in 7 Stunden');
+    expect(after?.action.kind).not.toBe('shake');
+    expect(after?.at).toBe(21 * 60 + 30);
+
+    const now = suggest(
+      input({
+        day: training,
+        targets: trainingTargets,
+        now: 22 * 60,
+        eaten: m(2050, 100, 300),
+        shakesEnabled: false,
+      }),
+    );
+    expect(now[0]?.when).toBe('Nach dem Training');
+    expect(now.some((s) => s.action.kind === 'shake')).toBe(false);
+  });
+});

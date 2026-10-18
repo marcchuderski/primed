@@ -57,4 +57,24 @@ final class ShakesFlowTest extends ApiTestCase
             'shake' => 'big',
         ])->status);
     }
+
+    public function testShakesCanBeSwitchedOff(): void
+    {
+        $off = self::json($this->call('PATCH', '/api/v1/settings', ['shakesEnabled' => false]))['settings'];
+        self::assertIsArray($off);
+        self::assertFalse($off['shakesEnabled']);
+        self::assertSame([], self::json($this->call('GET', '/api/v1/shakes'))['shakes']);
+        $response = $this->call('POST', '/api/v1/entries/shake', [
+            'date' => '2026-10-20',
+            'timeMin' => 600,
+            'shake' => 'big',
+        ]);
+        self::assertSame(409, $response->status);
+        self::assertSame(422, $this->call('PATCH', '/api/v1/settings', ['shakesEnabled' => 'nein'])->status);
+
+        $this->call('PATCH', '/api/v1/settings', ['shakesEnabled' => true]);
+        $shakes = self::json($this->call('GET', '/api/v1/shakes'))['shakes'];
+        self::assertIsArray($shakes);
+        self::assertCount(3, $shakes);
+    }
 }

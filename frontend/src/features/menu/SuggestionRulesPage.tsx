@@ -100,6 +100,12 @@ export function SuggestionRulesPage({ settings, onBack }: { settings: Settings; 
       <p className={styles['hint']}>
         Wann der Zauberstab einen Shake vorschlägt und welchen. Protein hat immer Vorrang.
       </p>
+      {!settings.shakesEnabled && (
+        <p className={styles['hint']} role="note">
+          Shakes sind ausgeschaltet. Diese Schwellen greifen erst wieder, wenn du Shakes einschaltest; bis
+          dahin schlägt der Zauberstab nur Essen vor.
+        </p>
+      )}
       <div className={styles['card']}>
         {FIELDS.map((f) => (
           <SettingRow key={f.key} label={f.label} hint={f.hint}>

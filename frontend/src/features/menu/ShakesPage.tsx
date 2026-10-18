@@ -4,6 +4,7 @@ import { updateSettings, type Settings } from '../../api/days.ts';
 import { fetchFood, searchFoods, type Food } from '../../api/foods.ts';
 import { Sheet } from '../../components/Sheet/Sheet.tsx';
 import { Stepper } from '../../components/Stepper/Stepper.tsx';
+import { Switch } from '../../components/Switch/Switch.tsx';
 import { displayName } from '../../domain/categories.ts';
 import { SettingRow, SettingsPage } from './SettingsPage.tsx';
 import { useAutoSave } from './useAutoSave.ts';
@@ -28,6 +29,8 @@ export function ShakesPage({ settings, onBack }: { settings: Settings; onBack: (
   const [names, setNames] = useState<Partial<Record<Slot, string>>>({});
   const [amounts, setAmounts] = useState(settings.shakeAmounts);
   const [picking, setPicking] = useState<Slot | null>(null);
+  const [enabled, setEnabled] = useState(settings.shakesEnabled);
+  const [toggling, setToggling] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const saver = useAutoSave(async (value: Settings['shakeAmounts']) => {
     await updateSettings({ shake: value });
@@ -62,6 +65,20 @@ export function ShakesPage({ settings, onBack }: { settings: Settings; onBack: (
     }
   }
 
+  async function toggle(next: boolean) {
+    setToggling(true);
+    setError(null);
+    setEnabled(next);
+    try {
+      await updateSettings({ shakesEnabled: next });
+    } catch (e) {
+      setEnabled(!next);
+      setError(e instanceof Error ? e.message : 'Speichern fehlgeschlagen.');
+    } finally {
+      setToggling(false);
+    }
+  }
+
   const change = (patch: Partial<Settings['shakeAmounts']>) => {
     const next = { ...amounts, ...patch };
     setAmounts(next);
@@ -70,82 +87,108 @@ export function ShakesPage({ settings, onBack }: { settings: Settings; onBack: (
 
   return (
     <SettingsPage title="Shakes" onBack={onBack} status={saver.status} error={saver.error ?? error}>
-      <section className={styles['section']} aria-labelledby="shake-foods">
-        <h2 id="shake-foods" className={styles['sectionLabel']}>
-          Zutaten aus deiner Bibliothek
-        </h2>
-        <div className={styles['card']}>
-          {SLOTS.map((slot) => (
-            <button
-              key={slot.id}
-              type="button"
-              className={styles['link']}
-              aria-haspopup="dialog"
-              onClick={() => {
-                setPicking(slot.id);
-              }}
-            >
-              <span className={styles['linkTexts']}>
-                <span className={styles['linkName']}>{slot.label}</span>
-                <span className={styles['linkMeta']}>
-                  {foods[slot.id] === null ? 'Nicht gewählt' : (names[slot.id] ?? '…')}
-                </span>
-              </span>
-              <ChevronRight size={20} strokeWidth={2.2} className={styles['chevron']} aria-hidden="true" />
-            </button>
-          ))}
-        </div>
-        <p className={styles['hint']}>
-          Proteinpulver und Shake-Milch tauchen in den Vorschlägen nie einzeln auf, nur als Shake.
-        </p>
-      </section>
+      <p className={styles['hint']}>
+        Shakes sind Schnell-Einträge aus Milch und deinem Proteinpulver: ein Tipp im „+“, fertig. Der
+        Zauberstab schlägt sie gezielt vor, wenn dir abends oder nach dem Training noch Protein fehlt – mit
+        wenig Kalorien und ohne Kochen. Trinkst du keine Shakes, schalte sie aus: Dann verschwinden sie aus
+        „+“ und den Vorschlägen, und der Zauberstab schlägt stattdessen proteinreiches Essen vor.
+      </p>
+      <div className={styles['card']}>
+        <SettingRow label="Shakes verwenden" hint={enabled ? 'an' : 'aus'}>
+          <Switch
+            label="Shakes verwenden"
+            checked={enabled}
+            disabled={toggling}
+            onChange={(next) => void toggle(next)}
+          />
+        </SettingRow>
+      </div>
 
-      <section className={styles['section']} aria-labelledby="shake-amounts">
-        <h2 id="shake-amounts" className={styles['sectionLabel']}>
-          Mengen
-        </h2>
-        <div className={styles['card']}>
-          <SettingRow label="Milch, großer Shake">
-            <Stepper
-              label="Milch groß"
-              value={amounts.bigMl}
-              min={100}
-              max={1000}
-              step={50}
-              unit="ml"
-              onChange={(bigMl) => {
-                change({ bigMl });
-              }}
-            />
-          </SettingRow>
-          <SettingRow label="Milch, kleiner Shake">
-            <Stepper
-              label="Milch klein"
-              value={amounts.smallMl}
-              min={50}
-              max={600}
-              step={50}
-              unit="ml"
-              onChange={(smallMl) => {
-                change({ smallMl });
-              }}
-            />
-          </SettingRow>
-          <SettingRow label="Proteinpulver" hint="pro Shake">
-            <Stepper
-              label="Proteinpulver"
-              value={amounts.powderG}
-              min={10}
-              max={80}
-              step={5}
-              unit="g"
-              onChange={(powderG) => {
-                change({ powderG });
-              }}
-            />
-          </SettingRow>
-        </div>
-      </section>
+      {enabled && (
+        <>
+          <section className={styles['section']} aria-labelledby="shake-foods">
+            <h2 id="shake-foods" className={styles['sectionLabel']}>
+              Zutaten aus deiner Bibliothek
+            </h2>
+            <div className={styles['card']}>
+              {SLOTS.map((slot) => (
+                <button
+                  key={slot.id}
+                  type="button"
+                  className={styles['link']}
+                  aria-haspopup="dialog"
+                  onClick={() => {
+                    setPicking(slot.id);
+                  }}
+                >
+                  <span className={styles['linkTexts']}>
+                    <span className={styles['linkName']}>{slot.label}</span>
+                    <span className={styles['linkMeta']}>
+                      {foods[slot.id] === null ? 'Nicht gewählt' : (names[slot.id] ?? '…')}
+                    </span>
+                  </span>
+                  <ChevronRight
+                    size={20}
+                    strokeWidth={2.2}
+                    className={styles['chevron']}
+                    aria-hidden="true"
+                  />
+                </button>
+              ))}
+            </div>
+            <p className={styles['hint']}>
+              Proteinpulver und Shake-Milch tauchen in den Vorschlägen nie einzeln auf, nur als Shake.
+            </p>
+          </section>
+
+          <section className={styles['section']} aria-labelledby="shake-amounts">
+            <h2 id="shake-amounts" className={styles['sectionLabel']}>
+              Mengen
+            </h2>
+            <div className={styles['card']}>
+              <SettingRow label="Milch, großer Shake">
+                <Stepper
+                  label="Milch groß"
+                  value={amounts.bigMl}
+                  min={100}
+                  max={1000}
+                  step={50}
+                  unit="ml"
+                  onChange={(bigMl) => {
+                    change({ bigMl });
+                  }}
+                />
+              </SettingRow>
+              <SettingRow label="Milch, kleiner Shake">
+                <Stepper
+                  label="Milch klein"
+                  value={amounts.smallMl}
+                  min={50}
+                  max={600}
+                  step={50}
+                  unit="ml"
+                  onChange={(smallMl) => {
+                    change({ smallMl });
+                  }}
+                />
+              </SettingRow>
+              <SettingRow label="Proteinpulver" hint="pro Shake">
+                <Stepper
+                  label="Proteinpulver"
+                  value={amounts.powderG}
+                  min={10}
+                  max={80}
+                  step={5}
+                  unit="g"
+                  onChange={(powderG) => {
+                    change({ powderG });
+                  }}
+                />
+              </SettingRow>
+            </div>
+          </section>
+        </>
+      )}
 
       {picking !== null && (
         <FoodPickerSheet

@@ -12,4 +12,5 @@ export const testSettings: Settings = {
   shakeAmounts: { bigMl: 400, smallMl: 200, powderG: 30 },
   tolerancePct: 5,
   thresholds: DEFAULT_SETTINGS_THRESHOLDS,
+  shakesEnabled: true,
 };

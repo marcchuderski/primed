@@ -72,6 +72,9 @@ final class SettingsController
                 'Frühester Trainingsbeginn',
             );
         }
+        if ($input->has('shakesEnabled')) {
+            $values['shakes_enabled'] = $input->bool('shakesEnabled', 'Shakes') ? 1 : 0;
+        }
         if ($input->has('tolerancePct')) {
             $values['tolerance_pct'] = $input->int('tolerancePct', 1, 15, 'Toleranz');
         }

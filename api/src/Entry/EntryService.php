@@ -77,6 +77,9 @@ final class EntryService
     /** Logs one of the quick shakes (BRIEFING §9); nutrients from milk + current protein powder. */
     public function createShake(int $userId, string $date, int $timeMin, string $shakeId): Entry
     {
+        if (!$this->settings->get($userId)->shakesEnabled) {
+            throw new HttpException(409, 'shakes_disabled', 'Shakes sind in den Einstellungen ausgeschaltet.');
+        }
         $this->days->getDay($userId, $date);
         self::assertTime($timeMin);
         $shake = $this->shakes->get($userId, $shakeId);

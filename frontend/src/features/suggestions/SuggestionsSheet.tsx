@@ -27,9 +27,16 @@ interface Data {
 }
 
 async function loadData(settings: Settings): Promise<Data> {
-  const [shakes, foods, dishes] = await Promise.all([fetchShakes(), searchFoods({}), fetchDishes('active')]);
+  const [shakes, foods, dishes] = await Promise.all([
+    settings.shakesEnabled ? fetchShakes() : Promise.resolve([]),
+    searchFoods({}),
+    fetchDishes('active'),
+  ]);
+  // Shake ingredients are only kept out while shakes are on (they are part of the shakes then).
   const sf = settings.shakeFoods;
-  const excluded = [sf.proteinPowder, sf.milkLow, sf.milkHigh].filter((id): id is number => id !== null);
+  const excluded = settings.shakesEnabled
+    ? [sf.proteinPowder, sf.milkLow, sf.milkHigh].filter((id): id is number => id !== null)
+    : [];
   return {
     shakes: shakes.map((s) => ({ id: s.id, name: s.name, nutrients: s.nutrients })),
     candidates: buildCandidates(foods, dishes, excluded),
@@ -93,6 +100,7 @@ export function SuggestionsSheet({
           shakes: data.shakes,
           candidates: data.candidates,
           thresholds: thresholdsFromSettings(settings),
+          shakesEnabled: settings.shakesEnabled,
         });
 
   const wall = now % MINUTES_PER_DAY;

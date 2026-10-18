@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-18 – Shakes optional, Einstellungs-Reihenfolge
+- Migration `010_shakes_enabled`; Schalter „Shakes verwenden“ mit Erklärung in Einstellungen › Shakes.
+- Shakes aus: keine Shakes im „+“, keine Shake-Regeln; der Zauberstab schlägt nach dem Training proteinreiches Essen vor.
+- Einstellungen neu sortiert: Tagesarten → Wochenvorlage → Checkpoints → Bewertung → Vorschläge → Shakes.
+
 ## 2026-10-18 – Phase 6 Verlauf
 - `GET /v1/history`: Soll und Summen je Tag (Kontostart bis heute, max. 366 Tage).
 - Fachlogik: Tagesstatus (im Rahmen/unter/über, „/“, „läuft“), Bilanzen mit Einordnung, ISO-Wochen, Monatsgruppen (getestet).
