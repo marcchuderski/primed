@@ -1,5 +1,6 @@
 import { ChevronLeft } from 'lucide-react';
 import { useEffect, useRef, type ReactNode } from 'react';
+import { Footer } from '../../components/Footer/Footer.tsx';
 import type { SaveStatus } from './useAutoSave.ts';
 import styles from './Settings.module.css';
 
@@ -44,6 +45,7 @@ export function SettingsPage({
           {error}
         </p>
       )}
+      <Footer />
     </div>
   );
 }

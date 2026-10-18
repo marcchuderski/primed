@@ -122,7 +122,7 @@ Bewertet wird nur die **kcal-Bilanz gegen das Tagessoll, Toleranz ±5 %**. Drei 
 
 **Verlauf:** Bilanzkarte mit kcal-Bilanz groß links, Ø Protein groß rechts (Akzent), darunter drei getrennte Status-Kacheln. Wochentabelle: Tage als Spalten, Merkmale als Zeilen, letzte Spalte **Σ Woche**, horizontal scrollbar.
 
-**Footer** nur am Ende scrollbarer Hauptscreens: kleines Logo, Version, gedämpft.
+**Footer** am Ende aller Seiten (Heute, Essen, Verlauf, Menü und Einstellungsseiten), nie in Sheets: kleines Logo, Version, gedämpft (D-145).
 
 ## 7. Icons
 

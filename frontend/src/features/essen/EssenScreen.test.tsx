@@ -92,6 +92,7 @@ describe('EssenScreen library', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Bibliothek' }));
 
     expect(await screen.findByRole('button', { name: /REWE Quarkcreme/ })).toHaveTextContent('134 kcal');
+    expect(screen.getByRole('contentinfo')).toHaveTextContent('Bereit für heute.');
     expect(screen.getByRole('button', { name: /Magerquark/ })).toHaveTextContent('Richtwert');
 
     await userEvent.click(screen.getByRole('button', { name: 'Grundnahrung' }));

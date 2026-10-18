@@ -10,6 +10,7 @@ import {
   type Settings,
   type TemplateDay,
 } from '../../api/days.ts';
+import { Footer } from '../../components/Footer/Footer.tsx';
 import { Button } from '../../components/Button/Button.tsx';
 import { useAuth } from '../auth/useAuth.ts';
 import { CheckpointsPage } from './CheckpointsPage.tsx';
@@ -223,6 +224,7 @@ export function MenuScreen({ user, onClose }: { user: User; onClose: () => void 
           Überall abmelden
         </button>
       </div>
+      <Footer />
     </div>
   );
 }

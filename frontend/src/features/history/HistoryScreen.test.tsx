@@ -61,6 +61,7 @@ describe('HistoryScreen (6.2–6.4)', () => {
     render(<HistoryScreen />);
     expect(await screen.findByText('KW 43')).toBeInTheDocument();
     expect(screen.getByText('19.–25. Oktober')).toBeInTheDocument();
+    expect(screen.getByRole('contentinfo')).toHaveTextContent('Bereit für heute.');
     await waitFor(() => {
       expect(ranges()).toEqual(['2026-10-19..2026-10-25']);
     });

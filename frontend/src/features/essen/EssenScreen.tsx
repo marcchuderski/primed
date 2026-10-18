@@ -14,6 +14,7 @@ import {
   type OffProduct,
 } from '../../api/foods.ts';
 import { Button } from '../../components/Button/Button.tsx';
+import { Footer } from '../../components/Footer/Footer.tsx';
 import { ConfirmDialog } from '../../components/ConfirmDialog/ConfirmDialog.tsx';
 import { Sheet } from '../../components/Sheet/Sheet.tsx';
 import { CATEGORIES, displayName, type Category } from '../../domain/categories.ts';
@@ -59,6 +60,7 @@ export function EssenScreen() {
         </button>
       </div>
       {segment === 'gerichte' ? <DishesView /> : <Library />}
+      <Footer />
     </div>
   );
 }

@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-10-18 – Footer auf allen Seiten
+- Logo und Version jetzt auch am Ende von Essen, Verlauf, Menü und den Einstellungsseiten (nicht in Sheets).
+
 ## 2026-10-18 – Bibliothek anlegen/scannen, Fix Gericht-Editor
 - Fix: Zutatenliste im Gericht-Editor war auf kleinen Bildschirmen unsichtbar; neue Zeile „+ Zutat hinzufügen“ und Hinweis bei leerer Liste.
 - Essen › Bibliothek wie „Zutat suchen“: Scannen, Online-Treffer, „Produkt anlegen“ (unten fest).

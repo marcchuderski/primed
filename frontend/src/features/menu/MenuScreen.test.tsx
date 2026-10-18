@@ -96,6 +96,7 @@ describe('Menu and settings (7.1)', () => {
     renderMenu();
     expect(screen.getByRole('button', { name: /Marc.*@marcch · Profil bearbeiten/ })).toBeInTheDocument();
     expect(await screen.findByText('Di + Do Basketball 20:00')).toBeInTheDocument();
+    expect(screen.getByRole('contentinfo')).toHaveTextContent('Bereit für heute.');
     expect(screen.getByText('Bis 3 h vor Training: 70 %')).toBeInTheDocument();
     expect(screen.getByText('2 Tagesarten · kcal, Protein, KH')).toBeInTheDocument();
 

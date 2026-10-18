@@ -1,6 +1,7 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { fetchSettings, type Settings } from '../../api/days.ts';
+import { Footer } from '../../components/Footer/Footer.tsx';
 import { fetchHistory, type History } from '../../api/history.ts';
 import {
   addDays,
@@ -112,6 +113,7 @@ export function HistoryScreen() {
       <div className={styles['screen']}>
         <h1 className={styles['title']}>Verlauf</h1>
         {error !== null && <p role="alert">{error}</p>}
+        <Footer />
       </div>
     );
   }
@@ -210,6 +212,7 @@ export function HistoryScreen() {
           {view === 'year' && <MonthList months={months} />}
         </>
       )}
+      <Footer />
     </div>
   );
 }
