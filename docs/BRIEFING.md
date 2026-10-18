@@ -148,6 +148,8 @@ Oben auf „Heute“: „Hey, [Display-Name].“ (fett, Textfarbe), direkt dahin
 
 ## 9. Shakes
 
+**Varianten (D-139):** feste Größen Groß 400 ml und Klein 200 ml; Flüssigkeit nach Auswahl Milch 1,5 % · Milch 3,5 % · Wasser (Mehrfachauswahl, mindestens eine, Standard alle); Werte der Flüssigkeit fest aus den Richtwerten (Wasser 0 kcal), Proteinpulver aus der Bibliothek mit einstellbarer Menge (Standard 30 g). Shakes erscheinen nur im „+“ und in den Vorschlägen, nicht in der Bibliothek. Der Zauberstab nimmt bei knappen Kalorien die leichteste, bei viel Offenem die reichhaltigste gewählte Flüssigkeit, beim großen Shake bevorzugt Milch 1,5 %.
+
 **Optional (D-137):** In Einstellungen › Shakes per Schalter ein- und ausschaltbar (Standard: an). Aus = keine Shakes im „+“ und keine Shake-Regeln in den Vorschlägen; Proteinpulver und Milch werden dann wie normales Essen behandelt.
 
 Drei vordefinierte Shakes als Schnellbuttons (Zusammensetzung in `docs/DEFAULTS.md`, änderbar): Groß 1,5 % (400 ml Milch 1,5 % + 30 g Proteinpulver), Klein 1,5 % (200 ml + 30 g), Klein 3,5 % (200 ml + 30 g).
@@ -217,7 +219,7 @@ Aus Gerichten und Bibliothek die Optionen wählen, die die offenen Werte (bis Ch
 - Profil (Display-Name, Username, Passwort ändern)
 - Aktuelles Proteinpulver, Protein-Standard
 - Darstellung: System · Hell · Dunkel (überschreibt Geräteeinstellung)
-- Reihenfolge: Tagesarten & Sollwerte · Wochenvorlage · Checkpoints · Bewertung (Toleranz) · Vorschläge (Schwellen) · Shakes (mit kurzer Erklärung und An/Aus-Schalter)
+- Reihenfolge: Tagesarten & Sollwerte · Wochenvorlage · Checkpoints · Bewertung (Toleranz) · Shakes (Erklärung, An/Aus, Proteinpulver + Menge, Flüssigkeiten) · Vorschläge (Shake) (Schwellen; bei Shakes aus ausgegraut mit Hinweis)
 - **Tagesarten & Sollwerte** (Screen 19): Protein-Standard als Stepper, Liste der Tagesarten (Icon Training/Ruhe, Name, kcal · Protein · KH; Tap = bearbeiten), Button „Neue Tagesart“, darunter immer sichtbar die Zeile „Hilfe beim Ermitteln deiner Richtwerte“ (Icon CircleHelp).
 - **Modal „Richtwerte ermitteln“** (Screen 20, Bottom-Sheet in voller Höhe, D-108): Titel, ein Satz Erklärung, Schließen. Vier Schritte: Fragebogen kopieren · KI deiner Wahl öffnen und einfügen · Fragen beantworten · Ergebnis hier eintragen. Vorschau des Fragebogens (nach unten ausgeblendet) mit Link „Ganzen Fragebogen anzeigen“; Primärbutton „Fragebogen kopieren“ (Zwischenablage nur auf Klick, danach kurz „Kopiert“; Fallback: markierbarer Text). „Dann einfügen in“: ChatGPT, Claude, Copilot, Gemini (nur Startseiten, Text vorher kopieren; Anzeige: Name + Lucide ExternalLink, keine Logos; neuer Tab, `rel="noopener noreferrer"`, D-109). Ganz unten, durch eine Linie abgesetzt, wörtlich:
   - „Hinweis: Kein Ersatz für ärztliche oder ernährungsfachliche Beratung. Die Werte sind unverbindliche Richtwerte, die eine KI aus deinen Angaben berechnet; Primed übernimmt dafür keine Gewähr. Bei Erkrankungen, Schwangerschaft, Stillzeit oder Essstörungen sprich bitte mit einer Ärztin, einem Arzt oder einer Ernährungsfachkraft.“

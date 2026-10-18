@@ -115,16 +115,21 @@ export async function deleteEntry(id: number): Promise<void> {
   await apiRequest('DELETE', `/entries/${String(id)}`);
 }
 
-export type ShakeId = 'big' | 'small_low' | 'small_high';
+export type ShakeSize = 'big' | 'small';
+export type ShakeLiquid = 'milk_low' | 'milk_high' | 'water';
 
 export interface Shake {
-  id: ShakeId;
+  /** "big_milk_low", "small_water" … (D-139) */
+  id: string;
+  size: ShakeSize;
+  liquid: ShakeLiquid;
   name: string;
   label: string;
   nutrients: EntryNutrients;
 }
 
-const SHAKE_IDS = ['big', 'small_low', 'small_high'] as const;
+const SIZES = ['big', 'small'] as const;
+const LIQUIDS = ['milk_low', 'milk_high', 'water'] as const;
 
 export async function fetchShakes(): Promise<Shake[]> {
   const data = await apiRequest('GET', '/shakes');
@@ -135,14 +140,23 @@ export async function fetchShakes(): Promise<Shake[]> {
     if (!isRecord(value) || !isRecord(value['nutrients'])) {
       throw invalid();
     }
-    const id = SHAKE_IDS.find((s) => s === value['id']);
-    const { name, label } = value;
-    if (id === undefined || typeof name !== 'string' || typeof label !== 'string') {
+    const size = SIZES.find((s) => s === value['size']);
+    const liquid = LIQUIDS.find((l) => l === value['liquid']);
+    const { id, name, label } = value;
+    if (
+      size === undefined ||
+      liquid === undefined ||
+      id !== `${size}_${liquid}` ||
+      typeof name !== 'string' ||
+      typeof label !== 'string'
+    ) {
       throw invalid();
     }
     const nu = value['nutrients'];
     return {
       id,
+      size,
+      liquid,
       name,
       label,
       nutrients: {
@@ -159,7 +173,7 @@ export async function fetchShakes(): Promise<Shake[]> {
 export async function createShakeEntry(input: {
   date: string;
   timeMin: number;
-  shake: ShakeId;
+  shake: string;
 }): Promise<Entry> {
   return entryOf(await apiRequest('POST', '/entries/shake', input));
 }

@@ -226,7 +226,7 @@ describe('Menu and settings (7.1)', () => {
       });
     });
 
-    await userEvent.click(await screen.findByRole('button', { name: /Vorschläge/ }));
+    await userEvent.click(await screen.findByRole('button', { name: /^Shakes/ }));
     await userEvent.click(
       screen.getByRole('button', { name: 'Abend-Shake an Ruhetagen, ab dieser Uhrzeit erhöhen' }),
     );
@@ -276,9 +276,9 @@ describe('Menu and settings (7.1)', () => {
       'Wochenvorlage',
       'Checkpoints',
       'Bewertung',
-      'Vorschläge',
       'Shakes',
     ];
+    expect(names).toHaveLength(order.length);
     expect(names.map((n, idx) => n.startsWith(order[idx] ?? '-'))).toEqual(order.map(() => true));
   });
 
@@ -289,11 +289,42 @@ describe('Menu and settings (7.1)', () => {
     const toggle = screen.getByRole('switch', { name: 'Shakes verwenden' });
     expect(toggle).toHaveAttribute('aria-checked', 'true');
     expect(screen.getByText('Aktuelles Proteinpulver')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Vorschläge' })).toBeInTheDocument();
     await userEvent.click(toggle);
     expect(toggle).toHaveAttribute('aria-checked', 'false');
     expect(screen.queryByText('Aktuelles Proteinpulver')).not.toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: 'Vorschläge' })).not.toBeInTheDocument();
     await waitFor(() => {
       expect(body('/settings', 'PATCH')).toEqual({ shakesEnabled: false });
     });
+  });
+
+  it('toggles liquids as pills and keeps at least one', async () => {
+    renderMenu();
+    await userEvent.click(await screen.findByRole('button', { name: /^Shakes/ }));
+    const water = screen.getByRole('button', { name: 'Wasser' });
+    expect(water).toHaveAttribute('aria-pressed', 'true');
+    await userEvent.click(water);
+    expect(water).toHaveAttribute('aria-pressed', 'false');
+    await waitFor(() => {
+      expect(body('/settings', 'PATCH')).toEqual({ shake: { liquids: { water: false } } });
+    });
+    await userEvent.click(screen.getByRole('button', { name: 'Milch 3,5 %' }));
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Milch 1,5 %' })).toBeDisabled();
+    });
+  });
+
+  it('offers scanning and creating a product from the powder picker', async () => {
+    renderMenu();
+    await userEvent.click(await screen.findByRole('button', { name: /^Shakes/ }));
+    await userEvent.click(screen.getByRole('button', { name: /Aktuelles Proteinpulver/ }));
+    const picker = screen.getByRole('dialog', { name: /Aktuelles Proteinpulver/ });
+    expect(within(picker).getByRole('button', { name: 'Barcode scannen' })).toBeInTheDocument();
+    expect(within(picker).getByRole('button', { name: /Scannen/ })).toBeInTheDocument();
+    await userEvent.type(within(picker).getByLabelText('Bibliothek durchsuchen'), 'Whey');
+    await userEvent.click(within(picker).getByRole('button', { name: /Produkt anlegen/ }));
+    const product = await screen.findByRole('dialog', { name: /Neues Produkt/ });
+    expect(within(product).getByDisplayValue('Whey')).toBeInTheDocument();
   });
 });

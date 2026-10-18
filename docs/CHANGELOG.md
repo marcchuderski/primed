@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-18 – Shake-Varianten
+- Migration `011_shake_liquids`: Größen fest (400/200 ml), Flüssigkeiten Milch 1,5 % / 3,5 % / Wasser wählbar, Milch-Produkte und Mengen-Einstellungen entfallen.
+- Bis zu sechs Shakes im „+“ (Groß/Klein je Flüssigkeit); der Zauberstab wählt die passende Flüssigkeit nach offenen Kalorien.
+- Einstellungen: „Vorschläge (Shake)“ an letzter Stelle, bei ausgeschalteten Shakes ausgegraut mit Hinweis.
+
 ## 2026-10-18 – Shakes optional, Einstellungs-Reihenfolge
 - Migration `010_shakes_enabled`; Schalter „Shakes verwenden“ mit Erklärung in Einstellungen › Shakes.
 - Shakes aus: keine Shakes im „+“, keine Shake-Regeln; der Zauberstab schlägt nach dem Training proteinreiches Essen vor.

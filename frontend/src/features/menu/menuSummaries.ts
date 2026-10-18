@@ -53,7 +53,11 @@ export function checkpointSummary(settings: Settings): string {
   return `Bis ${formatDuration(settings.checkpoint.offsetMin)} vor Training: ${String(settings.checkpoint.pct)} %`;
 }
 
+/** "Milch 1,5 % · Wasser · 30 g Pulver" */
 export function shakesSummary(settings: Settings): string {
-  const a = settings.shakeAmounts;
-  return `Groß ${String(a.bigMl)} ml · Klein ${String(a.smallMl)} ml · ${String(a.powderG)} g Pulver`;
+  const l = settings.shakeLiquids;
+  const liquids = [l.milkLow && 'Milch 1,5 %', l.milkHigh && 'Milch 3,5 %', l.water && 'Wasser'].filter(
+    (x): x is string => x !== false,
+  );
+  return `${liquids.join(' · ')} · ${String(settings.shakePowderG)} g Pulver`;
 }

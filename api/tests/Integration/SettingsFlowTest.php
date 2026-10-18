@@ -49,7 +49,7 @@ final class SettingsFlowTest extends ApiTestCase
                 ['tolerancePct' => 16],
                 ['thresholds' => ['minProteinGap' => -1]],
                 ['thresholds' => ['unknown' => 5]],
-                ['shake' => ['bigMl' => 2000]],
+                ['shake' => ['bigMl' => 400]],
                 ['shake' => ['powderG' => 5]],
                 ['checkpoint' => 'x'],
             ] as $body
@@ -58,7 +58,7 @@ final class SettingsFlowTest extends ApiTestCase
         }
     }
 
-    public function testShakeFoodsMustBeOwnProductsWithPer100Basis(): void
+    public function testShakePowderMustBeOwnProductWithPer100Basis(): void
     {
         $foods = self::json($this->call('GET', '/api/v1/foods?q=Milch'))['foods'];
         self::assertIsArray($foods);
@@ -68,16 +68,15 @@ final class SettingsFlowTest extends ApiTestCase
         self::assertIsInt($milkId);
 
         $ok = self::json($this->call('PATCH', '/api/v1/settings', [
-            'shake' => ['milkLowFoodId' => $milkId, 'bigMl' => 450, 'smallMl' => 250, 'powderG' => 30],
+            'shake' => ['proteinPowderFoodId' => $milkId, 'powderG' => 35],
         ]))['settings'];
         self::assertIsArray($ok);
-        self::assertIsArray($ok['shakeFoods']);
-        self::assertSame($milkId, $ok['shakeFoods']['milkLow']);
-        self::assertSame(['bigMl' => 450, 'smallMl' => 250, 'powderG' => 30], $ok['shakeAmounts']);
+        self::assertSame(['proteinPowder' => $milkId], $ok['shakeFoods']);
+        self::assertSame(35, $ok['shakePowderG']);
 
         // Another user's food is invisible.
         self::assertSame(404, $this->call('PATCH', '/api/v1/settings', [
-            'shake' => ['milkLowFoodId' => $milkId],
+            'shake' => ['proteinPowderFoodId' => $milkId],
         ], 'freund')->status);
 
         // Clearing is allowed.
@@ -85,8 +84,7 @@ final class SettingsFlowTest extends ApiTestCase
             'shake' => ['proteinPowderFoodId' => null],
         ]))['settings'];
         self::assertIsArray($cleared);
-        self::assertIsArray($cleared['shakeFoods']);
-        self::assertNull($cleared['shakeFoods']['proteinPowder']);
+        self::assertSame(['proteinPowder' => null], $cleared['shakeFoods']);
     }
 
     public function testProfileUpdateWithUniqueUsername(): void
@@ -127,7 +125,7 @@ final class SettingsFlowTest extends ApiTestCase
         $this->call('POST', '/api/v1/entries/shake', [
             'date' => '2026-10-20',
             'timeMin' => 600,
-            'shake' => 'big',
+            'shake' => 'big_milk_low',
         ], 'freund');
 
         $wrong = $this->call('POST', '/api/v1/account/delete', ['password' => 'falsch'], 'freund');

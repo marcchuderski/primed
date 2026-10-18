@@ -89,35 +89,36 @@ final class SettingsController
             }
         }
         if ($input->has('shake')) {
-            $shake = $input->object('shake', 'Shakes')
-                ->only('proteinPowderFoodId', 'milkLowFoodId', 'milkHighFoodId', 'bigMl', 'smallMl', 'powderG');
-            $foods = new FoodRepository($this->c->pdo());
-            foreach (
-                ['proteinPowderFoodId' => 'protein_powder_food_id', 'milkLowFoodId' => 'shake_milk_low_food_id',
-                'milkHighFoodId' => 'shake_milk_high_food_id'] as $field => $column
-            ) {
-                if (!$shake->has($field)) {
-                    continue;
-                }
-                $id = $shake->nullableInt($field, 1, PHP_INT_MAX, 'Shake-Zutat');
+            $shake = $input->object('shake', 'Shakes')->only('proteinPowderFoodId', 'powderG', 'liquids');
+            if ($shake->has('proteinPowderFoodId')) {
+                $id = $shake->nullableInt('proteinPowderFoodId', 1, PHP_INT_MAX, 'Proteinpulver');
                 if ($id !== null) {
-                    $food = $foods->find($user->id, $id) ?? throw HttpException::notFound();
+                    $food = (new FoodRepository($this->c->pdo()))->find($user->id, $id)
+                        ?? throw HttpException::notFound();
                     if ($food->basis === 'per_unit') {
                         throw Input::invalid('Für Shakes brauchst du ein Produkt mit Angaben pro 100 g oder 100 ml.');
                     }
                 }
-                $values[$column] = $id;
-            }
-            if ($shake->has('bigMl')) {
-                $big = $shake->int('bigMl', 100, 1000, 'Milch groß');
-                $values['shake_big_ml'] = self::stepped($big, 10, 'Milch groß');
-            }
-            if ($shake->has('smallMl')) {
-                $small = $shake->int('smallMl', 50, 600, 'Milch klein');
-                $values['shake_small_ml'] = self::stepped($small, 10, 'Milch klein');
+                $values['protein_powder_food_id'] = $id;
             }
             if ($shake->has('powderG')) {
                 $values['shake_powder_g'] = $shake->int('powderG', 10, 80, 'Proteinpulver');
+            }
+            if ($shake->has('liquids')) {
+                $liquids = $shake->object('liquids', 'Flüssigkeiten')->only('milkLow', 'milkHigh', 'water');
+                $current = $settings->get($user->id)->shakeLiquids;
+                foreach (
+                    ['milkLow' => 'shake_liquid_milk_low', 'milkHigh' => 'shake_liquid_milk_high',
+                    'water' => 'shake_liquid_water'] as $field => $column
+                ) {
+                    if ($liquids->has($field)) {
+                        $current[$field] = $liquids->bool($field, 'Flüssigkeit');
+                        $values[$column] = $current[$field] ? 1 : 0;
+                    }
+                }
+                if (!in_array(true, $current, true)) {
+                    throw Input::invalid('Wähle mindestens eine Flüssigkeit für deine Shakes.');
+                }
             }
         }
         $settings->update($user->id, $values, $now);

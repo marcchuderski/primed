@@ -9,9 +9,27 @@ import {
 
 const m = (kcal: number, protein: number, carbs = 0, fat = 0) => ({ kcal, protein, carbs, fat, sugar: 0 });
 const shakes: ShakeOption[] = [
-  { id: 'big', name: 'Shake Groß 1,5 %', nutrients: m(300, 35, 21, 8) },
-  { id: 'small_low', name: 'Shake Klein 1,5 %', nutrients: m(206, 28, 12, 5) },
-  { id: 'small_high', name: 'Shake Klein 3,5 %', nutrients: m(240, 28, 11, 9) },
+  {
+    id: 'big_milk_low',
+    size: 'big',
+    liquid: 'milk_low',
+    name: 'Shake Groß · Milch 1,5 %',
+    nutrients: m(300, 35, 21, 8),
+  },
+  {
+    id: 'small_milk_low',
+    size: 'small',
+    liquid: 'milk_low',
+    name: 'Shake Klein · Milch 1,5 %',
+    nutrients: m(206, 28, 12, 5),
+  },
+  {
+    id: 'small_milk_high',
+    size: 'small',
+    liquid: 'milk_high',
+    name: 'Shake Klein · Milch 3,5 %',
+    nutrients: m(240, 28, 11, 9),
+  },
 ];
 const candidates: Candidate[] = [
   {
@@ -77,7 +95,7 @@ describe('decideShake (BRIEFING §10)', () => {
   });
 
   it('calories exceeded: small 1,5 % only with at least 30 g protein open', () => {
-    expect(decideShake(input({ eaten: m(2100, 115) })).shake).toBe('small_low');
+    expect(decideShake(input({ eaten: m(2100, 115) })).shake).toBe('small_milk_low');
     expect(decideShake(input({ eaten: m(2100, 122) })).shake).toBeNull();
   });
 
@@ -87,21 +105,21 @@ describe('decideShake (BRIEFING §10)', () => {
 
   it('after training: big with ≥ 35 g protein and ≥ 500 kcal open, otherwise small', () => {
     const after = { day: training, targets: trainingTargets, now: 22 * 60 };
-    expect(decideShake(input({ ...after, eaten: m(2050, 100, 300) })).shake).toBe('big');
-    expect(decideShake(input({ ...after, eaten: m(2300, 120, 300) })).shake).toBe('small_low');
+    expect(decideShake(input({ ...after, eaten: m(2050, 100, 300) })).shake).toBe('big_milk_low');
+    expect(decideShake(input({ ...after, eaten: m(2300, 120, 300) })).shake).toBe('small_milk_low');
   });
 
   it('after training with ≥ 700 kcal and ≥ 100 g carbs open: light meal plus small shake', () => {
     const d = decideShake(
       input({ day: training, targets: trainingTargets, now: 22 * 60, eaten: m(1500, 90, 150) }),
     );
-    expect(d.shake).toBe('small_high');
+    expect(d.shake).toBe('small_milk_high');
     expect('withLightMeal' in d && d.withLightMeal).toBe(true);
   });
 
   it('rest day from 19:00: small 3,5 % with ≥ 400 kcal open, otherwise 1,5 %', () => {
-    expect(decideShake(input({ now: 19 * 60, eaten: m(1500, 110) })).shake).toBe('small_high');
-    expect(decideShake(input({ now: 19 * 60, eaten: m(1700, 110) })).shake).toBe('small_low');
+    expect(decideShake(input({ now: 19 * 60, eaten: m(1500, 110) })).shake).toBe('small_milk_high');
+    expect(decideShake(input({ now: 19 * 60, eaten: m(1700, 110) })).shake).toBe('small_milk_low');
     expect(decideShake(input({ now: 18 * 60 + 45, eaten: m(1500, 110) })).shake).toBeNull();
   });
 });
@@ -137,14 +155,14 @@ describe('suggest', () => {
       'Nach dem Training · in 7 Stunden',
     ]);
     expect(list[1]?.title).toBe('Lidl Müsli-Riegel, 2 Stück');
-    expect(list[2]?.action).toEqual({ kind: 'shake', shake: 'big' });
+    expect(list[2]?.action).toEqual({ kind: 'shake', shake: 'big_milk_low' });
   });
 
   it('after training: the shake comes first', () => {
     const list = suggest(
       input({ day: training, targets: trainingTargets, now: 22 * 60, eaten: m(2050, 100, 300) }),
     );
-    expect(list[0]).toMatchObject({ when: 'Nach dem Training', title: 'Shake Groß 1,5 %' });
+    expect(list[0]).toMatchObject({ when: 'Nach dem Training', title: 'Shake Groß · Milch 1,5 %' });
   });
 });
 
@@ -183,5 +201,31 @@ describe('suggest without shakes (settings)', () => {
     );
     expect(now[0]?.when).toBe('Nach dem Training');
     expect(now.some((s) => s.action.kind === 'shake')).toBe(false);
+  });
+});
+
+describe('shake liquids (D-139)', () => {
+  const water: ShakeOption = {
+    id: 'small_water',
+    size: 'small',
+    liquid: 'water',
+    name: 'Shake Klein · Wasser',
+    nutrients: m(112, 22, 2, 2),
+  };
+
+  it('takes the lightest liquid when calories are tight and the richest when much is open', () => {
+    const all = [...shakes, water];
+    expect(decideShake(input({ shakes: all, eaten: m(2100, 115) })).shake).toBe('small_water');
+    expect(decideShake(input({ shakes: all, now: 19 * 60, eaten: m(1700, 110) })).shake).toBe('small_water');
+    expect(decideShake(input({ shakes: all, now: 19 * 60, eaten: m(1500, 110) })).shake).toBe(
+      'small_milk_high',
+    );
+  });
+
+  it('falls back to what is selected', () => {
+    expect(decideShake(input({ shakes: [water], now: 19 * 60, eaten: m(1500, 110) })).shake).toBe(
+      'small_water',
+    );
+    expect(decideShake(input({ shakes: [], now: 19 * 60, eaten: m(1500, 110) })).shake).toBeNull();
   });
 });

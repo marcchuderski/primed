@@ -48,7 +48,14 @@ describe('SuggestionsSheet', () => {
       if (url.endsWith('/shakes')) {
         return respond({
           shakes: [
-            { id: 'small_high', name: 'Shake Klein 3,5 %', label: 'Klein 3,5 %', nutrients: m(240, 28) },
+            {
+              id: 'small_milk_high',
+              size: 'small',
+              liquid: 'milk_high',
+              name: 'Shake Klein · Milch 3,5 %',
+              label: 'Klein · Milch 3,5 %',
+              nutrients: m(240, 28),
+            },
           ],
         });
       }
@@ -64,7 +71,7 @@ describe('SuggestionsSheet', () => {
               kind: 'shake',
               foodId: null,
               dishId: null,
-              name: 'Shake Klein 3,5 %',
+              name: 'Shake Klein · Milch 3,5 %',
               amount: 1,
               unit: 'stueck',
               quantity: 1,
@@ -89,7 +96,7 @@ describe('SuggestionsSheet', () => {
     render(
       <SuggestionsSheet
         day={day}
-        settings={{ ...testSettings, shakeFoods: { proteinPowder: 99, milkLow: null, milkHigh: null } }}
+        settings={{ ...testSettings, shakeFoods: { proteinPowder: 99 } }}
         now={19 * 60 + 50}
         checkpoint={null}
         eaten={m(1400, 100)}
@@ -101,7 +108,7 @@ describe('SuggestionsSheet', () => {
 
     expect(screen.getByText('19:50 · Ruhetag')).toBeInTheDocument();
     const items = await screen.findAllByRole('listitem');
-    expect(items[0]).toHaveTextContent('Shake Klein 3,5 %');
+    expect(items[0]).toHaveTextContent('Shake Klein · Milch 3,5 %');
     expect(items[0]).toHaveTextContent('+240 kcal · +28 g P');
     expect(items[1]).toHaveTextContent('REWE Quarkcreme, 1 Packung');
 
@@ -111,6 +118,8 @@ describe('SuggestionsSheet', () => {
     });
     expect(within(items.at(0) ?? document.body).getByRole('status')).toHaveTextContent('Eingetragen');
     const call = fetchMock.mock.calls.find(([u]) => urlOf(u).endsWith('/entries/shake'));
-    expect(call?.[1]?.body).toBe(JSON.stringify({ date: '2026-10-19', timeMin: 1200, shake: 'small_high' }));
+    expect(call?.[1]?.body).toBe(
+      JSON.stringify({ date: '2026-10-19', timeMin: 1200, shake: 'small_milk_high' }),
+    );
   });
 });

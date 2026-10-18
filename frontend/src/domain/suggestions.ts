@@ -29,12 +29,37 @@ export const DEFAULT_THRESHOLDS: SuggestionThresholds = {
   maxMealKcal: 900,
 };
 
-export type ShakeKind = 'big' | 'small_low' | 'small_high';
+export type ShakeSize = 'big' | 'small';
+export type ShakeLiquid = 'milk_low' | 'milk_high' | 'water';
+/** Shake id from the API, e.g. "big_milk_low", "small_water" (D-139). */
+export type ShakeKind = string;
 
 export interface ShakeOption {
   id: ShakeKind;
+  size: ShakeSize;
+  liquid: ShakeLiquid;
   name: string;
   nutrients: Macros;
+}
+
+/** Which liquid fits: light when calories are tight, rich when much is open, standard for the big shake. */
+type ShakePref = 'light' | 'rich' | 'standard';
+
+const LIQUID_ORDER: Record<ShakePref, ShakeLiquid[]> = {
+  light: ['water', 'milk_low', 'milk_high'],
+  rich: ['milk_high', 'milk_low', 'water'],
+  standard: ['milk_low', 'milk_high', 'water'],
+};
+
+/** The available shake of that size whose liquid fits best (only the user's selected liquids exist). */
+export function pickShake(shakes: ShakeOption[], size: ShakeSize, pref: ShakePref): ShakeOption | undefined {
+  for (const liquid of LIQUID_ORDER[pref]) {
+    const hit = shakes.find((s) => s.size === size && s.liquid === liquid);
+    if (hit !== undefined) {
+      return hit;
+    }
+  }
+  return undefined;
 }
 
 /** Something that can be logged in one tap: a food (with its usual amount) or a dish portion. */
@@ -89,6 +114,26 @@ export type ShakeDecision =
  * Shake rules (BRIEFING §10, D-055, D-121). The first matching rule wins; protein has priority.
  */
 export function decideShake(input: SuggestionInput): ShakeDecision {
+  const raw = decideShakeRule(input);
+  if (raw.pick === null) {
+    return { shake: null, reason: raw.reason };
+  }
+  const shake = pickShake(input.shakes, raw.pick.size, raw.pick.pref);
+  if (shake === undefined) {
+    return { shake: null, reason: raw.reason };
+  }
+  return raw.withLightMeal === true
+    ? { shake: shake.id, reason: raw.reason, withLightMeal: true }
+    : { shake: shake.id, reason: raw.reason };
+}
+
+interface RuleResult {
+  pick: { size: ShakeSize; pref: ShakePref } | null;
+  reason: string;
+  withLightMeal?: boolean;
+}
+
+function decideShakeRule(input: SuggestionInput): RuleResult {
   const t = input.thresholds ?? DEFAULT_THRESHOLDS;
   const proteinOpen = input.targets.protein - input.eaten.protein;
   const kcalOpen = input.targets.kcal - input.eaten.kcal;
@@ -97,50 +142,56 @@ export function decideShake(input: SuggestionInput): ShakeDecision {
 
   if (proteinOpen < t.minProteinGapForShake) {
     return {
-      shake: null,
+      pick: null,
       reason: `Weniger als ${formatInt(t.minProteinGapForShake)} g Protein offen – dafür reicht normales Essen.`,
     };
   }
   if (kcalOpen < 0) {
     return proteinOpen >= t.overKcalShakeProtein
-      ? { shake: 'small_low', reason: 'Kalorien sind durch, Protein fehlt noch – der leichteste Shake.' }
-      : { shake: null, reason: 'Kalorien sind durch.' };
+      ? {
+          pick: { size: 'small', pref: 'light' },
+          reason: 'Kalorien sind durch, Protein fehlt noch – der leichteste Shake.',
+        }
+      : { pick: null, reason: 'Kalorien sind durch.' };
   }
   if (day.isTraining && day.trainingStart !== null) {
     const end = day.trainingStart + (day.durationMin ?? 0);
     if (now < day.trainingStart) {
-      return { shake: null, reason: 'Vor dem Training zählen Kohlenhydrate, der Shake kommt danach.' };
+      return { pick: null, reason: 'Vor dem Training zählen Kohlenhydrate, der Shake kommt danach.' };
     }
     if (now < end) {
-      return { shake: null, reason: 'Während des Trainings kein Vorschlag.' };
+      return { pick: null, reason: 'Während des Trainings kein Vorschlag.' };
     }
     if (kcalOpen >= t.lightMealKcal && carbsOpen >= t.lightMealCarbs) {
       return {
-        shake: kcalOpen >= t.restDayRichMilkKcal ? 'small_high' : 'small_low',
+        pick: { size: 'small', pref: kcalOpen >= t.restDayRichMilkKcal ? 'rich' : 'light' },
         reason: 'Noch viel offen: eine leichte Mahlzeit plus kleiner Shake statt einer großen Portion.',
         withLightMeal: true,
       };
     }
     if (proteinOpen >= t.bigShakeProtein && kcalOpen >= t.bigShakeKcal) {
       return {
-        shake: 'big',
+        pick: { size: 'big', pref: 'standard' },
         reason: 'Nach dem Training hat der Shake Vorrang – genug Protein und Kalorien offen.',
       };
     }
     return {
-      shake: kcalOpen >= t.restDayRichMilkKcal ? 'small_high' : 'small_low',
+      pick: { size: 'small', pref: kcalOpen >= t.restDayRichMilkKcal ? 'rich' : 'light' },
       reason: 'Nach dem Training: ein kleiner Shake reicht für den Rest.',
     };
   }
   if (now >= t.restDayShakeFrom) {
     return kcalOpen >= t.restDayRichMilkKcal
       ? {
-          shake: 'small_high',
+          pick: { size: 'small', pref: 'rich' },
           reason: 'Am Abend schließt ein kleiner Shake die Proteinlücke, Kalorien sind noch frei.',
         }
-      : { shake: 'small_low', reason: 'Am Abend schließt ein kleiner Shake die Proteinlücke.' };
+      : {
+          pick: { size: 'small', pref: 'light' },
+          reason: 'Am Abend schließt ein kleiner Shake die Proteinlücke.',
+        };
   }
-  return { shake: null, reason: 'Noch Zeit – Protein lieber über Essen holen.' };
+  return { pick: null, reason: 'Noch Zeit – Protein lieber über Essen holen.' };
 }
 
 interface Goal {
@@ -297,10 +348,10 @@ export function suggest(input: SuggestionInput): Suggestion[] {
       at: now,
     });
   } else if (day.isTraining && day.trainingStart !== null && now < day.trainingStart) {
-    const shakeAfter = input.shakes.find(
-      (s) =>
-        s.id === (open.kcal >= t.bigShakeKcal && open.protein >= t.bigShakeProtein ? 'big' : 'small_low'),
-    );
+    const shakeAfter =
+      open.kcal >= t.bigShakeKcal && open.protein >= t.bigShakeProtein
+        ? pickShake(input.shakes, 'big', 'standard')
+        : pickShake(input.shakes, 'small', 'light');
     if (shakeAfter !== undefined && open.protein >= t.minProteinGapForShake) {
       result.push({
         key: `after-${shakeAfter.id}`,

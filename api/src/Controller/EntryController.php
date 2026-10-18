@@ -61,7 +61,7 @@ final class EntryController
             $user->id,
             $input->text('date', 10, 10, 'Datum'),
             $input->int('timeMin', 0, 1439, 'Uhrzeit'),
-            $input->enum('shake', array_keys(ShakeService::SHAKES), 'Shake'),
+            $input->enum('shake', ShakeService::ids(), 'Shake'),
         );
 
         return Response::json(['entry' => $entry->toPublic()], 201);

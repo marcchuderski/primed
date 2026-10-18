@@ -1,201 +1,293 @@
-import { ChevronRight, Search } from 'lucide-react';
+import { Check, ChevronRight, Plus, ScanBarcode, Search } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { updateSettings, type Settings } from '../../api/days.ts';
-import { fetchFood, searchFoods, type Food } from '../../api/foods.ts';
+import { updateSettings, type Settings, type ShakeLiquids, type Thresholds } from '../../api/days.ts';
+import {
+  createFood,
+  draftFromOff,
+  fetchFood,
+  lookupBarcode,
+  searchFoods,
+  type Food,
+  type FoodDraft,
+} from '../../api/foods.ts';
+import { Button } from '../../components/Button/Button.tsx';
 import { Sheet } from '../../components/Sheet/Sheet.tsx';
 import { Stepper } from '../../components/Stepper/Stepper.tsx';
 import { Switch } from '../../components/Switch/Switch.tsx';
 import { displayName } from '../../domain/categories.ts';
+import { ScannerSheet } from '../add/ScannerSheet.tsx';
+import { ProductSheet } from '../foods/ProductSheet.tsx';
 import { SettingRow, SettingsPage } from './SettingsPage.tsx';
-import { useAutoSave } from './useAutoSave.ts';
+import { ShakeRulesSection } from './ShakeRulesSection.tsx';
+import { useAutoSave, type SaveStatus } from './useAutoSave.ts';
 import addStyles from '../add/AddSheet.module.css';
 import styles from './Settings.module.css';
 
-type Slot = 'proteinPowder' | 'milkLow' | 'milkHigh';
-
-const SLOTS: {
-  id: Slot;
-  label: string;
-  field: 'proteinPowderFoodId' | 'milkLowFoodId' | 'milkHighFoodId';
-}[] = [
-  { id: 'proteinPowder', label: 'Aktuelles Proteinpulver', field: 'proteinPowderFoodId' },
-  { id: 'milkLow', label: 'Milch für 1,5 %', field: 'milkLowFoodId' },
-  { id: 'milkHigh', label: 'Milch für 3,5 %', field: 'milkHighFoodId' },
+const LIQUIDS: { key: keyof ShakeLiquids; label: string }[] = [
+  { key: 'milkLow', label: 'Milch 1,5 %' },
+  { key: 'milkHigh', label: 'Milch 3,5 %' },
+  { key: 'water', label: 'Wasser' },
 ];
 
-/** Shakes (BRIEFING §9): protein powder, the two milks and the amounts. */
+const PER_UNIT_ERROR = 'Proteinpulver braucht Werte pro 100 g oder 100 ml.';
+
+/** Powder picker flow: library search → scan or create a product (both end in the library). */
+type Picker =
+  | { kind: 'search' }
+  | { kind: 'scan' }
+  | { kind: 'product'; initial: Partial<FoodDraft> }
+  | null;
+
+/** "saving" wins over "error" over "saved", so two independent savers share one status line. */
+function combinedStatus(a: SaveStatus, b: SaveStatus): SaveStatus {
+  for (const s of ['saving', 'error', 'saved'] as const) {
+    if (a === s || b === s) {
+      return s;
+    }
+  }
+  return 'idle';
+}
+
+/**
+ * Shakes (BRIEFING §9/§10, D-139): on/off, protein powder and amount, liquids and the suggestion
+ * thresholds; sizes fixed at 400/200 ml.
+ */
 export function ShakesPage({ settings, onBack }: { settings: Settings; onBack: () => void }) {
-  const [foods, setFoods] = useState(settings.shakeFoods);
-  const [names, setNames] = useState<Partial<Record<Slot, string>>>({});
-  const [amounts, setAmounts] = useState(settings.shakeAmounts);
-  const [picking, setPicking] = useState<Slot | null>(null);
   const [enabled, setEnabled] = useState(settings.shakesEnabled);
-  const [toggling, setToggling] = useState(false);
+  const [powderId, setPowderId] = useState(settings.shakeFoods.proteinPowder);
+  const [powderName, setPowderName] = useState<string | null>(null);
+  const [grams, setGrams] = useState(settings.shakePowderG);
+  const [liquids, setLiquids] = useState(settings.shakeLiquids);
+  const [thresholds, setThresholds] = useState(settings.thresholds);
+  const [picker, setPicker] = useState<Picker>(null);
+  const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const saver = useAutoSave(async (value: Settings['shakeAmounts']) => {
-    await updateSettings({ shake: value });
+  const powderSaver = useAutoSave(async (powderG: number) => {
+    await updateSettings({ shake: { powderG } });
+  });
+  const rulesSaver = useAutoSave(async (value: Thresholds) => {
+    await updateSettings({ thresholds: value });
   });
 
   useEffect(() => {
-    for (const slot of SLOTS) {
-      const id = settings.shakeFoods[slot.id];
-      if (id !== null) {
-        fetchFood(id)
-          .then((food) => {
-            setNames((n) => ({ ...n, [slot.id]: displayName(food.name, food.brand) }));
-          })
-          .catch(() => undefined);
-      }
-    }
-  }, [settings.shakeFoods]);
-
-  async function choose(slot: Slot, food: Food | null) {
-    const field = SLOTS.find((s) => s.id === slot)?.field;
-    if (field === undefined) {
+    if (settings.shakeFoods.proteinPowder === null) {
       return;
     }
-    setError(null);
-    try {
-      const saved = await updateSettings({ shake: { [field]: food?.id ?? null } });
-      setFoods(saved.shakeFoods);
-      setNames((n) => ({ ...n, [slot]: food === null ? undefined : displayName(food.name, food.brand) }));
-      setPicking(null);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Speichern fehlgeschlagen.');
-    }
-  }
+    fetchFood(settings.shakeFoods.proteinPowder)
+      .then((food) => {
+        setPowderName(displayName(food.name, food.brand));
+      })
+      .catch(() => undefined);
+  }, [settings.shakeFoods.proteinPowder]);
 
-  async function toggle(next: boolean) {
-    setToggling(true);
+  /** Saves immediately and rolls back on failure. */
+  async function save(patch: Parameters<typeof updateSettings>[0], rollback: () => void) {
+    setBusy(true);
     setError(null);
-    setEnabled(next);
     try {
-      await updateSettings({ shakesEnabled: next });
+      await updateSettings(patch);
     } catch (e) {
-      setEnabled(!next);
+      rollback();
       setError(e instanceof Error ? e.message : 'Speichern fehlgeschlagen.');
     } finally {
-      setToggling(false);
+      setBusy(false);
     }
   }
 
-  const change = (patch: Partial<Settings['shakeAmounts']>) => {
-    const next = { ...amounts, ...patch };
-    setAmounts(next);
-    saver.schedule(next);
-  };
+  function toggleShakes(next: boolean) {
+    setEnabled(next);
+    void save({ shakesEnabled: next }, () => {
+      setEnabled(!next);
+    });
+  }
+
+  function toggleLiquid(key: keyof ShakeLiquids) {
+    const previous = liquids;
+    const next = !liquids[key];
+    setLiquids({ ...liquids, [key]: next });
+    void save({ shake: { liquids: { [key]: next } } }, () => {
+      setLiquids(previous);
+    });
+  }
+
+  async function choosePowder(food: Food | null) {
+    setPicker(null);
+    const previous = { id: powderId, name: powderName };
+    setPowderId(food?.id ?? null);
+    setPowderName(food === null ? null : displayName(food.name, food.brand));
+    await save({ shake: { proteinPowderFoodId: food?.id ?? null } }, () => {
+      setPowderId(previous.id);
+      setPowderName(previous.name);
+    });
+  }
+
+  /** Library hit → choose it; online hit or unknown → product sheet to review and save. */
+  function onDetected(ean: string) {
+    lookupBarcode(ean)
+      .then((result) => {
+        if (result === null) {
+          setPicker({ kind: 'product', initial: { barcode: ean, category: 'drinks' } });
+        } else if (result.source === 'library') {
+          if (result.food.basis === 'per_unit') {
+            setError(PER_UNIT_ERROR);
+            setPicker(null);
+          } else {
+            void choosePowder(result.food);
+          }
+        } else {
+          setPicker({ kind: 'product', initial: draftFromOff(result.product) });
+        }
+      })
+      .catch((e: unknown) => {
+        setError(e instanceof Error ? e.message : 'Barcode konnte nicht geprüft werden.');
+        setPicker({ kind: 'search' });
+      });
+  }
+
+  const selectedCount = LIQUIDS.filter((l) => liquids[l.key]).length;
 
   return (
-    <SettingsPage title="Shakes" onBack={onBack} status={saver.status} error={saver.error ?? error}>
+    <SettingsPage
+      title="Shakes"
+      onBack={onBack}
+      status={combinedStatus(powderSaver.status, rulesSaver.status)}
+      error={powderSaver.error ?? rulesSaver.error ?? error}
+    >
       <p className={styles['hint']}>
-        Shakes sind Schnell-Einträge aus Milch und deinem Proteinpulver: ein Tipp im „+“, fertig. Der
-        Zauberstab schlägt sie gezielt vor, wenn dir abends oder nach dem Training noch Protein fehlt – mit
-        wenig Kalorien und ohne Kochen. Trinkst du keine Shakes, schalte sie aus: Dann verschwinden sie aus
-        „+“ und den Vorschlägen, und der Zauberstab schlägt stattdessen proteinreiches Essen vor.
+        Shakes sind Schnell-Einträge aus deinem Proteinpulver und Milch oder Wasser: ein Tipp im „+“, fertig.
+        Der Zauberstab schlägt sie gezielt vor, wenn dir abends oder nach dem Training noch Protein fehlt –
+        mit wenig Kalorien und ohne Kochen. Trinkst du keine Shakes, schalte sie aus: Dann verschwinden sie
+        aus „+“ und den Vorschlägen, und der Zauberstab schlägt stattdessen proteinreiches Essen vor.
       </p>
       <div className={styles['card']}>
         <SettingRow label="Shakes verwenden" hint={enabled ? 'an' : 'aus'}>
-          <Switch
-            label="Shakes verwenden"
-            checked={enabled}
-            disabled={toggling}
-            onChange={(next) => void toggle(next)}
-          />
+          <Switch label="Shakes verwenden" checked={enabled} disabled={busy} onChange={toggleShakes} />
         </SettingRow>
       </div>
 
       {enabled && (
         <>
-          <section className={styles['section']} aria-labelledby="shake-foods">
-            <h2 id="shake-foods" className={styles['sectionLabel']}>
-              Zutaten aus deiner Bibliothek
+          <section className={styles['section']} aria-labelledby="shake-powder">
+            <h2 id="shake-powder" className={styles['sectionLabel']}>
+              Proteinpulver
             </h2>
             <div className={styles['card']}>
-              {SLOTS.map((slot) => (
-                <button
-                  key={slot.id}
-                  type="button"
-                  className={styles['link']}
-                  aria-haspopup="dialog"
-                  onClick={() => {
-                    setPicking(slot.id);
-                  }}
-                >
-                  <span className={styles['linkTexts']}>
-                    <span className={styles['linkName']}>{slot.label}</span>
-                    <span className={styles['linkMeta']}>
-                      {foods[slot.id] === null ? 'Nicht gewählt' : (names[slot.id] ?? '…')}
-                    </span>
+              <button
+                type="button"
+                className={styles['link']}
+                aria-haspopup="dialog"
+                onClick={() => {
+                  setPicker({ kind: 'search' });
+                }}
+              >
+                <span className={styles['linkTexts']}>
+                  <span className={styles['linkName']}>Aktuelles Proteinpulver</span>
+                  <span className={styles['linkMeta']}>
+                    {powderId === null
+                      ? 'Nicht gewählt – ohne Pulver gibt es keine Shakes'
+                      : (powderName ?? '…')}
                   </span>
-                  <ChevronRight
-                    size={20}
-                    strokeWidth={2.2}
-                    className={styles['chevron']}
-                    aria-hidden="true"
-                  />
-                </button>
-              ))}
-            </div>
-            <p className={styles['hint']}>
-              Proteinpulver und Shake-Milch tauchen in den Vorschlägen nie einzeln auf, nur als Shake.
-            </p>
-          </section>
-
-          <section className={styles['section']} aria-labelledby="shake-amounts">
-            <h2 id="shake-amounts" className={styles['sectionLabel']}>
-              Mengen
-            </h2>
-            <div className={styles['card']}>
-              <SettingRow label="Milch, großer Shake">
-                <Stepper
-                  label="Milch groß"
-                  value={amounts.bigMl}
-                  min={100}
-                  max={1000}
-                  step={50}
-                  unit="ml"
-                  onChange={(bigMl) => {
-                    change({ bigMl });
-                  }}
-                />
-              </SettingRow>
-              <SettingRow label="Milch, kleiner Shake">
-                <Stepper
-                  label="Milch klein"
-                  value={amounts.smallMl}
-                  min={50}
-                  max={600}
-                  step={50}
-                  unit="ml"
-                  onChange={(smallMl) => {
-                    change({ smallMl });
-                  }}
-                />
-              </SettingRow>
-              <SettingRow label="Proteinpulver" hint="pro Shake">
+                </span>
+                <ChevronRight size={20} strokeWidth={2.2} className={styles['chevron']} aria-hidden="true" />
+              </button>
+              <SettingRow label="Menge pro Shake">
                 <Stepper
                   label="Proteinpulver"
-                  value={amounts.powderG}
+                  value={grams}
                   min={10}
                   max={80}
                   step={5}
                   unit="g"
-                  onChange={(powderG) => {
-                    change({ powderG });
+                  onChange={(value) => {
+                    setGrams(value);
+                    powderSaver.schedule(value);
                   }}
                 />
               </SettingRow>
             </div>
           </section>
+
+          <section className={styles['section']} aria-labelledby="shake-liquids">
+            <h2 id="shake-liquids" className={styles['sectionLabel']}>
+              Flüssigkeit
+            </h2>
+            <div className={styles['pills']} role="group" aria-labelledby="shake-liquids">
+              {LIQUIDS.map((l) => (
+                <button
+                  key={l.key}
+                  type="button"
+                  className={styles['pill']}
+                  aria-pressed={liquids[l.key]}
+                  disabled={busy || (liquids[l.key] && selectedCount === 1)}
+                  onClick={() => {
+                    toggleLiquid(l.key);
+                  }}
+                >
+                  {liquids[l.key] && <Check size={16} strokeWidth={2.6} aria-hidden="true" />}
+                  {l.label}
+                </button>
+              ))}
+            </div>
+            <p className={styles['hint']}>
+              Jede gewählte Flüssigkeit gibt es als Groß (400 ml) und Klein (200 ml), mindestens eine bleibt
+              gewählt. 400 ml: Milch 1,5 % ≈ 188 kcal, Milch 3,5 % ≈ 256 kcal, Wasser 0 kcal. Der Zauberstab
+              nimmt die leichteste, wenn die Kalorien knapp sind, und die reichhaltigste, wenn noch viel offen
+              ist.
+            </p>
+          </section>
+
+          <ShakeRulesSection
+            values={thresholds}
+            onChange={(next) => {
+              setThresholds(next);
+              rulesSaver.schedule(next);
+            }}
+          />
         </>
       )}
 
-      {picking !== null && (
+      {picker?.kind === 'search' && (
         <FoodPickerSheet
-          title={SLOTS.find((s) => s.id === picking)?.label ?? ''}
-          onPick={(food) => void choose(picking, food)}
+          title="Aktuelles Proteinpulver"
+          onPick={(food) => void choosePowder(food)}
+          onScan={() => {
+            setPicker({ kind: 'scan' });
+          }}
+          onCreate={(name) => {
+            setPicker({
+              kind: 'product',
+              initial: { category: 'drinks', ...(name === '' ? {} : { name }) },
+            });
+          }}
           onClose={() => {
-            setPicking(null);
+            setPicker(null);
+          }}
+        />
+      )}
+
+      {picker?.kind === 'scan' && (
+        <ScannerSheet
+          open
+          onDetected={onDetected}
+          onClose={() => {
+            setPicker({ kind: 'search' });
+          }}
+        />
+      )}
+
+      {picker?.kind === 'product' && (
+        <ProductSheet
+          open
+          initial={picker.initial}
+          submitLabel="Speichern & verwenden"
+          onClose={() => {
+            setPicker({ kind: 'search' });
+          }}
+          onSubmit={async (draft) => {
+            if (draft.basis === 'per_unit') {
+              throw new Error(PER_UNIT_ERROR);
+            }
+            await choosePowder(await createFood(draft));
           }}
         />
       )}
@@ -207,10 +299,14 @@ export function ShakesPage({ settings, onBack }: { settings: Settings; onBack: (
 function FoodPickerSheet({
   title,
   onPick,
+  onScan,
+  onCreate,
   onClose,
 }: {
   title: string;
   onPick: (food: Food | null) => void;
+  onScan: () => void;
+  onCreate: (name: string) => void;
   onClose: () => void;
 }) {
   const [query, setQuery] = useState('');
@@ -255,6 +351,9 @@ function FoodPickerSheet({
             }}
           />
         </label>
+        <button type="button" className={addStyles['scan']} aria-label="Barcode scannen" onClick={onScan}>
+          <ScanBarcode size={22} strokeWidth={2.2} aria-hidden="true" />
+        </button>
       </div>
       <ul className={addStyles['list']}>
         <li>
@@ -286,6 +385,19 @@ function FoodPickerSheet({
           </li>
         ))}
       </ul>
+      <div className={addStyles['footer']}>
+        <Button variant="tonal" onClick={onScan}>
+          <ScanBarcode size={18} strokeWidth={2.2} aria-hidden="true" /> Scannen
+        </Button>
+        <Button
+          variant="tonal"
+          onClick={() => {
+            onCreate(trimmed);
+          }}
+        >
+          <Plus size={18} strokeWidth={2.2} aria-hidden="true" /> Produkt anlegen
+        </Button>
+      </div>
     </Sheet>
   );
 }

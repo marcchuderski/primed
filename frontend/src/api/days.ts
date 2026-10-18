@@ -21,8 +21,11 @@ export interface Settings {
   checkpoint: { offsetMin: number; pct: number; earliestMin: number };
   dayBoundaryMin: number;
   /** Foods used by the quick shakes (never suggested on their own). */
-  shakeFoods: { proteinPowder: number | null; milkLow: number | null; milkHigh: number | null };
-  shakeAmounts: { bigMl: number; smallMl: number; powderG: number };
+  shakeFoods: { proteinPowder: number | null };
+  /** Protein powder per shake in grams; sizes are fixed at 400/200 ml (D-139). */
+  shakePowderG: number;
+  /** Liquids the shakes are offered with (at least one). */
+  shakeLiquids: ShakeLiquids;
   /** Rating tolerance in percent (history, D-044). */
   tolerancePct: number;
   thresholds: Thresholds;
@@ -52,6 +55,12 @@ export const DEFAULT_SETTINGS_THRESHOLDS: Thresholds = {
   overKcalProtein: 30,
 };
 
+export interface ShakeLiquids {
+  milkLow: boolean;
+  milkHigh: boolean;
+  water: boolean;
+}
+
 /** Partial update for PATCH /settings (D-123). */
 export interface SettingsPatch {
   theme?: Settings['theme'];
@@ -63,11 +72,8 @@ export interface SettingsPatch {
   thresholds?: Partial<Thresholds>;
   shake?: Partial<{
     proteinPowderFoodId: number | null;
-    milkLowFoodId: number | null;
-    milkHighFoodId: number | null;
-    bigMl: number;
-    smallMl: number;
     powderG: number;
+    liquids: Partial<ShakeLiquids>;
   }>;
 }
 
@@ -176,18 +182,19 @@ export function parseSettings(value: unknown): Settings {
     checkpoint: { offsetMin: num(c['offsetMin']), pct: num(c['pct']), earliestMin: num(c['earliestMin']) },
     dayBoundaryMin: num(s['dayBoundaryMin']),
     shakeFoods: parseShakeFoods(s['shakeFoods']),
-    shakeAmounts: parseShakeAmounts(s['shakeAmounts']),
+    shakePowderG: s['shakePowderG'] === undefined ? 30 : num(s['shakePowderG']),
+    shakeLiquids: parseShakeLiquids(s['shakeLiquids']),
     tolerancePct: s['tolerancePct'] === undefined ? 5 : num(s['tolerancePct']),
     thresholds: parseThresholds(s['thresholds']),
     shakesEnabled: s['shakesEnabled'] !== false,
   };
 }
 
-function parseShakeAmounts(value: unknown): Settings['shakeAmounts'] {
+function parseShakeLiquids(value: unknown): ShakeLiquids {
   if (!isRecord(value)) {
-    return { bigMl: 400, smallMl: 200, powderG: 30 };
+    return { milkLow: true, milkHigh: true, water: true };
   }
-  return { bigMl: num(value['bigMl']), smallMl: num(value['smallMl']), powderG: num(value['powderG']) };
+  return { milkLow: bool(value['milkLow']), milkHigh: bool(value['milkHigh']), water: bool(value['water']) };
 }
 
 function parseThresholds(value: unknown): Thresholds {
@@ -202,14 +209,7 @@ function parseThresholds(value: unknown): Thresholds {
 }
 
 function parseShakeFoods(value: unknown): Settings['shakeFoods'] {
-  if (!isRecord(value)) {
-    return { proteinPowder: null, milkLow: null, milkHigh: null };
-  }
-  return {
-    proteinPowder: nullableNum(value['proteinPowder'] ?? null),
-    milkLow: nullableNum(value['milkLow'] ?? null),
-    milkHigh: nullableNum(value['milkHigh'] ?? null),
-  };
+  return { proteinPowder: isRecord(value) ? nullableNum(value['proteinPowder'] ?? null) : null };
 }
 
 export function parseDayType(value: unknown): DayType {

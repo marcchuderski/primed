@@ -196,3 +196,34 @@
   color: var(--text);
   font-weight: 700;
 }
+
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: var(--touch);
+  padding: 0 16px;
+  border: none;
+  border-radius: var(--r-pill);
+  background: var(--surface);
+  color: var(--text);
+  font: 600 14px var(--font-text);
+  cursor: pointer;
+}
+
+.pill[aria-pressed='true'] {
+  background: var(--accent-track);
+  color: var(--accent-text);
+  font-weight: 700;
+}
+
+/* The last selected liquid cannot be removed; it keeps its selected look. */
+.pill:disabled {
+  cursor: default;
+}

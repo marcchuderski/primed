@@ -51,9 +51,11 @@ const offSkyr = {
 };
 const shakes = [
   {
-    id: 'big',
-    name: 'Shake Groß 1,5 %',
-    label: 'Groß 1,5 %',
+    id: 'big_milk_low',
+    size: 'big',
+    liquid: 'milk_low',
+    name: 'Shake Groß · Milch 1,5 %',
+    label: 'Groß · Milch 1,5 %',
     nutrients: { kcal: 300.2, protein: 35.2, carbs: 21, sugar: 20.8, fat: 7.6 },
   },
 ];
@@ -126,18 +128,20 @@ describe('AddFlow', () => {
   it('shows shakes and "Häufig um diese Zeit" with the last amount', async () => {
     setup();
     expect(
-      await screen.findByRole('button', { name: /Shake Groß 1,5 % eintragen: 300 kcal, 35 g Protein/ }),
+      await screen.findByRole('button', {
+        name: /Shake Groß · Milch 1,5 % eintragen: 300 kcal, 35 g Protein/,
+      }),
     ).toBeInTheDocument();
     expect(await screen.findByText('134 kcal ·', { exact: false })).toHaveTextContent('1 Packung');
   });
 
   it('logs a shake with one tap at the rounded current time', async () => {
     const onAdded = setup();
-    await userEvent.click(await screen.findByRole('button', { name: /Shake Groß 1,5 % eintragen/ }));
+    await userEvent.click(await screen.findByRole('button', { name: /Shake Groß · Milch 1,5 % eintragen/ }));
     await waitFor(() => {
       expect(onAdded).toHaveBeenCalledOnce();
     });
-    expect(lastBody('/entries/shake')).toEqual({ date: '2026-10-19', timeMin: 885, shake: 'big' });
+    expect(lastBody('/entries/shake')).toEqual({ date: '2026-10-19', timeMin: 885, shake: 'big_milk_low' });
   });
 
   it('searches library, online and reference values and logs with the prefilled amount, also for yesterday', async () => {

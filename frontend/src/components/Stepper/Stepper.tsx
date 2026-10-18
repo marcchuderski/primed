@@ -12,17 +12,28 @@ interface StepperProps {
   /** Formatted value; defaults to the plain number. */
   format?: (value: number) => string;
   unit?: string;
+  disabled?: boolean;
 }
 
 /** Minus / value / plus (screen 19). Values are clamped to the server's ranges. */
-export function Stepper({ label, value, min, max, step, onChange, format = String, unit }: StepperProps) {
+export function Stepper({
+  label,
+  value,
+  min,
+  max,
+  step,
+  onChange,
+  format = String,
+  unit,
+  disabled = false,
+}: StepperProps) {
   return (
     <span className={styles['stepper']} role="group" aria-label={label}>
       <button
         type="button"
         className={styles['minus']}
         aria-label={`${label} verringern`}
-        disabled={value <= min}
+        disabled={disabled || value <= min}
         onClick={() => {
           onChange(Math.max(min, value - step));
         }}
@@ -37,7 +48,7 @@ export function Stepper({ label, value, min, max, step, onChange, format = Strin
         type="button"
         className={styles['plus']}
         aria-label={`${label} erhöhen`}
-        disabled={value >= max}
+        disabled={disabled || value >= max}
         onClick={() => {
           onChange(Math.min(max, value + step));
         }}

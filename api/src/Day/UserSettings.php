@@ -16,10 +16,9 @@ final class UserSettings
         public readonly int $earliestCheckpointMin,
         public readonly int $dayBoundaryMin,
         public readonly ?int $proteinPowderFoodId = null,
-        public readonly ?int $shakeMilkLowFoodId = null,
-        public readonly ?int $shakeMilkHighFoodId = null,
-        /** @var array{bigMl: int, smallMl: int, powderG: int} */
-        public readonly array $shakeAmounts = ['bigMl' => 400, 'smallMl' => 200, 'powderG' => 30],
+        public readonly int $shakePowderG = 30,
+        /** @var array{milkLow: bool, milkHigh: bool, water: bool} */
+        public readonly array $shakeLiquids = ['milkLow' => true, 'milkHigh' => true, 'water' => true],
         public readonly int $tolerancePct = 5,
         /** @var array<string, int> */
         public readonly array $thresholds = [],
@@ -43,12 +42,9 @@ final class UserSettings
                 'earliestMin' => $this->earliestCheckpointMin,
             ],
             'dayBoundaryMin' => $this->dayBoundaryMin,
-            'shakeFoods' => [
-                'proteinPowder' => $this->proteinPowderFoodId,
-                'milkLow' => $this->shakeMilkLowFoodId,
-                'milkHigh' => $this->shakeMilkHighFoodId,
-            ],
-            'shakeAmounts' => $this->shakeAmounts,
+            'shakeFoods' => ['proteinPowder' => $this->proteinPowderFoodId],
+            'shakePowderG' => $this->shakePowderG,
+            'shakeLiquids' => $this->shakeLiquids,
             'tolerancePct' => $this->tolerancePct,
             'shakesEnabled' => $this->shakesEnabled,
             'thresholds' => $this->thresholds,

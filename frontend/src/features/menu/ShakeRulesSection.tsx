@@ -1,10 +1,8 @@
-import { useState } from 'react';
-import { updateSettings, type Settings, type Thresholds } from '../../api/days.ts';
+import type { Thresholds } from '../../api/days.ts';
 import { Stepper } from '../../components/Stepper/Stepper.tsx';
 import { formatInt } from '../../domain/format.ts';
 import { formatClock } from '../../domain/time.ts';
-import { SettingRow, SettingsPage } from './SettingsPage.tsx';
-import { useAutoSave } from './useAutoSave.ts';
+import { SettingRow } from './SettingsPage.tsx';
 import styles from './Settings.module.css';
 
 interface Field {
@@ -60,8 +58,8 @@ const FIELDS: Field[] = [
   },
   {
     key: 'richMilkKcal',
-    label: 'Milch 3,5\u00a0% statt 1,5\u00a0%',
-    hint: 'ab so vielen kcal offen',
+    label: 'Reichhaltigere Flüssigkeit',
+    hint: 'z.\u00a0B. Milch 3,5\u00a0% statt Wasser, ab kcal offen',
     min: 100,
     max: 1000,
     step: 50,
@@ -88,24 +86,19 @@ const FIELDS: Field[] = [
   },
 ];
 
-/** Shake thresholds for the suggestions (BRIEFING §10). */
-export function SuggestionRulesPage({ settings, onBack }: { settings: Settings; onBack: () => void }) {
-  const [values, setValues] = useState(settings.thresholds);
-  const saver = useAutoSave(async (value: Thresholds) => {
-    await updateSettings({ thresholds: value });
-  });
-
+/** Shake thresholds for the suggestions (BRIEFING §10), shown inside the shakes page. */
+export function ShakeRulesSection({
+  values,
+  onChange,
+}: {
+  values: Thresholds;
+  onChange: (next: Thresholds) => void;
+}) {
   return (
-    <SettingsPage title="Vorschläge" onBack={onBack} status={saver.status} error={saver.error}>
-      <p className={styles['hint']}>
-        Wann der Zauberstab einen Shake vorschlägt und welchen. Protein hat immer Vorrang.
-      </p>
-      {!settings.shakesEnabled && (
-        <p className={styles['hint']} role="note">
-          Shakes sind ausgeschaltet. Diese Schwellen greifen erst wieder, wenn du Shakes einschaltest; bis
-          dahin schlägt der Zauberstab nur Essen vor.
-        </p>
-      )}
+    <section className={styles['section']} aria-labelledby="shake-rules">
+      <h2 id="shake-rules" className={styles['sectionLabel']}>
+        Vorschläge
+      </h2>
       <div className={styles['card']}>
         {FIELDS.map((f) => (
           <SettingRow key={f.key} label={f.label} hint={f.hint}>
@@ -118,14 +111,15 @@ export function SuggestionRulesPage({ settings, onBack }: { settings: Settings; 
               {...(f.unit === undefined ? {} : { unit: f.unit })}
               {...(f.format === undefined ? {} : { format: f.format })}
               onChange={(v) => {
-                const next = { ...values, [f.key]: v };
-                setValues(next);
-                saver.schedule(next);
+                onChange({ ...values, [f.key]: v });
               }}
             />
           </SettingRow>
         ))}
       </div>
-    </SettingsPage>
+      <p className={styles['hint']}>
+        Wann der Zauberstab einen Shake vorschlägt und welchen. Protein hat immer Vorrang.
+      </p>
+    </section>
   );
 }

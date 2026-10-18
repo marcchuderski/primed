@@ -34,6 +34,12 @@ interface AddSheetProps {
   onCook?: () => void;
 }
 
+const LIQUID_SHORT: Record<Shake['liquid'], string> = {
+  milk_low: '1,5 %',
+  milk_high: '3,5 %',
+  water: 'Wasser',
+};
+
 /** Screens 04 + 05: quick add (shakes, frequent at this time) and search (library, online, reference values). */
 export function AddSheet({
   open,
@@ -197,7 +203,9 @@ export function AddSheet({
                       onShake(shake);
                     }}
                   >
-                    <strong>{shake.label}</strong>
+                    <strong>
+                      {shake.size === 'big' ? 'Groß' : 'Klein'} · {LIQUID_SHORT[shake.liquid]}
+                    </strong>
                     <span>
                       {formatInt(shake.nutrients.kcal)} · {formatInt(shake.nutrients.protein)} g P
                     </span>

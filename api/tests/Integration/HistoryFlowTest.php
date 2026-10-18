@@ -17,7 +17,7 @@ final class HistoryFlowTest extends ApiTestCase
             $created = $this->call('POST', '/api/v1/entries/shake', [
                 'date' => $date,
                 'timeMin' => 600,
-                'shake' => 'big',
+                'shake' => 'big_milk_low',
             ], $user);
             self::assertSame(201, $created->status, $created->body);
         }

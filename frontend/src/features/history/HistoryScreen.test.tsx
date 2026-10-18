@@ -61,7 +61,9 @@ describe('HistoryScreen (6.2–6.4)', () => {
     render(<HistoryScreen />);
     expect(await screen.findByText('KW 43')).toBeInTheDocument();
     expect(screen.getByText('19.–25. Oktober')).toBeInTheDocument();
-    expect(ranges()).toEqual(['2026-10-19..2026-10-25']);
+    await waitFor(() => {
+      expect(ranges()).toEqual(['2026-10-19..2026-10-25']);
+    });
     expect(screen.getByRole('button', { name: 'Nächste Woche' })).toBeDisabled();
     await userEvent.click(screen.getByRole('button', { name: 'Nächste Woche' }));
     expect(screen.getByText('KW 43')).toBeInTheDocument();

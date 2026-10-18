@@ -18,13 +18,12 @@ import { checkpointSummary, shakesSummary, weekSummary } from './menuSummaries.t
 import { ProfilePage } from './ProfilePage.tsx';
 import { RatingPage } from './RatingPage.tsx';
 import { ShakesPage } from './ShakesPage.tsx';
-import { SuggestionRulesPage } from './SuggestionRulesPage.tsx';
 import { applyTheme } from './theme.ts';
 import { WeekTemplatePage } from './WeekTemplatePage.tsx';
 import styles from './MenuScreen.module.css';
 import common from './Settings.module.css';
 
-type Page = 'profile' | 'dayTypes' | 'week' | 'shakes' | 'checkpoints' | 'suggestions' | 'rating';
+type Page = 'profile' | 'dayTypes' | 'week' | 'shakes' | 'checkpoints' | 'rating';
 
 const THEMES: { id: Settings['theme']; label: string }[] = [
   { id: 'system', label: 'System' },
@@ -103,8 +102,6 @@ export function MenuScreen({ user, onClose }: { user: User; onClose: () => void 
         return <ShakesPage {...props} />;
       case 'checkpoints':
         return <CheckpointsPage {...props} />;
-      case 'suggestions':
-        return <SuggestionRulesPage {...props} />;
       case 'rating':
         return <RatingPage {...props} />;
     }
@@ -125,11 +122,6 @@ export function MenuScreen({ user, onClose }: { user: User; onClose: () => void 
             id: 'rating',
             name: 'Bewertung',
             meta: `Toleranz ±${String(data.settings.tolerancePct)} % im Verlauf`,
-          },
-          {
-            id: 'suggestions',
-            name: 'Vorschläge',
-            meta: data.settings.shakesEnabled ? 'Shake-Schwellen' : 'Shakes aus · nur Essen',
           },
           {
             id: 'shakes',

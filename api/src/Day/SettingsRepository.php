@@ -26,9 +26,8 @@ final class SettingsRepository
     /** Columns that may be changed via update(); never derived from user input. */
     private const UPDATABLE = [
         'checkpoint_offset_min', 'checkpoint_pct', 'earliest_checkpoint_min', 'earliest_training_min',
-        'tolerance_pct', 'shakes_enabled',
-        'protein_powder_food_id', 'shake_milk_low_food_id', 'shake_milk_high_food_id',
-        'shake_big_ml', 'shake_small_ml', 'shake_powder_g',
+        'tolerance_pct', 'shakes_enabled', 'protein_powder_food_id', 'shake_powder_g',
+        'shake_liquid_milk_low', 'shake_liquid_milk_high', 'shake_liquid_water',
         'sg_min_protein_gap', 'sg_big_shake_protein', 'sg_big_shake_kcal', 'sg_light_meal_kcal',
         'sg_rest_shake_from', 'sg_rich_milk_kcal', 'sg_over_kcal_protein',
     ];
@@ -42,8 +41,8 @@ final class SettingsRepository
         $statement = $this->pdo->prepare(
             'SELECT theme, protein_default, default_duration_min, earliest_training_min, checkpoint_offset_min,
                     checkpoint_pct, earliest_checkpoint_min, day_boundary_min,
-                    protein_powder_food_id, shake_milk_low_food_id, shake_milk_high_food_id,
-                    shake_big_ml, shake_small_ml, shake_powder_g, tolerance_pct, shakes_enabled, '
+                    protein_powder_food_id, shake_powder_g, shake_liquid_milk_low, shake_liquid_milk_high,
+                    shake_liquid_water, tolerance_pct, shakes_enabled, '
                     . implode(', ', self::THRESHOLDS) . '
                FROM user_settings WHERE user_id = ?',
         );
@@ -63,12 +62,11 @@ final class SettingsRepository
             Row::int($row, 'earliest_checkpoint_min'),
             Row::int($row, 'day_boundary_min'),
             ($row['protein_powder_food_id'] ?? null) === null ? null : Row::int($row, 'protein_powder_food_id'),
-            ($row['shake_milk_low_food_id'] ?? null) === null ? null : Row::int($row, 'shake_milk_low_food_id'),
-            ($row['shake_milk_high_food_id'] ?? null) === null ? null : Row::int($row, 'shake_milk_high_food_id'),
+            Row::int($row, 'shake_powder_g'),
             [
-                'bigMl' => Row::int($row, 'shake_big_ml'),
-                'smallMl' => Row::int($row, 'shake_small_ml'),
-                'powderG' => Row::int($row, 'shake_powder_g'),
+                'milkLow' => Row::int($row, 'shake_liquid_milk_low') === 1,
+                'milkHigh' => Row::int($row, 'shake_liquid_milk_high') === 1,
+                'water' => Row::int($row, 'shake_liquid_water') === 1,
             ],
             Row::int($row, 'tolerance_pct'),
             array_combine(

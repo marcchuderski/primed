@@ -32,13 +32,17 @@ async function loadData(settings: Settings): Promise<Data> {
     searchFoods({}),
     fetchDishes('active'),
   ]);
-  // Shake ingredients are only kept out while shakes are on (they are part of the shakes then).
-  const sf = settings.shakeFoods;
-  const excluded = settings.shakesEnabled
-    ? [sf.proteinPowder, sf.milkLow, sf.milkHigh].filter((id): id is number => id !== null)
-    : [];
+  // The protein powder is only kept out while shakes are on (it is part of the shakes then, D-122/D-139).
+  const powder = settings.shakeFoods.proteinPowder;
+  const excluded = settings.shakesEnabled && powder !== null ? [powder] : [];
   return {
-    shakes: shakes.map((s) => ({ id: s.id, name: s.name, nutrients: s.nutrients })),
+    shakes: shakes.map((s) => ({
+      id: s.id,
+      size: s.size,
+      liquid: s.liquid,
+      name: s.name,
+      nutrients: s.nutrients,
+    })),
     candidates: buildCandidates(foods, dishes, excluded),
   };
 }
