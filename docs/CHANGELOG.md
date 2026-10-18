@@ -3,7 +3,9 @@
 ## 2026-10-18 – Shake-Varianten
 - Migration `011_shake_liquids`: Größen fest (400/200 ml), Flüssigkeiten Milch 1,5 % / 3,5 % / Wasser wählbar, Milch-Produkte und Mengen-Einstellungen entfallen.
 - Bis zu sechs Shakes im „+“ (Groß/Klein je Flüssigkeit); der Zauberstab wählt die passende Flüssigkeit nach offenen Kalorien.
-- Einstellungen: „Vorschläge (Shake)“ an letzter Stelle, bei ausgeschalteten Shakes ausgegraut mit Hinweis.
+- Einstellungen: Vorschlags-Schwellen als Abschnitt in „Shakes“ (eigener Menüpunkt entfällt); Flüssigkeiten als Pills mit Häkchen.
+- Proteinpulver-Auswahl: direkt scannen oder neues Produkt anlegen; es landet in der Bibliothek und wird gewählt.
+- Bottom-Sheets: nur der Inhalt scrollt; Titel, Suchzeile und Aktions-Buttons bleiben stehen (Hinzufügen, Zutat suchen, Proteinpulver). Behebt den versetzten, durchscheinenden Footer.
 
 ## 2026-10-18 – Shakes optional, Einstellungs-Reihenfolge
 - Migration `010_shakes_enabled`; Schalter „Shakes verwenden“ mit Erklärung in Einstellungen › Shakes.

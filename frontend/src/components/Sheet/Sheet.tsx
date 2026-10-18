@@ -10,13 +10,26 @@ interface SheetProps {
   children: ReactNode;
   /** 'surface' (default) or 'bg' for sheets that contain their own surface cards (screen 06). */
   tone?: 'surface' | 'bg';
+  /** Fixed area between title and body, e.g. a search row; stays visible while the body scrolls. */
+  header?: ReactNode;
+  /** Fixed area below the body, e.g. actions; stays visible while the body scrolls. */
+  footer?: ReactNode;
 }
 
 /**
  * Bottom sheet (DESIGN.md §6): handle, title left, close right. Built on the native modal <dialog>,
  * which traps focus, makes the page behind inert and closes on Escape.
  */
-export function Sheet({ open, title, subtitle, onClose, children, tone = 'surface' }: SheetProps) {
+export function Sheet({
+  open,
+  title,
+  subtitle,
+  onClose,
+  children,
+  tone = 'surface',
+  header,
+  footer,
+}: SheetProps) {
   const ref = useRef<HTMLDialogElement>(null);
   const titleId = useId();
 
@@ -59,7 +72,9 @@ export function Sheet({ open, title, subtitle, onClose, children, tone = 'surfac
                 <X size={18} strokeWidth={2.2} aria-hidden="true" />
               </button>
             </div>
+            {header !== undefined && <div className={styles['header']}>{header}</div>}
             <div className={styles['body']}>{children}</div>
+            {footer !== undefined && <div className={styles['footer']}>{footer}</div>}
           </div>
         </>
       )}

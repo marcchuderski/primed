@@ -165,10 +165,6 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
-  position: sticky;
-  bottom: 0;
-  padding-top: 8px;
-  background: var(--bg);
 }
 
 .error {

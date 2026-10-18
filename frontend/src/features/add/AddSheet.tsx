@@ -133,32 +133,56 @@ export function AddSheet({
   const own = (library ?? []).filter((f) => f.type !== 'reference');
   const references = (library ?? []).filter((f) => f.type === 'reference');
 
-  return (
-    <Sheet open={open} title="Hinzufügen" onClose={onClose} tone="bg">
-      <div className={styles['searchRow']}>
-        <label className={styles['search']}>
-          <Search size={18} strokeWidth={2.2} aria-hidden="true" />
-          <input
-            type="search"
-            placeholder="Suchen …"
-            aria-label="Lebensmittel suchen"
-            autoComplete="off"
-            maxLength={60}
-            value={query}
-            onChange={(e) => {
-              setQuery(e.target.value);
-              if (e.target.value.trim() === '') {
-                setLibrary(null);
-                setOnline(null);
-              }
-            }}
-          />
-        </label>
-        <button type="button" className={styles['scan']} aria-label="Barcode scannen" onClick={onScan}>
-          <ScanBarcode size={22} strokeWidth={2.2} aria-hidden="true" />
-        </button>
-      </div>
+  const sheetHeader = (
+    <div className={styles['searchRow']}>
+      <label className={styles['search']}>
+        <Search size={18} strokeWidth={2.2} aria-hidden="true" />
+        <input
+          type="search"
+          placeholder="Suchen …"
+          aria-label="Lebensmittel suchen"
+          autoComplete="off"
+          maxLength={60}
+          value={query}
+          onChange={(e) => {
+            setQuery(e.target.value);
+            if (e.target.value.trim() === '') {
+              setLibrary(null);
+              setOnline(null);
+            }
+          }}
+        />
+      </label>
+      <button type="button" className={styles['scan']} aria-label="Barcode scannen" onClick={onScan}>
+        <ScanBarcode size={22} strokeWidth={2.2} aria-hidden="true" />
+      </button>
+    </div>
+  );
+  const sheetFooter = (
+    <div className={styles['footer']}>
+      <Button variant="tonal" onClick={onCook}>
+        <ChefHat size={18} strokeWidth={2.2} aria-hidden="true" /> Gericht zubereiten
+      </Button>
+      <Button
+        variant="tonal"
+        onClick={() => {
+          onCreate(trimmed);
+        }}
+      >
+        <Plus size={18} strokeWidth={2.2} aria-hidden="true" /> Produkt anlegen
+      </Button>
+    </div>
+  );
 
+  return (
+    <Sheet
+      open={open}
+      title="Hinzufügen"
+      onClose={onClose}
+      tone="bg"
+      header={sheetHeader}
+      footer={sheetFooter}
+    >
       {error !== null && (
         <p className={styles['error']} role="alert">
           {error}
@@ -277,20 +301,6 @@ export function AddSheet({
           )}
         </>
       )}
-
-      <div className={styles['footer']}>
-        <Button variant="tonal" onClick={onCook}>
-          <ChefHat size={18} strokeWidth={2.2} aria-hidden="true" /> Gericht zubereiten
-        </Button>
-        <Button
-          variant="tonal"
-          onClick={() => {
-            onCreate(trimmed);
-          }}
-        >
-          <Plus size={18} strokeWidth={2.2} aria-hidden="true" /> Produkt anlegen
-        </Button>
-      </div>
     </Sheet>
   );
 }

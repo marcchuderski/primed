@@ -330,27 +330,53 @@ function FoodPickerSheet({
     };
   }, [trimmed]);
 
+  const sheetHeader = (
+    <div className={addStyles['searchRow']}>
+      <label className={addStyles['search']}>
+        <Search size={18} strokeWidth={2.2} aria-hidden="true" />
+        <input
+          type="search"
+          placeholder="Suchen …"
+          aria-label="Bibliothek durchsuchen"
+          autoComplete="off"
+          maxLength={60}
+          value={query}
+          onChange={(e) => {
+            setQuery(e.target.value);
+          }}
+        />
+      </label>
+      <button type="button" className={addStyles['scan']} aria-label="Barcode scannen" onClick={onScan}>
+        <ScanBarcode size={22} strokeWidth={2.2} aria-hidden="true" />
+      </button>
+    </div>
+  );
+  const sheetFooter = (
+    <div className={addStyles['footer']}>
+      <Button variant="tonal" onClick={onScan}>
+        <ScanBarcode size={18} strokeWidth={2.2} aria-hidden="true" /> Scannen
+      </Button>
+      <Button
+        variant="tonal"
+        onClick={() => {
+          onCreate(trimmed);
+        }}
+      >
+        <Plus size={18} strokeWidth={2.2} aria-hidden="true" /> Produkt anlegen
+      </Button>
+    </div>
+  );
+
   return (
-    <Sheet open title={title} subtitle="aus deiner Bibliothek" onClose={onClose} tone="bg">
-      <div className={addStyles['searchRow']}>
-        <label className={addStyles['search']}>
-          <Search size={18} strokeWidth={2.2} aria-hidden="true" />
-          <input
-            type="search"
-            placeholder="Suchen …"
-            aria-label="Bibliothek durchsuchen"
-            autoComplete="off"
-            maxLength={60}
-            value={query}
-            onChange={(e) => {
-              setQuery(e.target.value);
-            }}
-          />
-        </label>
-        <button type="button" className={addStyles['scan']} aria-label="Barcode scannen" onClick={onScan}>
-          <ScanBarcode size={22} strokeWidth={2.2} aria-hidden="true" />
-        </button>
-      </div>
+    <Sheet
+      open
+      title={title}
+      subtitle="aus deiner Bibliothek"
+      onClose={onClose}
+      tone="bg"
+      header={sheetHeader}
+      footer={sheetFooter}
+    >
       <ul className={addStyles['list']}>
         <li>
           <button
@@ -381,19 +407,6 @@ function FoodPickerSheet({
           </li>
         ))}
       </ul>
-      <div className={addStyles['footer']}>
-        <Button variant="tonal" onClick={onScan}>
-          <ScanBarcode size={18} strokeWidth={2.2} aria-hidden="true" /> Scannen
-        </Button>
-        <Button
-          variant="tonal"
-          onClick={() => {
-            onCreate(trimmed);
-          }}
-        >
-          <Plus size={18} strokeWidth={2.2} aria-hidden="true" /> Produkt anlegen
-        </Button>
-      </div>
     </Sheet>
   );
 }

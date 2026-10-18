@@ -108,7 +108,7 @@ Bewertet wird nur die **kcal-Bilanz gegen das Tagessoll, Toleranz ±5 %**. Drei 
 
 **Listeneintrag:** Titel + Menge, darunter Makrozeile (Protein in `--accent-text`), Uhrzeit rechts. Wischen löscht, Tap bearbeitet. Keine Mahlzeiten-Slots.
 
-**Bottom-Sheets** für Hinzufügen, Suche, Menge, Tagesart, Vorschläge: Griff oben, Titel links, Schließen rechts, Primärbutton unten.
+**Bottom-Sheets** für Hinzufügen, Suche, Menge, Tagesart, Vorschläge: Griff oben, Titel links, Schließen rechts, Primärbutton unten. Nur der Inhalt scrollt, Griff und Titel bleiben stehen. In Such-Sheets (Hinzufügen, Zutat suchen, Proteinpulver) bleiben auch Suchzeile und Schnellzugriffe (Scannen, Produkt anlegen) fest; in allen anderen Sheets steht der Hauptbutton am Ende des Inhalts (D-142).
 
 **Eingaben**
 - Mengen: Einheiten-Segment **g · ml · EL · TL · Packung** über der Zahl; nur zur Produkt-Basis passende Einheiten sind aktiv (100 g: g/EL/TL/Packung · 100 ml: ml/EL/TL/Packung · Stück: Stück/Packung). Große Zahl mit −/+, darunter die Umrechnung („2 EL = 30 g · 1 EL = 15 g“), Schnellwahl-Chips passend zur Einheit (z. B. 1 / 2 / 3 EL), letzte Menge vorausgefüllt. Gleiches Muster für Meal-Prep-Zutaten (Screen 17).

@@ -76,6 +76,46 @@ export function IngredientSearchSheet({
     };
   }, [trimmed]);
 
+  const sheetHeader = (
+    <div className={styles['searchRow']}>
+      <label className={styles['search']}>
+        <Search size={18} strokeWidth={2.2} aria-hidden="true" />
+        <input
+          type="search"
+          placeholder="Zutat suchen …"
+          aria-label="Zutat suchen"
+          autoComplete="off"
+          maxLength={60}
+          value={query}
+          onChange={(e) => {
+            setQuery(e.target.value);
+            if (e.target.value.trim().length < 3) {
+              setOnline([]);
+            }
+          }}
+        />
+      </label>
+      <button type="button" className={styles['scan']} aria-label="Barcode scannen" onClick={onScan}>
+        <ScanBarcode size={22} strokeWidth={2.2} aria-hidden="true" />
+      </button>
+    </div>
+  );
+  const sheetFooter = (
+    <div className={styles['footer']}>
+      <Button variant="tonal" onClick={onScan}>
+        <ScanBarcode size={18} strokeWidth={2.2} aria-hidden="true" /> Scannen
+      </Button>
+      <Button
+        variant="tonal"
+        onClick={() => {
+          onCreate(trimmed);
+        }}
+      >
+        <Plus size={18} strokeWidth={2.2} aria-hidden="true" /> Produkt anlegen
+      </Button>
+    </div>
+  );
+
   return (
     <Sheet
       open={open}
@@ -83,30 +123,9 @@ export function IngredientSearchSheet({
       subtitle={`für ${dishName === '' ? 'dein Gericht' : dishName}`}
       onClose={onClose}
       tone="bg"
+      header={sheetHeader}
+      footer={sheetFooter}
     >
-      <div className={styles['searchRow']}>
-        <label className={styles['search']}>
-          <Search size={18} strokeWidth={2.2} aria-hidden="true" />
-          <input
-            type="search"
-            placeholder="Zutat suchen …"
-            aria-label="Zutat suchen"
-            autoComplete="off"
-            maxLength={60}
-            value={query}
-            onChange={(e) => {
-              setQuery(e.target.value);
-              if (e.target.value.trim().length < 3) {
-                setOnline([]);
-              }
-            }}
-          />
-        </label>
-        <button type="button" className={styles['scan']} aria-label="Barcode scannen" onClick={onScan}>
-          <ScanBarcode size={22} strokeWidth={2.2} aria-hidden="true" />
-        </button>
-      </div>
-
       <section className={styles['section']} aria-label="Deine Bibliothek">
         <h3 className={styles['sectionTitle']}>Deine Bibliothek</h3>
         {foods.length === 0 && <p className={styles['empty']}>Nichts gefunden.</p>}
@@ -166,20 +185,6 @@ export function IngredientSearchSheet({
           </ul>
         </section>
       )}
-
-      <div className={styles['footer']}>
-        <Button variant="tonal" onClick={onScan}>
-          <ScanBarcode size={18} strokeWidth={2.2} aria-hidden="true" /> Scannen
-        </Button>
-        <Button
-          variant="tonal"
-          onClick={() => {
-            onCreate(trimmed);
-          }}
-        >
-          <Plus size={18} strokeWidth={2.2} aria-hidden="true" /> Produkt anlegen
-        </Button>
-      </div>
     </Sheet>
   );
 }
