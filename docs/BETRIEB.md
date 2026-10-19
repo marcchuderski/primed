@@ -65,6 +65,6 @@ Ein User hat sein Passwort vergessen: `user-password.php` ausführen, neues Pass
 | API antwortet mit 500 | `primed-app/var/log/app.log` lesen; häufig: `.env` fehlt/falsch, `var/log/` nicht schreibbar, Migration fehlt. |
 | Login immer „falsch“, obwohl richtig | Rate-Limit greift (15 min warten) oder Passwort per CLI zurücksetzen. |
 | Barcode-/Online-Suche liefert nichts | Open Food Facts nicht erreichbar oder Rate-Limit; `OFF_CONTACT_EMAIL` in der `.env` gesetzt? Manuelle Eingabe funktioniert weiter. |
-| Seite vom eigenen Rechner plötzlich nicht erreichbar (`Failed to connect`) | Fail2Ban hat die IP gesperrt (z. B. nach `check-headers.sh`, ModSecurity erkennt die Proben auf `.env`/`.git`): Plesk › Tools & Einstellungen › IP-Adressensperre (Fail2Ban) › Gesperrte IP-Adressen › Entsperren. |
+| Seite vom eigenen Rechner plötzlich nicht erreichbar (`Failed to connect`) | Fail2Ban (Jail `plesk-apache`) hat die IP gesperrt (z. B. nach `check-headers.sh`, die Proben auf `.env`/`.git` erzeugen 403-Antworten): Plesk › Tools & Einstellungen › IP-Adressensperre (Fail2Ban) › Gesperrte IP-Adressen › Entsperren. |
 | Sicherheits-Header fehlen (`check-headers.sh`) | Plesk › Apache & nginx: intelligente Bearbeitung und Direktauslieferung statischer Dateien aus; `.htaccess` hochgeladen (SFTP zeigt Dotfiles oft nicht an)? |
 | Kamera startet nicht | nur über HTTPS und mit Kamera-Freigabe im Browser; im iPhone unter Einstellungen › Safari › Kamera. |
