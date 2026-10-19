@@ -38,7 +38,7 @@ final class FoodService
      */
     public function search(int $userId, ?string $query, ?string $category, ?string $type, bool $mealPrep): array
     {
-        if ($query !== null && mb_strlen($query, 'UTF-8') > 60) {
+        if ($query !== null && (!mb_check_encoding($query, 'UTF-8') || mb_strlen($query, 'UTF-8') > 60)) {
             throw Input::invalid('Der Suchbegriff ist zu lang.');
         }
 
@@ -140,6 +140,9 @@ final class FoodService
     public function searchOnline(int $userId, string $query): array
     {
         $query = trim($query);
+        if (!mb_check_encoding($query, 'UTF-8')) {
+            throw Input::invalid('Bitte gib 2 bis 60 Zeichen ein.');
+        }
         $length = mb_strlen($query, 'UTF-8');
         if ($length < 2 || $length > 60 || preg_match('/\p{C}/u', $query) === 1) {
             throw Input::invalid('Bitte gib 2 bis 60 Zeichen ein.');

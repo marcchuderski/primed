@@ -294,3 +294,5 @@ Neue Einträge unten anhängen. Getroffene Entscheidungen werden nicht gelöscht
 **D-149 · Barrierefreiheit-Check gestrichen** – der A11y-Teil von 7.5 entfällt; 7.5 umfasst nur noch das abschließende Security Audit. Die Grundregeln aus DESIGN.md §10 gelten weiter. · Nutzer · 2026-10-19
 
 **D-150 · Doku-Aufteilung** – Einrichtung/Release bleiben in `DEPLOYMENT.md`, laufender Betrieb in `BETRIEB.md`, Nutzer-Anleitung in `ANLEITUNG.md` (Du-Form, Inhalt von Screen 18 und Hinweis aus Screen 20 wörtlich übernommen). · Claude · 2026-10-19
+
+**D-151 · Funde aus dem Abschluss-Audit (7.5)** – DB-Fehler nur mit SQLSTATE loggen; IP-HMAC-Präfix (12 Hex) in Login-Ereignissen; OFF-Cache bei jedem Schreiben bereinigen (statt Zufall oder Cron, Index auf `fetched_at`); Sicherheits-Header ohne `<IfModule>` (fail closed); HTTPS-Weiterleitung auch in `api/.htaccess`; Client-IP hinter nginx, nginx-Direktauslieferung und Trusted Types werden im ersten Deploy-Check auf dem Server geprüft (lokal nicht prüfbar). · Claude · 2026-10-19

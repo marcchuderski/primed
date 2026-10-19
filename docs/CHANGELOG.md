@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-19 – 7.5 Abschließendes Security Audit
+- Barrierefreiheit-Check gestrichen (Nutzer).
+- API: Datenbankfehler im Log nur noch als SQLSTATE; Login-Ereignisse mit kurzem IP-HMAC; Open-Food-Facts-Cache räumt sich selbst auf (> 30 Tage); Suchbegriffe mit ungültigem UTF-8 → 422.
+- `.htaccess`: Sicherheits-Header fail closed (ohne `<IfModule>`), `/api/` leitet HTTP selbst auf HTTPS um.
+- `check-headers.sh`: prüft auch Header auf Assets und die HTTPS-Weiterleitung der API.
+- `DEPLOYMENT.md`: Abschnitt „Erster Deploy-Check“ (echte Client-IP, nginx-Direktauslieferung aus, Smoke-Test auf Geräten, Trusted Types).
+
 ## 2026-10-19 – 7.6 Doku
 - Neu: `docs/BETRIEB.md` (Admin: User-CLI, Migrationen, Backups, Logs, Schlüsselwechsel, Störungen) und `docs/ANLEITUNG.md` (Nutzer: Login, App-Installation iPhone/Android, Bedienung, Einstellungen, Gesundheits-Hinweis, Daten).
 - `DEPLOYMENT.md` und `README.md` verlinken beide.

@@ -37,12 +37,14 @@ final class AuthService
         $now = $this->clock->now();
         $normalized = mb_substr(UsernameNormalizer::normalize($username), 0, 64, 'UTF-8');
         $ipHash = $this->ipHasher->hash($clientIp);
+        // Short HMAC prefix: correlates events per client without storing the IP (SECURITY.md).
+        $ipRef = substr(bin2hex($ipHash), 0, 12);
         // Runs on every attempt (indexed DELETE) so failed-login floods cannot grow the table unbounded.
         $this->purge($now);
 
         $retryAfter = $this->rateLimiter->retryAfter($normalized, $ipHash, $now);
         if ($retryAfter !== null) {
-            $this->logger->log('warning', 'Login throttled', ['retryAfter' => $retryAfter]);
+            $this->logger->log('warning', 'Login throttled', ['retryAfter' => $retryAfter, 'ip' => $ipRef]);
             throw AuthException::rateLimited($retryAfter);
         }
 
@@ -53,13 +55,17 @@ final class AuthService
         if ($user === null) {
             $this->hasher->verifyDummy($password);
             $this->attempts->record($normalized, $ipHash, false, $now);
-            $this->logger->log('notice', 'Login failed', ['reason' => 'unknown_user']);
+            $this->logger->log('notice', 'Login failed', ['reason' => 'unknown_user', 'ip' => $ipRef]);
             throw AuthException::invalidCredentials();
         }
 
         if (!$this->hasher->verify($password, $user->passwordHash)) {
             $this->attempts->record($normalized, $ipHash, false, $now);
-            $this->logger->log('notice', 'Login failed', ['userId' => $user->id, 'reason' => 'wrong_password']);
+            $this->logger->log('notice', 'Login failed', [
+                'userId' => $user->id,
+                'reason' => 'wrong_password',
+                'ip' => $ipRef,
+            ]);
             throw AuthException::invalidCredentials();
         }
 
@@ -74,7 +80,7 @@ final class AuthService
         $absolute = $now->modify('+' . $this->absoluteDays . ' days');
         $expires = self::earliest($now->modify('+' . $this->idleDays . ' days'), $absolute);
         $this->sessions->create($user->id, $tokenHash, $now, $expires, $absolute);
-        $this->logger->log('info', 'Login succeeded', ['userId' => $user->id]);
+        $this->logger->log('info', 'Login succeeded', ['userId' => $user->id, 'ip' => $ipRef]);
 
         return new LoginResult($user, $token, $this->csrf->forSession($tokenHash), $expires);
     }

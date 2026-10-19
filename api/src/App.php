@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Primed;
 
+use PDOException;
 use Primed\Http\HttpException;
 use Primed\Http\OriginGuard;
 use Primed\Http\Request;
@@ -47,7 +48,8 @@ final class App
             // Internal details go to the log only, never to the client.
             $this->logger->log('error', 'Unhandled exception', [
                 'type' => $e::class,
-                'message' => $e->getMessage(),
+                // Driver messages can echo user data (e.g. "Duplicate entry 'name'"): log only the SQLSTATE.
+                'message' => $e instanceof PDOException ? 'SQLSTATE ' . (string) $e->getCode() : $e->getMessage(),
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
                 'method' => $request->method,

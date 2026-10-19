@@ -129,6 +129,8 @@ final class OffClient
             'INSERT INTO off_cache (cache_key, payload, fetched_at) VALUES (?, ?, ?)
              ON DUPLICATE KEY UPDATE payload = VALUES(payload), fetched_at = VALUES(fetched_at)',
         )->execute([$key, $payload, Db::dateTime($this->clock->now())]);
+        // Keep the cache bounded: nothing is used beyond the longest TTL (indexed delete, cheap).
+        $this->purge($this->clock->now()->modify('-' . self::HIT_TTL_DAYS . ' days'));
     }
 
     /**
@@ -192,7 +194,7 @@ final class OffClient
         return is_array($data) ? $data : [];
     }
 
-    /** Removes stale cache rows (called opportunistically). */
+    /** Removes stale cache rows (called on every write). */
     public function purge(DateTimeImmutable $before): void
     {
         $this->pdo->prepare('DELETE FROM off_cache WHERE fetched_at < ?')->execute([Db::dateTime($before)]);

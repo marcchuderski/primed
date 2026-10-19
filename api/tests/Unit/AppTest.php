@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Primed\Tests\Unit;
 
+use PDOException;
 use PHPUnit\Framework\TestCase;
 use Primed\App;
 use Primed\Http\Request;
@@ -73,6 +74,19 @@ final class AppTest extends TestCase
         self::assertStringNotContainsString('SQLSTATE', $response->body);
         self::assertCount(1, $this->logger->records);
         self::assertSame('error', $this->logger->records[0]['level']);
+    }
+
+    public function testDatabaseErrorsAreLoggedWithoutDriverMessage(): void
+    {
+        $router = Kernel::routes();
+        $router->add('GET', '/v1/boom', static function (): Response {
+            throw new PDOException("SQLSTATE[23000]: Duplicate entry 'marcch' for key 'uniq_username'", 23000);
+        });
+
+        (new App($router, $this->logger))->handle(new Request('GET', '/api/v1/boom'));
+
+        self::assertSame('SQLSTATE 23000', $this->logger->records[0]['context']['message'] ?? null);
+        self::assertStringNotContainsString('marcch', (string) json_encode($this->logger->records));
     }
 
     private function app(): App

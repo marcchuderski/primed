@@ -234,6 +234,8 @@ final class AuthFlowTest extends DatabaseTestCase
         self::assertStringNotContainsString(self::PASSWORD, $logs);
         self::assertStringNotContainsString('falsch falsch falsch', $logs);
         self::assertStringNotContainsString($token, $logs);
+        // Security events carry a short IP-HMAC reference, never the IP itself.
+        self::assertMatchesRegularExpression('/"ip":"[0-9a-f]{12}"/', $logs);
     }
 
     public function testOldLoginAttemptsArePurgedOnEveryAttempt(): void

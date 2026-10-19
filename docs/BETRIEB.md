@@ -26,6 +26,8 @@ Eine Registrierung im Web gibt es nicht; Konten legt nur der Betreiber an (D-063
 | Passwort zurücksetzen | `… user-password.php [--set-password]` | ohne Option zufälliges Passwort; **beendet alle Sessions** des Users. |
 | Konto löschen | in der App: Menü › Profil › Konto löschen (mit Passwort) | löscht alle Daten des Users. Einen CLI-Befehl dafür gibt es nicht; ein direktes `DELETE FROM users` in phpMyAdmin scheitert an der Wochenvorlage (Fremdschlüssel `RESTRICT`) und ist nicht vorgesehen. |
 
+Löschwunsch eines Users, der sein Passwort nicht mehr kennt: `user-password.php` ausführen, mit dem neuen Passwort anmelden (gemeinsam oder durch den User) und unter Menü › Profil › Konto löschen.
+
 Ein User hat sein Passwort vergessen: `user-password.php` ausführen, neues Passwort sicher übergeben. Der User kann es danach unter Menü › Profil selbst ändern.
 
 ## Migrationen
@@ -42,14 +44,14 @@ Ein User hat sein Passwort vergessen: `user-password.php` ausführen, neues Pass
 
 ## Logs
 
-- `primed-app/var/log/app.log`: JSON-Zeilen mit Fehlern und Sicherheitsereignissen (Login ok/fehlgeschlagen, Sperre, Logout überall, Passwortwechsel). Passwörter, Tokens, Cookies und Schlüssel werden geschwärzt; IPs stehen nur als HMAC drin.
-- Es gibt keine automatische Rotation. Gelegentlich prüfen (`ls -lh primed-app/var/log/`) und bei Bedarf archivieren oder leeren; Inhalte nicht länger als nötig aufbewahren (Vorschlag: 90 Tage).
+- `primed-app/var/log/app.log`: JSON-Zeilen mit Fehlern und Sicherheitsereignissen (Login ok/fehlgeschlagen, Sperre, Logout überall, Passwortwechsel). Passwörter, Tokens, Cookies und Schlüssel werden geschwärzt; IPs stehen nur als kurzes HMAC-Präfix (`ip`) drin, Datenbankfehler nur als SQLSTATE.
+- Es gibt keine automatische Rotation. Gelegentlich prüfen (`ls -lh primed-app/var/log/`) und bei Bedarf archivieren oder leeren; höchstens 90 Tage aufbewahren (SECURITY.md).
 - Auffälligkeiten: viele `login_failed` für einen Username oder viele Sperren → Passwort des Users zurücksetzen, ggf. betroffene IP-Bereiche in Plesk sperren.
-- Login-Versuche in der DB werden nach 30 Tagen, abgelaufene Sessions beim Login automatisch gelöscht.
+- Login-Versuche in der DB werden nach 30 Tagen, abgelaufene Sessions beim Login, Open-Food-Facts-Cache nach 30 Tagen automatisch gelöscht.
 
 ## Sicherheitsprüfung im Betrieb
 
-- Nach jedem Release: `scripts/check-headers.sh https://primed.dev-pfeffermond.de` (Header, CSP, HSTS, PWA-Dateien, keine Dotfiles erreichbar).
+- Nach jedem Release: `scripts/check-headers.sh https://primed.dev-pfeffermond.de` (Header auf Seite und Assets, CSP, HSTS, PWA-Dateien, HTTPS-Weiterleitung, keine Dotfiles erreichbar). Schlägt der Asset-Teil fehl, liefert nginx statische Dateien direkt aus (siehe `DEPLOYMENT.md`, Einrichtung Punkt 7).
 - Vor jedem Release lokal: `npm audit` (Frontend) und `composer audit` (API); Funde nach `SECURITY.md` bewerten.
 - `APP_KEY` wechseln (z. B. nach Verdacht auf Leck): neuen Wert in `.env` eintragen. Folge: bestehende CSRF-Tokens werden ungültig (Seite neu laden genügt), die IP-HMACs der Login-Versuche passen nicht mehr (unkritisch). Sessions bleiben gültig; alle User abmelden geht per `UPDATE sessions SET revoked_at = NOW() WHERE revoked_at IS NULL;`.
 - DB-Passwort wechseln: in Plesk ändern, dann `DB_PASS` in der `.env` anpassen.

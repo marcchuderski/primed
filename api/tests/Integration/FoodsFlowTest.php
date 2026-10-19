@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Primed\Tests\Integration;
 
+use PDO;
+
 /**
  * Library and Open Food Facts proxy through the HTTP kernel (roadmap 3.1, 3.4, 3.6, 3.7).
  */
@@ -145,6 +147,26 @@ final class FoodsFlowTest extends ApiTestCase
         $this->call('GET', '/api/v1/foods/barcode/4006381333931');
         self::assertCount(1, $this->offFetcher->requests, 'second lookup must come from the cache');
         self::assertStringStartsWith('https://world.openfoodfacts.org/', $this->offFetcher->requests[0]);
+    }
+
+    public function testOffCacheIsPurgedOnWrite(): void
+    {
+        $this->pdo->exec("INSERT INTO off_cache (cache_key, payload, fetched_at) VALUES
+            ('barcode:old', NULL, '2026-09-01 00:00:00'), ('barcode:recent', NULL, '2026-10-01 00:00:00')");
+        $this->offFetcher->responses['search.openfoodfacts.org'] = (string) json_encode(['hits' => []]);
+
+        self::assertSame(200, $this->call('GET', '/api/v1/off/search?q=skyr')->status);
+
+        $statement = $this->pdo->query("SELECT cache_key FROM off_cache WHERE cache_key LIKE 'barcode:%'");
+        self::assertNotFalse($statement);
+        $keys = $statement->fetchAll(PDO::FETCH_COLUMN);
+        self::assertSame(['barcode:recent'], $keys, 'rows older than the longest TTL (30 days) are removed');
+    }
+
+    public function testSearchRejectsInvalidUtf8(): void
+    {
+        self::assertSame(422, $this->call('GET', '/api/v1/off/search?q=' . rawurlencode("sky\xC3r"))->status);
+        self::assertSame(422, $this->call('GET', '/api/v1/foods?q=' . rawurlencode("sky\xC3r"))->status);
     }
 
     public function testBarcodeErrors(): void

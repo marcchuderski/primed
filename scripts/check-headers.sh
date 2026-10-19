@@ -37,6 +37,18 @@ check_header "$BASE/manifest.webmanifest" "Content-Type" "application/manifest+j
 check_header "$BASE/pwa/icon-192.png" "Content-Type" "image/png"
 check_status "$BASE/pwa/missing.png" 404
 
+echo "Static assets (must get headers from Apache, not only from nginx)"
+asset=$("${CURL[@]}" "$BASE/" | grep -o '/assets/theme-init-[0-9a-f]\{8\}\.js' | head -1 || true)
+if [[ -n "$asset" ]]; then
+  for h in "Content-Security-Policy:default-src 'none'" "X-Content-Type-Options:nosniff" \
+    "Cross-Origin-Resource-Policy:same-origin" "Cache-Control:immutable" "Content-Type:javascript"; do
+    check_header "$BASE$asset" "${h%%:*}" "${h#*:}"
+  done
+else
+  bad "theme-init script not referenced in index.html"
+fi
+check_status "$BASE/assets/missing-00000000.js" 404
+
 echo "API"
 check_status "$BASE/api/v1/health" 200
 check_header "$BASE/api/v1/health" "Cache-Control" "no-store"
@@ -58,7 +70,9 @@ done
 
 echo "HTTP → HTTPS"
 http_url="${BASE/https:/http:}"
-status=$("${CURL[@]}" -o /dev/null -w '%{http_code} %{redirect_url}' "$http_url/")
-if [[ "$status" == 30[18]\ https://* ]]; then pass "redirect ($status)"; else bad "no HTTPS redirect ($status)"; fi
+for path in / /api/v1/health; do
+  status=$("${CURL[@]}" -o /dev/null -w '%{http_code} %{redirect_url}' "$http_url$path")
+  if [[ "$status" == 30[18]\ https://* ]]; then pass "redirect $path ($status)"; else bad "no HTTPS redirect for $path ($status)"; fi
+done
 
 exit $fail

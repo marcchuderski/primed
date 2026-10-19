@@ -23,28 +23,25 @@ DirectoryIndex index.html
     RewriteRule ^ index.html [L]
 </IfModule>
 
-<IfModule mod_headers.c>
-    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
-    Header always set Content-Security-Policy "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; media-src 'self' blob:; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests"
-    Header always set X-Content-Type-Options "nosniff"
-    Header always set X-Frame-Options "DENY"
-    Header always set Referrer-Policy "no-referrer"
-    Header always set Permissions-Policy "camera=(self), microphone=(), geolocation=(), payment=(), usb=(), bluetooth=(), serial=(), hid=(), midi=(), magnetometer=(), gyroscope=(), accelerometer=(), display-capture=(), browsing-topics=()"
-    Header always set Cross-Origin-Opener-Policy "same-origin"
-    Header always set Cross-Origin-Resource-Policy "same-origin"
-    Header always unset X-Powered-By
-    Header unset Server
-</IfModule>
+# Security headers without <IfModule>: if mod_headers were missing, Apache fails with 500 instead of
+# silently serving pages without CSP/HSTS (fail closed).
+Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+Header always set Content-Security-Policy "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; media-src 'self' blob:; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests"
+Header always set X-Content-Type-Options "nosniff"
+Header always set X-Frame-Options "DENY"
+Header always set Referrer-Policy "no-referrer"
+Header always set Permissions-Policy "camera=(self), microphone=(), geolocation=(), payment=(), usb=(), bluetooth=(), serial=(), hid=(), midi=(), magnetometer=(), gyroscope=(), accelerometer=(), display-capture=(), browsing-topics=()"
+Header always set Cross-Origin-Opener-Policy "same-origin"
+Header always set Cross-Origin-Resource-Policy "same-origin"
+Header always unset X-Powered-By
 
 # Caching: the app shell must always be revalidated, hashed assets are immutable.
-<IfModule mod_headers.c>
-    <FilesMatch "\.(html|webmanifest)$|^sw\.js$">
-        Header set Cache-Control "no-cache"
-    </FilesMatch>
-    <FilesMatch "^.+-[A-Za-z0-9_-]{8}\.(js|css|woff2|svg|png)$">
-        Header set Cache-Control "public, max-age=31536000, immutable"
-    </FilesMatch>
-</IfModule>
+<FilesMatch "\.(html|webmanifest)$|^sw\.js$">
+    Header set Cache-Control "no-cache"
+</FilesMatch>
+<FilesMatch "^.+-[A-Za-z0-9_-]{8}\.(js|css|woff2|svg|png)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+</FilesMatch>
 
 <IfModule mod_mime.c>
     AddType font/woff2 .woff2

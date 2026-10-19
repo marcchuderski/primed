@@ -6,6 +6,11 @@ DirectoryIndex index.php
     RewriteEngine On
     RewriteBase /api/
 
+    # Enforce HTTPS here too: this file's rules replace the web root's, so its redirect does not apply.
+    RewriteCond %{HTTPS} !=on
+    RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
     # Existing files other than the front controller are never served (defense in depth).
     RewriteCond %{REQUEST_FILENAME} -f
     RewriteRule !^index\.php$ - [F,L]

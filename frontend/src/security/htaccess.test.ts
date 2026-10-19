@@ -1,4 +1,5 @@
 // Regression guard for the security headers in public/.htaccess (docs/SECURITY.md).
+import apiHtaccess from '../../../api/public/.htaccess?raw';
 import htaccess from '../../public/.htaccess?raw';
 
 function header(name: string): string {
@@ -45,5 +46,19 @@ describe('web root .htaccess', () => {
   it('blocks dotfiles and enforces HTTPS', () => {
     expect(htaccess).toContain('RewriteRule (^|/)\\.(?!well-known/) - [F,L]');
     expect(htaccess).toMatch(/RewriteRule \^ https:\/\/%\{HTTP_HOST\}%\{REQUEST_URI\} \[R=301,L\]/);
+  });
+
+  it('fails closed: security headers are not wrapped in <IfModule>', () => {
+    const csp = htaccess.indexOf('Header always set Content-Security-Policy');
+    const before = htaccess.slice(0, csp);
+    expect(before.lastIndexOf('<IfModule mod_headers.c>')).toBeLessThanOrEqual(
+      before.lastIndexOf('</IfModule>'),
+    );
+  });
+});
+
+describe('API .htaccess', () => {
+  it('enforces HTTPS itself (its rewrite rules replace the web root ones)', () => {
+    expect(apiHtaccess).toMatch(/RewriteRule \^ https:\/\/%\{HTTP_HOST\}%\{REQUEST_URI\} \[R=301,L\]/);
   });
 });
