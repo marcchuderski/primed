@@ -1,5 +1,5 @@
-import { X } from 'lucide-react';
-import { useId, useLayoutEffect, useRef, type ReactNode } from 'react';
+import { ChevronDown, X } from 'lucide-react';
+import { useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import styles from './Sheet.module.css';
 
 interface SheetProps {
@@ -38,7 +38,9 @@ export function Sheet({
   fullHeight = header !== undefined,
 }: SheetProps) {
   const ref = useRef<HTMLDialogElement>(null);
+  const bodyRef = useRef<HTMLDivElement>(null);
   const titleId = useId();
+  const moreBelow = useMoreBelow(bodyRef, open);
 
   // Layout effect: the dialog is open before children's effects run (e.g. wheels measuring scroll).
   useLayoutEffect(() => {
@@ -96,11 +98,61 @@ export function Sheet({
               </button>
             </div>
             {header !== undefined && <div className={styles['header']}>{header}</div>}
-            <div className={styles['body']}>{children}</div>
+            <div className={styles['bodyWrap']}>
+              <div ref={bodyRef} className={styles['body']}>
+                {children}
+              </div>
+              {moreBelow && (
+                <button
+                  type="button"
+                  className={styles['more']}
+                  aria-label="Nach unten scrollen"
+                  onClick={() => {
+                    const body = bodyRef.current;
+                    body?.scrollTo({ top: body.scrollHeight, behavior: 'smooth' });
+                  }}
+                >
+                  <ChevronDown size={20} strokeWidth={2.4} aria-hidden="true" />
+                </button>
+              )}
+            </div>
             {footer !== undefined && <div className={styles['footer']}>{footer}</div>}
           </div>
         </>
       )}
     </dialog>
   );
+}
+
+/**
+ * True while the sheet body has content below the visible area (D-163): a round arrow at the bottom says
+ * "there is more", e.g. the main button at the end of the quantity sheet. Re-checked on scroll, on content
+ * changes (data arriving) and on resize.
+ */
+function useMoreBelow(bodyRef: { current: HTMLDivElement | null }, open: boolean): boolean {
+  const [more, setMore] = useState(false);
+
+  useEffect(() => {
+    const body = bodyRef.current;
+    if (!open || body === null) {
+      setMore(false);
+      return;
+    }
+    const check = () => {
+      setMore(body.scrollTop + body.clientHeight < body.scrollHeight - 12);
+    };
+    const frame = window.requestAnimationFrame(check);
+    body.addEventListener('scroll', check, { passive: true });
+    window.addEventListener('resize', check);
+    const observer = typeof MutationObserver === 'undefined' ? null : new MutationObserver(check);
+    observer?.observe(body, { childList: true, subtree: true, characterData: true });
+    return () => {
+      window.cancelAnimationFrame(frame);
+      body.removeEventListener('scroll', check);
+      window.removeEventListener('resize', check);
+      observer?.disconnect();
+    };
+  }, [bodyRef, open]);
+
+  return more;
 }

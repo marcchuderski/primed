@@ -76,7 +76,8 @@
   display: flex;
   flex-shrink: 0;
   justify-content: space-between;
-  align-items: center;
+  /* Top-aligned: long titles (food names) wrap, the close button stays at the first line. */
+  align-items: flex-start;
   gap: 12px;
 }
 
@@ -84,12 +85,16 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
+  min-width: 0;
+  /* Centres a one-line title on the 48px close button; longer titles wrap downwards. */
+  padding-top: 11px;
 }
 
 .title {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: 26px;
+  font-size: 22px;
+  line-height: 1.15;
   letter-spacing: -0.02em;
 }
 
@@ -119,6 +124,35 @@
   flex-shrink: 0;
   flex-direction: column;
   gap: 14px;
+}
+
+/* Holds the scrolling body and the "more below" arrow (D-163). */
+.bodyWrap {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* Floats over the content while more of it is below; tap scrolls to the end. */
+.more {
+  position: absolute;
+  left: 50%;
+  bottom: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin-left: -20px;
+  border: 1px solid var(--input-border);
+  border-radius: var(--r-pill);
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+  cursor: pointer;
+  animation: fade 200ms ease-out both;
 }
 
 /* Only the body scrolls. It bleeds into the sheet padding so focus outlines are not clipped. */

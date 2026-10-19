@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-19 – Mengen-Sheet kompakter
+- Fix: „Packung“ lief im Einheiten-Schalter über den Rand.
+- Mengenzahl und −/+ kleiner, damit „Hinzufügen“ näher rückt; Sheet-Titel kleiner, Schließen-Button oben am Titel.
+- Neuer runder Pfeil unten in Sheets, solange darunter noch Inhalt kommt; Tipp scrollt ans Ende.
+
 ## 2026-10-19 – Kategorie „Öle & Saucen“
 - Migration `013_sauces_category`; neue Kategorie in Bibliothek, Filter und Produkt-Formular. Online-Treffer für Öle, Fette, Saucen und Dressings landen automatisch dort.
 

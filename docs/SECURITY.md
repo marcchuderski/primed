@@ -53,6 +53,7 @@ Nach **jedem** Implementierungsschritt mit `agent-skills:security-and-hardening`
 
 | Datum | Schritt (Roadmap-ID) | Umfang | Funde | Maßnahmen | Status |
 |---|---|---|---|---|---|
+| 2026-10-19 | Mengen-Sheet kompakt, Scroll-Hinweis | CSS, Pfeil-Knopf im `Sheet` (Scroll-/Mutation-Beobachtung) | keine Angriffsfläche: reine Darstellung, keine Daten oder Endpunkte | – | erledigt |
 | 2026-10-19 | Kategorie Öle & Saucen | Migration 013 (ENUM erweitert), Allowlist in `FoodInput`, OFF-Zuordnung | keine neue Angriffsfläche: Kategorie bleibt serverseitig per Allowlist geprüft (unbekannte → 422), ENUM in der DB als zweite Grenze; Zuordnung nur aus festen Tag-Listen | – | erledigt |
 | 2026-10-19 | Sheet-Fokus | Dialog fokussiert sich selbst beim Öffnen, `overflow: clip`, Scroll-Rücksetzung | keine Angriffsfläche; Fokusfalle des nativen `<dialog>` bleibt (Fokus liegt im Dialog), Escape schließt weiter | – | erledigt |
 | 2026-10-19 | App-Icon dunkel | PNG-Icons und Master-SVG neu, Manifest `background_color` | keine Angriffsfläche: statische Bilddateien aus dem eigenen Repo (kein `data:`, CSP unverändert); Master-SVG ohne Skripte oder externe Verweise geprüft | – | erledigt |

@@ -1,4 +1,4 @@
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { Sheet } from './Sheet.tsx';
 
@@ -25,5 +25,23 @@ describe('Sheet (iOS open jump, D-161)', () => {
     dialog.scrollTop = 120;
     fireEvent.scroll(dialog);
     expect(dialog.scrollTop).toBe(0);
+  });
+
+  it('shows a "more below" arrow until the end of the content is reached (D-163)', () => {
+    render(
+      <Sheet open title="Banane" onClose={() => undefined}>
+        <p>Inhalt</p>
+      </Sheet>,
+    );
+    const body = screen.getByText('Inhalt').parentElement;
+    if (body === null) throw new Error('no body');
+    Object.defineProperty(body, 'scrollHeight', { configurable: true, value: 1000 });
+    Object.defineProperty(body, 'clientHeight', { configurable: true, value: 400 });
+    fireEvent.scroll(body);
+    expect(screen.getByRole('button', { name: 'Nach unten scrollen' })).toBeInTheDocument();
+
+    body.scrollTop = 600;
+    fireEvent.scroll(body);
+    expect(screen.queryByRole('button', { name: 'Nach unten scrollen' })).not.toBeInTheDocument();
   });
 });
