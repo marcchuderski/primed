@@ -474,3 +474,14 @@
   color: var(--text-muted);
   font-variant-numeric: tabular-nums;
 }
+
+/* Loading state (D-157). */
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.boneRight {
+  align-items: flex-end;
+}

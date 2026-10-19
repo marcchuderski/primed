@@ -17,6 +17,7 @@ import { Button } from '../../components/Button/Button.tsx';
 import { Footer } from '../../components/Footer/Footer.tsx';
 import { ConfirmDialog } from '../../components/ConfirmDialog/ConfirmDialog.tsx';
 import { Sheet } from '../../components/Sheet/Sheet.tsx';
+import { Loading, SkeletonRows } from '../../components/Skeleton/Skeleton.tsx';
 import { CATEGORIES, displayName, type Category } from '../../domain/categories.ts';
 import { defaultAmount, nutrientsFor } from '../../domain/foodAmounts.ts';
 import { formatDecimal, formatInt } from '../../domain/format.ts';
@@ -232,6 +233,11 @@ function Library() {
       </div>
 
       {error !== null && <p role="alert">{error}</p>}
+      {foods === null && error === null && (
+        <Loading>
+          <SkeletonRows count={6} variant="card" />
+        </Loading>
+      )}
       {foods !== null && visible.length === 0 && <p className={styles['empty']}>Keine Einträge gefunden.</p>}
       {visible.length > 0 && (
         <ul className={styles['list']}>

@@ -2,6 +2,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { fetchSettings, type Settings } from '../../api/days.ts';
 import { Footer } from '../../components/Footer/Footer.tsx';
+import { Bone, Loading } from '../../components/Skeleton/Skeleton.tsx';
 import { fetchHistory, type History } from '../../api/history.ts';
 import {
   addDays,
@@ -108,11 +109,40 @@ export function HistoryScreen() {
   const days = useMemo(() => new Map((history?.days ?? []).map((d) => [d.date, d])), [history]);
   const summary = useMemo(() => summarize(history?.days ?? [], tolerance), [history, tolerance]);
 
+  const segment = (
+    <div className={styles['segment']} role="group" aria-label="Zeitraum">
+      {VIEWS.map((v) => (
+        <button
+          key={v.id}
+          type="button"
+          aria-pressed={view === v.id}
+          onClick={() => {
+            setView(v.id);
+          }}
+        >
+          {v.label}
+        </button>
+      ))}
+    </div>
+  );
+
   if (range === null || anchor === null || today === null) {
     return (
       <div className={styles['screen']}>
         <h1 className={styles['title']}>Verlauf</h1>
-        {error !== null && <p role="alert">{error}</p>}
+        {segment}
+        {error !== null ? (
+          <p role="alert">{error}</p>
+        ) : (
+          <>
+            <div className={styles['nav']} aria-hidden="true">
+              <Bone width={48} height={48} radius="pill" />
+              <Bone width={120} height={20} />
+              <Bone width={48} height={48} radius="pill" />
+            </div>
+            <HistorySkeleton title={null} />
+          </>
+        )}
         <Footer />
       </div>
     );
@@ -142,20 +172,7 @@ export function HistoryScreen() {
   return (
     <div className={styles['screen']}>
       <h1 className={styles['title']}>Verlauf</h1>
-      <div className={styles['segment']} role="group" aria-label="Zeitraum">
-        {VIEWS.map((v) => (
-          <button
-            key={v.id}
-            type="button"
-            aria-pressed={view === v.id}
-            onClick={() => {
-              setView(v.id);
-            }}
-          >
-            {v.label}
-          </button>
-        ))}
-      </div>
+      {segment}
 
       <div className={styles['nav']}>
         <button
@@ -186,7 +203,7 @@ export function HistoryScreen() {
       </div>
 
       {error !== null && <p role="alert">{error}</p>}
-      {history === null && error === null && <p className={styles['emptyNote']}>Lädt …</p>}
+      {history === null && error === null && <HistorySkeleton title={title} />}
 
       {history !== null && (
         <>
@@ -214,5 +231,32 @@ export function HistoryScreen() {
       )}
       <Footer />
     </div>
+  );
+}
+
+/** Loading state in the final layout (D-157): balance card with bones, then the block for table/calendar/bars. */
+function HistorySkeleton({ title }: { title: string | null }) {
+  return (
+    <Loading className={styles['skeleton']}>
+      <section className={styles['card']}>
+        {title === null ? <Bone width="40%" height={12} /> : <h2 className={styles['cardTitle']}>{title}</h2>}
+        <div className={styles['figures']}>
+          <div className={styles['figure']}>
+            <Bone width={130} height={36} />
+            <Bone width={90} height={12} />
+          </div>
+          <div className={`${styles['figure'] ?? ''} ${styles['boneRight'] ?? ''}`}>
+            <Bone width={96} height={36} />
+            <Bone width={72} height={12} />
+          </div>
+        </div>
+        <div className={styles['tiles']}>
+          {[0, 1, 2].map((i) => (
+            <Bone key={i} height={58} radius="card" />
+          ))}
+        </div>
+      </section>
+      <Bone height={240} radius="card" />
+    </Loading>
   );
 }

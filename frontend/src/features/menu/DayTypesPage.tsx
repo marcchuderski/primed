@@ -2,6 +2,7 @@ import { ChevronRight, CircleHelp, Dumbbell, Moon, Plus } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { fetchDayTypes, updateSettings, type DayType, type Settings } from '../../api/days.ts';
 import { Button } from '../../components/Button/Button.tsx';
+import { Loading, SkeletonRows } from '../../components/Skeleton/Skeleton.tsx';
 import { Stepper } from '../../components/Stepper/Stepper.tsx';
 import { formatInt } from '../../domain/format.ts';
 import { DayTypeEditSheet } from './DayTypeEditSheet.tsx';
@@ -64,6 +65,11 @@ export function DayTypesPage({ settings, onBack }: { settings: Settings; onBack:
         <h2 id="day-types" className={styles['sectionLabel']}>
           Tagesarten{types === null ? '' : ` · ${String(types.length)}`}
         </h2>
+        {types === null && loadError === null && (
+          <Loading>
+            <SkeletonRows count={5} variant="card" />
+          </Loading>
+        )}
         <div className={styles['card']}>
           {types?.map((type) => (
             <button

@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { searchFoods, searchOnline, type Food, type OffProduct } from '../../api/foods.ts';
 import { Button } from '../../components/Button/Button.tsx';
 import { Sheet } from '../../components/Sheet/Sheet.tsx';
+import { Loading, SkeletonRows } from '../../components/Skeleton/Skeleton.tsx';
 import { displayName } from '../../domain/categories.ts';
 import { formatInt } from '../../domain/format.ts';
 import { basisLabel } from '../../domain/units.ts';
@@ -27,7 +28,7 @@ export function IngredientSearchSheet({
   onClose: () => void;
 }) {
   const [query, setQuery] = useState('');
-  const [foods, setFoods] = useState<Food[]>([]);
+  const [foods, setFoods] = useState<Food[] | null>(null);
   const [online, setOnline] = useState<OffProduct[]>([]);
   const trimmed = query.trim();
 
@@ -128,9 +129,14 @@ export function IngredientSearchSheet({
     >
       <section className={styles['section']} aria-label="Deine Bibliothek">
         <h3 className={styles['sectionTitle']}>Deine Bibliothek</h3>
-        {foods.length === 0 && <p className={styles['empty']}>Nichts gefunden.</p>}
+        {foods === null && (
+          <Loading>
+            <SkeletonRows count={4} />
+          </Loading>
+        )}
+        {foods !== null && foods.length === 0 && <p className={styles['empty']}>Nichts gefunden.</p>}
         <ul className={styles['list']}>
-          {foods.map((food) => (
+          {(foods ?? []).map((food) => (
             <li key={food.id}>
               <button
                 type="button"

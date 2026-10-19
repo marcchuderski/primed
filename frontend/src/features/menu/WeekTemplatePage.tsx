@@ -8,6 +8,7 @@ import {
   type Settings,
   type TemplateDay,
 } from '../../api/days.ts';
+import { Loading, SkeletonRows } from '../../components/Skeleton/Skeleton.tsx';
 import { formatClock } from '../../domain/time.ts';
 import { DayTypePickerSheet } from '../today/DayTypeSheet.tsx';
 import { WEEKDAYS_LONG } from './menuSummaries.ts';
@@ -49,6 +50,11 @@ export function WeekTemplatePage({ settings, onBack }: { settings: Settings; onB
         Legt fest, welche Tagesart ein Wochentag automatisch bekommt. Änderungen gelten ab heute; einzelne
         Tage änderst du unter „Heute“.
       </p>
+      {template === null && error === null && (
+        <Loading>
+          <SkeletonRows count={7} variant="card" />
+        </Loading>
+      )}
       <div className={styles['card']}>
         {template?.map((day) => (
           <button

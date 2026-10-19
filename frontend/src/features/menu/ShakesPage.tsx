@@ -12,6 +12,7 @@ import {
 } from '../../api/foods.ts';
 import { Button } from '../../components/Button/Button.tsx';
 import { Sheet } from '../../components/Sheet/Sheet.tsx';
+import { Loading, SkeletonRows } from '../../components/Skeleton/Skeleton.tsx';
 import { Stepper } from '../../components/Stepper/Stepper.tsx';
 import { Switch } from '../../components/Switch/Switch.tsx';
 import { displayName } from '../../domain/categories.ts';
@@ -306,7 +307,7 @@ function FoodPickerSheet({
   onClose: () => void;
 }) {
   const [query, setQuery] = useState('');
-  const [foods, setFoods] = useState<Food[]>([]);
+  const [foods, setFoods] = useState<Food[] | null>(null);
   const trimmed = query.trim();
 
   useEffect(() => {
@@ -391,7 +392,7 @@ function FoodPickerSheet({
             </span>
           </button>
         </li>
-        {foods.map((food) => (
+        {(foods ?? []).map((food) => (
           <li key={food.id}>
             <button
               type="button"
@@ -407,6 +408,11 @@ function FoodPickerSheet({
           </li>
         ))}
       </ul>
+      {foods === null && (
+        <Loading>
+          <SkeletonRows count={4} />
+        </Loading>
+      )}
     </Sheet>
   );
 }

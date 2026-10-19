@@ -69,11 +69,13 @@ export function AddFlow({
   const [view, setView] = useState<View>({ kind: 'search' });
   const [shakes, setShakes] = useState<Shake[]>([]);
   const [dishes, setDishes] = useState<Dish[]>([]);
+  // The quick view fills in one go once shakes and dishes are settled (D-157), instead of section by section.
+  const [quickReady, setQuickReady] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
-    fetchShakes()
+    const shakesLoaded = fetchShakes()
       .then((list) => {
         if (!cancelled) {
           setShakes(list);
@@ -82,7 +84,7 @@ export function AddFlow({
       .catch(() => {
         // Shakes are optional (e.g. protein powder deleted).
       });
-    fetchDishes('active')
+    const dishesLoaded = fetchDishes('active')
       .then((list) => {
         if (!cancelled) {
           setDishes(list);
@@ -91,6 +93,11 @@ export function AddFlow({
       .catch(() => {
         // Optional section.
       });
+    void Promise.all([shakesLoaded, dishesLoaded]).then(() => {
+      if (!cancelled) {
+        setQuickReady(true);
+      }
+    });
     return () => {
       cancelled = true;
     };
@@ -132,6 +139,7 @@ export function AddFlow({
           open
           shakes={shakes}
           dishes={dishes}
+          loading={!quickReady}
           onPickDish={(dish) => {
             setView({ kind: 'dish', dish });
           }}

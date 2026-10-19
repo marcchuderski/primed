@@ -155,6 +155,12 @@
   cursor: pointer;
 }
 
+/* While the menu loads the rows stand but cannot be opened yet; they keep their look. */
+.link:disabled {
+  color: inherit;
+  cursor: default;
+}
+
 .linkTexts {
   display: flex;
   flex-grow: 1;

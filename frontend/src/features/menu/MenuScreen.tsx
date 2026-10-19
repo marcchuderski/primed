@@ -12,6 +12,7 @@ import {
 } from '../../api/days.ts';
 import { Footer } from '../../components/Footer/Footer.tsx';
 import { Button } from '../../components/Button/Button.tsx';
+import { Bone } from '../../components/Skeleton/Skeleton.tsx';
 import { useAuth } from '../auth/useAuth.ts';
 import { CheckpointsPage } from './CheckpointsPage.tsx';
 import { DayTypesPage } from './DayTypesPage.tsx';
@@ -108,28 +109,30 @@ export function MenuScreen({ user, onClose }: { user: User; onClose: () => void 
     }
   }
 
-  const items: { id: Page; name: string; meta: string }[] =
-    data === null
-      ? []
-      : [
-          {
-            id: 'dayTypes',
-            name: 'Tagesarten & Sollwerte',
-            meta: `${String(data.types.length)} Tagesarten · kcal, Protein, KH`,
-          },
-          { id: 'week', name: 'Wochenvorlage', meta: weekSummary(data.template, data.types) },
-          { id: 'checkpoints', name: 'Checkpoints', meta: checkpointSummary(data.settings) },
-          {
-            id: 'rating',
-            name: 'Bewertung',
-            meta: `Toleranz ±${String(data.settings.tolerancePct)} % im Verlauf`,
-          },
-          {
-            id: 'shakes',
-            name: 'Shakes',
-            meta: data.settings.shakesEnabled ? shakesSummary(data.settings) : 'Aus',
-          },
-        ];
+  // Names are fixed, so the list stands at once; only the summaries wait for the data (D-157).
+  const items: { id: Page; name: string; meta: string | null }[] = [
+    {
+      id: 'dayTypes',
+      name: 'Tagesarten & Sollwerte',
+      meta: data === null ? null : `${String(data.types.length)} Tagesarten · kcal, Protein, KH`,
+    },
+    {
+      id: 'week',
+      name: 'Wochenvorlage',
+      meta: data === null ? null : weekSummary(data.template, data.types),
+    },
+    { id: 'checkpoints', name: 'Checkpoints', meta: data === null ? null : checkpointSummary(data.settings) },
+    {
+      id: 'rating',
+      name: 'Bewertung',
+      meta: data === null ? null : `Toleranz ±${String(data.settings.tolerancePct)} % im Verlauf`,
+    },
+    {
+      id: 'shakes',
+      name: 'Shakes',
+      meta: data === null ? null : data.settings.shakesEnabled ? shakesSummary(data.settings) : 'Aus',
+    },
+  ];
 
   return (
     <div className={styles['screen']}>
@@ -184,24 +187,30 @@ export function MenuScreen({ user, onClose }: { user: User; onClose: () => void 
         <h2 id="menu-settings" className={common['sectionLabel']}>
           Einstellungen
         </h2>
-        <div className={common['card']}>
+        <div className={common['card']} aria-busy={data === null && error === null}>
           {items.map((item) => (
             <button
               key={item.id}
               type="button"
               className={common['link']}
+              disabled={data === null}
               onClick={() => {
                 setPage(item.id);
               }}
             >
               <span className={common['linkTexts']}>
                 <span className={common['linkName']}>{item.name}</span>
-                <span className={common['linkMeta']}>{item.meta}</span>
+                {item.meta === null ? (
+                  <span className={styles['boneMeta']}>
+                    <Bone width="58%" height={12} />
+                  </span>
+                ) : (
+                  <span className={common['linkMeta']}>{item.meta}</span>
+                )}
               </span>
               <ChevronRight size={20} strokeWidth={2.2} className={common['chevron']} aria-hidden="true" />
             </button>
           ))}
-          {data === null && error === null && <p className={styles['loading']}>Lädt …</p>}
         </div>
       </section>
 

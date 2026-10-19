@@ -5,6 +5,7 @@ import { createEntry, createShakeEntry, fetchShakes, type Entry } from '../../ap
 import { searchFoods } from '../../api/foods.ts';
 import { Button } from '../../components/Button/Button.tsx';
 import { Sheet } from '../../components/Sheet/Sheet.tsx';
+import { Bone, Loading } from '../../components/Skeleton/Skeleton.tsx';
 import type { Checkpoint } from '../../domain/checkpoint.ts';
 import { formatRemaining } from '../../domain/format.ts';
 import {
@@ -141,11 +142,18 @@ export function SuggestionsSheet({
   }
 
   return (
-    <Sheet open title="Vorschläge" subtitle={subtitle} onClose={onClose} tone="bg">
+    <Sheet open title="Vorschläge" subtitle={subtitle} onClose={onClose} tone="bg" fullHeight>
       {error !== null && (
         <p className={styles['error']} role="alert">
           {error}
         </p>
+      )}
+      {data === null && error === null && (
+        <Loading className={styles['list']}>
+          <Bone height={104} radius="card" />
+          <Bone height={104} radius="card" />
+          <Bone height={104} radius="card" />
+        </Loading>
       )}
       {data !== null && suggestions.length === 0 && (
         <p className={styles['empty']}>Gerade passt nichts Sinnvolles – du liegst gut im Plan.</p>

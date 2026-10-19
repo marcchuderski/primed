@@ -196,6 +196,29 @@
   font-size: 15px;
 }
 
-.status {
-  color: var(--text-muted);
+/* Loading state (D-157): same boxes as the real content. */
+.boneLine {
+  display: flex;
+  align-items: center;
+  height: 21px;
+}
+
+.boneBar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.boneHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 22px;
+}
+
+.boneSmall {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  padding-top: 26px;
 }

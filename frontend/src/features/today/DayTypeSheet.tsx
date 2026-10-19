@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { fetchDayTypes, updateDay, type Day, type DayType, type Settings } from '../../api/days.ts';
 import { Button } from '../../components/Button/Button.tsx';
 import { Sheet } from '../../components/Sheet/Sheet.tsx';
+import { Loading, SkeletonRows } from '../../components/Skeleton/Skeleton.tsx';
 import { TimeWheel } from '../../components/Wheel/TimeWheel.tsx';
 import { formatInt } from '../../domain/format.ts';
 import styles from './DayTypeSheet.module.css';
@@ -124,6 +125,11 @@ export function DayTypePickerSheet({
 
   return (
     <Sheet open={open} title={title} subtitle={subtitle} onClose={onClose}>
+      {types === null && error === null && (
+        <Loading>
+          <SkeletonRows count={5} />
+        </Loading>
+      )}
       <div className={styles['list']} role="group" aria-label="Tagesart wählen">
         {(types ?? [])
           .filter((type) => expanded || type.id === typeId)

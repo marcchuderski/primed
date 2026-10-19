@@ -18,6 +18,8 @@ interface SheetProps {
   header?: ReactNode;
   /** Fixed area below the body, e.g. actions; stays visible while the body scrolls. */
   footer?: ReactNode;
+  /** Full height from the start, for sheets whose content loads (D-157); default: sheets with a header. */
+  fullHeight?: boolean;
 }
 
 /**
@@ -33,6 +35,7 @@ export function Sheet({
   tone = 'surface',
   header,
   footer,
+  fullHeight = header !== undefined,
 }: SheetProps) {
   const ref = useRef<HTMLDialogElement>(null);
   const titleId = useId();
@@ -67,7 +70,7 @@ export function Sheet({
             className={[
               styles['sheet'],
               tone === 'bg' ? styles['onBg'] : undefined,
-              header !== undefined ? styles['tall'] : undefined,
+              fullHeight ? styles['tall'] : undefined,
             ]
               .filter(Boolean)
               .join(' ')}

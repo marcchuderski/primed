@@ -3,6 +3,7 @@ import { useEffect, useId, useState } from 'react';
 import { fetchSettings, fetchToday, type Day, type Settings } from '../../api/days.ts';
 import { Footer } from '../../components/Footer/Footer.tsx';
 import { MacroBar } from '../../components/MacroBar/MacroBar.tsx';
+import { Bone, Loading, SkeletonRows } from '../../components/Skeleton/Skeleton.tsx';
 import { checkpointFor, eatenUntil, type Checkpoint } from '../../domain/checkpoint.ts';
 import { formatInt } from '../../domain/format.ts';
 import { greetingLine } from '../../domain/greeting.ts';
@@ -82,13 +83,7 @@ export function TodayScreen({ displayName }: { displayName: string }) {
   const minuteNow = data === null ? 0 : toLogicalMinute(berlinWallMinute(now), data.settings.dayBoundaryMin);
 
   if (data === null) {
-    return error === null ? (
-      <p className={styles['status']} aria-busy="true">
-        Lädt …
-      </p>
-    ) : (
-      <p role="alert">{error}</p>
-    );
+    return error === null ? <TodaySkeleton /> : <p role="alert">{error}</p>;
   }
 
   const { day, settings } = data;
@@ -461,5 +456,45 @@ function BarDetails({
         Gesamt heute: {formatInt(bar.target)} {unit}
       </span>
     </>
+  );
+}
+
+/** Loading state in the final layout (D-157): bones at the size of the values, headings shown at once. */
+function TodaySkeleton() {
+  return (
+    <Loading className={styles['screen']}>
+      <div className={styles['intro']}>
+        <span className={styles['boneLine']}>
+          <Bone width="78%" height={14} />
+        </span>
+        <Bone width="68%" height={38} />
+      </div>
+      <Bone width={168} height={40} radius="pill" />
+      <div className={styles['card']}>
+        {['34%', '28%', '46%'].map((label) => (
+          <span key={label} className={styles['boneBar']}>
+            <span className={styles['boneHead']}>
+              <Bone width={label} height={15} />
+              <Bone width="22%" height={15} />
+            </span>
+            <Bone height={12} radius="pill" />
+          </span>
+        ))}
+        <span className={styles['boneSmall']}>
+          <Bone height={6} radius="pill" />
+          <Bone height={6} radius="pill" />
+        </span>
+      </div>
+      <section className={styles['section']}>
+        <div className={styles['sectionHead']}>
+          <h2 className={styles['sectionTitle']}>Heute</h2>
+          <div className={styles['actions']}>
+            <Bone width={48} height={48} radius="pill" />
+            <Bone width={48} height={48} radius="pill" />
+          </div>
+        </div>
+        <SkeletonRows count={3} />
+      </section>
+    </Loading>
   );
 }

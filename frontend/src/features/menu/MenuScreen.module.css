@@ -94,10 +94,10 @@
   box-shadow: 0 1px 2px rgb(0 0 0 / 12%);
 }
 
-.loading {
-  padding: 16px;
-  color: var(--text-muted);
-  font-size: 14px;
+.boneMeta {
+  display: flex;
+  align-items: center;
+  height: 19px;
 }
 
 .actions {

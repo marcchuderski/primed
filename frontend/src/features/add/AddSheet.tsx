@@ -11,6 +11,7 @@ import {
 } from '../../api/foods.ts';
 import { Button } from '../../components/Button/Button.tsx';
 import { Sheet } from '../../components/Sheet/Sheet.tsx';
+import { Bone, Loading, SkeletonRows } from '../../components/Skeleton/Skeleton.tsx';
 import { defaultAmount, nutrientsFor } from '../../domain/foodAmounts.ts';
 import { formatDecimal, formatInt } from '../../domain/format.ts';
 import { displayName } from '../../domain/categories.ts';
@@ -32,6 +33,8 @@ interface AddSheetProps {
   dishes?: Dish[];
   onPickDish?: (dish: Dish) => void;
   onCook?: () => void;
+  /** Shakes and dishes are still loading (placeholders until everything is there, D-157). */
+  loading?: boolean;
 }
 
 const LIQUID_SHORT: Record<Shake['liquid'], string> = {
@@ -54,9 +57,10 @@ export function AddSheet({
   dishes = [],
   onPickDish,
   onCook,
+  loading = false,
 }: AddSheetProps) {
   const [query, setQuery] = useState('');
-  const [frequent, setFrequent] = useState<Food[]>([]);
+  const [frequent, setFrequent] = useState<Food[] | null>(null);
   const [library, setLibrary] = useState<Food[] | null>(null);
   const [online, setOnline] = useState<OffProduct[] | null>(null);
   const [onlineError, setOnlineError] = useState<string | null>(null);
@@ -72,6 +76,9 @@ export function AddSheet({
       })
       .catch(() => {
         // Optional section; the search still works.
+        if (!cancelled) {
+          setFrequent([]);
+        }
       });
     return () => {
       cancelled = true;
@@ -189,7 +196,12 @@ export function AddSheet({
         </p>
       )}
 
-      {trimmed === '' ? (
+      {trimmed === '' && (loading || frequent === null) ? (
+        <Loading className={styles['section']}>
+          <Bone width={110} height={12} />
+          <SkeletonRows count={4} />
+        </Loading>
+      ) : trimmed === '' ? (
         <>
           {dishes.length > 0 && (
             <section className={styles['section']} aria-label="Gerichte">
@@ -238,7 +250,7 @@ export function AddSheet({
               </div>
             </section>
           )}
-          {frequent.length > 0 && (
+          {frequent !== null && frequent.length > 0 && (
             <section className={styles['section']} aria-label="Häufig um diese Zeit">
               <h3 className={styles['sectionTitle']}>Häufig um diese Zeit</h3>
               <FoodList foods={frequent} onPick={onPickFood} showAmount />
@@ -249,7 +261,11 @@ export function AddSheet({
         <>
           <section className={styles['section']} aria-label="Deine Bibliothek">
             <h3 className={styles['sectionTitle']}>Deine Bibliothek</h3>
-            {library !== null && own.length === 0 ? (
+            {library === null ? (
+              <Loading>
+                <SkeletonRows count={3} />
+              </Loading>
+            ) : own.length === 0 ? (
               <p className={styles['empty']}>Noch nichts mit „{trimmed}“ gespeichert.</p>
             ) : (
               <FoodList foods={own} onPick={onPickFood} />
@@ -261,7 +277,11 @@ export function AddSheet({
                 Online-Treffer <small>Daten: Open Food Facts</small>
               </h3>
               {onlineError !== null && <p className={styles['empty']}>{onlineError}</p>}
-              {online === null && onlineError === null && <p className={styles['empty']}>Suche läuft …</p>}
+              {online === null && onlineError === null && (
+                <Loading>
+                  <SkeletonRows count={2} />
+                </Loading>
+              )}
               {online !== null && online.length === 0 && onlineError === null && (
                 <p className={styles['empty']}>Keine Online-Treffer.</p>
               )}

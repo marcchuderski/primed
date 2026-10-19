@@ -4,6 +4,7 @@ import { discardDish, fetchDish, fetchDishes, type Dish } from '../../api/dishes
 import { Button } from '../../components/Button/Button.tsx';
 import { ConfirmDialog } from '../../components/ConfirmDialog/ConfirmDialog.tsx';
 import { Sheet } from '../../components/Sheet/Sheet.tsx';
+import { Bone, Loading, SkeletonRows } from '../../components/Skeleton/Skeleton.tsx';
 import { formatDecimal, formatInt } from '../../domain/format.ts';
 import { cookedText } from './dishModel.ts';
 import { DishEditorSheet } from './DishEditorSheet.tsx';
@@ -77,6 +78,12 @@ export function DishesView() {
       </button>
 
       {error !== null && <p role="alert">{error}</p>}
+      {dishes === null && error === null && (
+        <Loading className={styles['cards']}>
+          <Bone height={112} radius="card" />
+          <Bone height={112} radius="card" />
+        </Loading>
+      )}
       {dishes !== null && dishes.length === 0 && (
         <p className={styles['empty']}>Gerade nichts vorgekocht. Leg dein nächstes Gericht an.</p>
       )}
@@ -147,7 +154,13 @@ export function DishesView() {
           setArchiveOpen(false);
         }}
         tone="bg"
+        fullHeight
       >
+        {archive === null && error === null && (
+          <Loading>
+            <SkeletonRows count={3} />
+          </Loading>
+        )}
         {archive !== null && archive.length === 0 && (
           <p className={styles['empty']}>Noch nichts im Archiv.</p>
         )}

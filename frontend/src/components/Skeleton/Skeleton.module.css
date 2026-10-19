@@ -1,0 +1,76 @@
+/* Loading placeholders (D-157). Flat tone step, no gradient or shimmer; opacity pulse only. */
+.bone {
+  display: block;
+  flex-shrink: 0;
+  max-width: 100%;
+  background: var(--tonal);
+}
+
+.radiusText {
+  border-radius: 6px;
+}
+
+.radiusPill {
+  border-radius: var(--r-pill);
+}
+
+.radiusCard {
+  border-radius: var(--r-item);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .bone {
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.45;
+  }
+}
+
+/* Rows: same padding and line heights as the real list rows (14px 16px, 22px + 20px lines). */
+.items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.items > .row {
+  border-radius: var(--r-item);
+  background: var(--surface);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: var(--r-card);
+  background: var(--surface);
+}
+
+.card > .row + .row {
+  border-top: 1px solid var(--divider);
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+}
+
+.line,
+.metaLine {
+  display: flex;
+  align-items: center;
+}
+
+.line {
+  height: 22px;
+}
+
+.metaLine {
+  height: 20px;
+}
