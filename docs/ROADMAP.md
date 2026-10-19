@@ -80,6 +80,13 @@ Reihenfolge (Nutzer, 2026-10-17): 7.1 und 7.3 vor Phase 6. Geändert (Nutzer, 20
 | 7.5 | ~~Barrierefreiheit-Check~~ (gestrichen, D-149), abschließendes Security Audit | fertig (A11y gestrichen, D-149; Audit siehe `SECURITY.md`; Fund 7 durch festen Username gelöst, D-152) |
 | 7.6 | Admin-Doku (Betrieb, Deployment, User-CLI) und Nutzer-Doku (inkl. PWA-Installation und Gesundheits-Hinweis aus dem Richtwerte-Modal) | fertig (`docs/BETRIEB.md`, `docs/ANLEITUNG.md`) |
 
+## Phase 8 – Deploy
+
+| ID | Item | Status |
+|---|---|---|
+| 8.1 | Deploy-Vorbereitung: Release-Paket per Skript (`scripts/build-release.sh`), Ablauf in `DEPLOYMENT.md` | fertig |
+| 8.2 | Erster Deploy-Check auf Plesk (`DEPLOYMENT.md` › „Erster Deploy-Check“) | blockiert (braucht den Nutzer: Plesk-Einrichtung, `.env`, SFTP-Upload, Migrationen, Tests auf Geräten) |
+
 ## Später / vielleicht
 
 | ID | Item | Status |

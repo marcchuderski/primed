@@ -26,9 +26,9 @@ Wird von Claude Code mit jedem Schritt präzisiert (Befehle, Dateilisten, Migrat
 
 ## Jedes Release
 
-1. Lokal: Tests grün (`npm test`, `composer test`), Security Audit dokumentiert.
-2. Frontend bauen: `npm run build` → Inhalt von `frontend/dist/` nach `httpdocs/`.
-3. API: `composer install --no-dev --optimize-autoloader` lokal, dann `src/`, `vendor/`, `bin/`, `resources/`, `bootstrap.php` nach `primed-app/` (dort zusätzlich leeres, für PHP schreibbares `var/log/`); `public/index.php` und `public/.htaccess` nach `httpdocs/api/`.
+1. Lokal: alles committet, Tests grün (`cd frontend && npm run check`, `ddev composer check`), Security Audit dokumentiert.
+2. Paket bauen: `scripts/build-release.sh` → `build/release-<version>-<commit>/` mit `httpdocs/`, `primed-app/`, `migrations/`, `SHA256SUMS`, `RELEASE.txt`. Das Skript baut das Frontend, installiert die API ohne Dev-Abhängigkeiten (nur Autoloader), setzt Rechte 644/755 und bricht ab bei fehlenden Dateien, Dev-Paketen, `.env`, Source Maps, PHP im Web-Root oder möglichen Geheimnissen. Lokal geprüft: die API startet aus diesem Layout.
+3. Hochladen per SFTP: Inhalt von `httpdocs/` nach `httpdocs/` (`assets/` vorher komplett leeren), Inhalt von `primed-app/` nach `primed-app/` (die `.env` und `var/log/` auf dem Server bleiben; `var/log/` muss für PHP schreibbar sein). `migrations/` wird **nicht** hochgeladen. `bin/migrate.php` ist bewusst nicht im Paket (Migrationen nur per phpMyAdmin).
 4. Vorher Datenbank-Backup in Plesk. Neue Migrationen (`api/migrations/NNN_*.sql`) **in Reihenfolge** über phpMyAdmin ausführen (Datei-Inhalt im SQL-Tab). Jede Migration trägt sich selbst in `schema_migrations` ein; Stand prüfen mit `SELECT * FROM schema_migrations`.
 5. Smoke-Test: Login, Heute laden, Eintrag anlegen/löschen, Barcode-Suche; `scripts/check-headers.sh https://primed.dev-pfeffermond.de` (inkl. PWA-Dateien).
    - Zum `dist/`-Inhalt gehören seit 7.3 auch `sw.js`, `manifest.webmanifest` und `pwa/` (Icons). Alles komplett ersetzen; alte `assets/` dürfen weg.
