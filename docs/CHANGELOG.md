@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-10-19 – Kategorie „Öle & Saucen“
+- Migration `013_sauces_category`; neue Kategorie in Bibliothek, Filter und Produkt-Formular. Online-Treffer für Öle, Fette, Saucen und Dressings landen automatisch dort.
+
 ## 2026-10-19 – Fix: Sheets springen auf dem iPhone
 - Beim Öffnen stand das Sheet kurz zu hoch (Titel abgeschnitten, unten schien die Seite durch) und sprang dann an seinen Platz; Ursache war der automatische Fokus auf den Schließen-Button. Behoben, auf dem iPhone bestätigt.
 

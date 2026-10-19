@@ -1,4 +1,4 @@
-export type Category = 'snacks' | 'dairy' | 'bread' | 'produce' | 'drinks' | 'basics';
+export type Category = 'snacks' | 'dairy' | 'bread' | 'produce' | 'drinks' | 'basics' | 'sauces';
 
 /** Library categories (BRIEFING §6). */
 export const CATEGORIES: readonly { id: Category; label: string; short: string }[] = [
@@ -8,6 +8,7 @@ export const CATEGORIES: readonly { id: Category; label: string; short: string }
   { id: 'produce', label: 'Obst & Gemüse', short: 'Obst & Gemüse' },
   { id: 'drinks', label: 'Getränke & Shakes', short: 'Getränke' },
   { id: 'basics', label: 'Grundnahrungsmittel', short: 'Grundnahrung' },
+  { id: 'sauces', label: 'Öle & Saucen', short: 'Öle & Saucen' },
 ];
 
 export function categoryLabel(id: string, variant: 'label' | 'short' = 'short'): string {

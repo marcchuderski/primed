@@ -12,7 +12,7 @@ use Primed\Http\Input;
 final class FoodInput
 {
     public const TYPES = ['product', 'reference', 'ingredient'];
-    public const CATEGORIES = ['snacks', 'dairy', 'bread', 'produce', 'drinks', 'basics'];
+    public const CATEGORIES = ['snacks', 'dairy', 'bread', 'produce', 'drinks', 'basics', 'sauces'];
     public const BASES = ['per_100g', 'per_100ml', 'per_unit'];
 
     private function __construct(

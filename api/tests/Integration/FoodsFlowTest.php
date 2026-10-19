@@ -181,6 +181,29 @@ final class FoodsFlowTest extends ApiTestCase
         self::assertSame(422, $this->call('GET', '/api/v1/foods?q=' . rawurlencode("sky\xC3r"))->status);
     }
 
+    public function testSaucesCategoryForOwnAndOnlineFoods(): void
+    {
+        $created = $this->call('POST', '/api/v1/foods', [...self::SKYR, 'name' => 'Olivenöl nativ', 'barcode' => null,
+            'category' => 'sauces']);
+        self::assertSame(201, $created->status, $created->body);
+        $sauces = $this->names(self::json($this->call('GET', '/api/v1/foods?category=sauces')));
+        self::assertSame(['Olivenöl nativ'], $sauces);
+
+        $this->offFetcher->responses['/api/v2/product/4006381333931.json'] = (string) json_encode([
+            'status' => 1,
+            'product' => [
+                'code' => '4006381333931',
+                'product_name_de' => 'Rapsöl',
+                'categories_tags' => ['en:plant-based-foods', 'en:fats', 'en:vegetable-oils'],
+                'nutriments' => ['energy-kcal_100g' => 828, 'proteins_100g' => 0, 'carbohydrates_100g' => 0,
+                    'sugars_100g' => 0, 'fat_100g' => 92],
+            ],
+        ]);
+        $online = self::json($this->call('GET', '/api/v1/foods/barcode/4006381333931'));
+        self::assertIsArray($online['product']);
+        self::assertSame('sauces', $online['product']['category']);
+    }
+
     public function testBarcodeErrors(): void
     {
         self::assertSame(422, $this->call('GET', '/api/v1/foods/barcode/4006381333932')->status);

@@ -66,7 +66,8 @@ final class LeanLibraryMigrationTest extends DatabaseTestCase
                        VALUES (?, '2026-10-19', 540, 'food', ?, 'Banane', 120, 'g', 120, 95, 2, 19, 17, 1,
                                UTC_TIMESTAMP(), UTC_TIMESTAMP())")->execute([$userId, $idOf('Banane')]);
 
-        self::assertSame(['012_lean_library'], (new Migrator($pdo, __DIR__ . '/../../migrations'))->migrate());
+        $applied = (new Migrator($pdo, __DIR__ . '/../../migrations'))->migrate();
+        self::assertSame('012_lean_library', $applied[0] ?? null); // later migrations may follow
 
         $active = $pdo->query('SELECT name FROM foods WHERE deleted_at IS NULL ORDER BY name');
         self::assertNotFalse($active);
