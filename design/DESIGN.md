@@ -135,7 +135,7 @@ Bewertet wird nur die **kcal-Bilanz gegen das Tagessoll, Toleranz ±5 %**. Drei 
 ## 8. Bewegung
 
 - **Login:** Ring im Logo-Lockup füllt sich auf ¾ (ca. 1,4 s), danach blenden Überschrift und Formular ein (ab ~0,9 s, 0,5 s). Kein separater Loading-Screen (D-096); während der Session-Prüfung nur Hintergrund.
-- **Sheets:** von unten einfahren, 250–300 ms, ease-out. Scrim blendet mit. Beim Schließen nach unten ausfahren, 220 ms, ease-in, Scrim blendet aus; der Inhalt bleibt dabei stehen (D-153).
+- **Sheets:** von unten einfahren, 250–300 ms, ease-out. Scrim blendet mit. Schließen ohne Animation (D-155). Such-Sheets (mit fester Suchzeile) haben von Anfang an volle Höhe (Screens 04/05), damit nichts beim Einfahren wächst.
 - **Tabs/Screens:** kurzer Crossfade (~150 ms).
 - **Balken:** füllen sich animiert, wenn ein Eintrag hinzukommt.
 - `prefers-reduced-motion` respektieren: dann keine Animationen außer sofortigen Zustandswechseln.

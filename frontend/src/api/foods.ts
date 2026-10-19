@@ -1,5 +1,6 @@
 import { ApiError, apiRequest, isRecord } from './client.ts';
 import type { EntryNutrients } from './entries.ts';
+import { isValidBarcode } from '../domain/barcode.ts';
 import type { Category } from '../domain/categories.ts';
 import type { Basis, Unit } from '../domain/units.ts';
 
@@ -214,7 +215,9 @@ export function draftFromOff(product: OffProduct, category: Category = product.c
     type: 'product',
     name: product.name,
     brand: product.brand,
-    barcode: product.barcode,
+    // Open Food Facts also lists store-internal codes (e.g. loose fruit) whose check digit fails;
+    // the server rejects those, so such a hit is saved without a barcode.
+    barcode: isValidBarcode(product.barcode) ? product.barcode : null,
     category,
     basis: product.basis,
     ...product.nutrients,

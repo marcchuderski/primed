@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-19 – Gerätetest: Fixes
+- Fix: Online-Treffer (z. B. „Banane“) ließen sich nicht eintragen („Der Barcode ist ungültig“), wenn Open Food Facts einen Code mit falscher Prüfziffer lieferte; sie werden jetzt ohne Barcode gespeichert.
+- Sheets öffnen ruhiger: Uhrzeit-Rad springt sofort auf die Uhrzeit statt sichtbar zu drehen, Such-Sheets haben von Anfang an volle Höhe.
+- Schließen-Animation der Sheets wieder entfernt.
+
 ## 2026-10-19 – Erster Deploy-Check (Teil 1)
 - Fund: auf Plesk fehlten alle Sicherheits-Header, weil nginx statische Dateien selbst auslieferte („Intelligente Bearbeitung statischer Dateien“); nach Abschalten alle Header-Prüfungen ok.
 - `check-headers.sh` bricht bei Verbindungsfehlern nicht mehr ab und weist auf eine mögliche Sperre durch Fail2Ban (Jail `plesk-apache`) hin. Header-Check auf dem Server danach komplett ok.

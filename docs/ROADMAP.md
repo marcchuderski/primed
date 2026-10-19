@@ -76,7 +76,7 @@ Reihenfolge (Nutzer, 2026-10-17): 7.1 und 7.3 vor Phase 6. Geändert (Nutzer, 20
 | 7.1 | Menü und alle Einstellungen (inkl. Konto löschen mit Passwort, D-082; Tagesarten & Sollwerte mit Modal „Richtwerte ermitteln“, Screens 19/20, D-108) | fertig |
 | 7.2 | Theme-Schalter System/Hell/Dunkel (flackerfrei) | fertig |
 | 7.3 | PWA: Manifest, Icons, Service Worker (nur App-Shell) | fertig |
-| 7.4 | Animationen (Sheets, Balken), `prefers-reduced-motion` | fertig (Sheets ein- und ausfahrend, D-153; Crossfade, Balken, Login; kein weiches Scrollen bei Reduced Motion) |
+| 7.4 | Animationen (Sheets, Balken), `prefers-reduced-motion` | fertig (Sheets fahren ein, Schließen ohne Animation, D-155; Crossfade, Balken, Login; kein weiches Scrollen bei Reduced Motion) |
 | 7.5 | ~~Barrierefreiheit-Check~~ (gestrichen, D-149), abschließendes Security Audit | fertig (A11y gestrichen, D-149; Audit siehe `SECURITY.md`; Fund 7 durch festen Username gelöst, D-152) |
 | 7.6 | Admin-Doku (Betrieb, Deployment, User-CLI) und Nutzer-Doku (inkl. PWA-Installation und Gesundheits-Hinweis aus dem Richtwerte-Modal) | fertig (`docs/BETRIEB.md`, `docs/ANLEITUNG.md`) |
 
@@ -85,7 +85,7 @@ Reihenfolge (Nutzer, 2026-10-17): 7.1 und 7.3 vor Phase 6. Geändert (Nutzer, 20
 | ID | Item | Status |
 |---|---|---|
 | 8.1 | Deploy-Vorbereitung: Release-Paket per Skript (`scripts/build-release.sh`), Ablauf in `DEPLOYMENT.md` | fertig |
-| 8.2 | Erster Deploy-Check auf Plesk (`DEPLOYMENT.md` › „Erster Deploy-Check“) | blockiert (braucht den Nutzer: Plesk-Einrichtung, `.env`, SFTP-Upload, Migrationen, Tests auf Geräten) |
+| 8.2 | Erster Deploy-Check auf Plesk (`DEPLOYMENT.md` › „Erster Deploy-Check“) | in Arbeit (Header-Check und Client-IP bestanden, Gerätetest läuft; offen: Trusted Types, weitere Funde vom Nutzer) |
 
 ## Später / vielleicht
 

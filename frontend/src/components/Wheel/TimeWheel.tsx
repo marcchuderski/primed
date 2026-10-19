@@ -17,12 +17,25 @@ function WheelColumn({ label, values, value, format, onChange }: ColumnProps) {
   const settle = useRef<number | undefined>(undefined);
   const index = Math.max(0, values.indexOf(value));
 
-  // Keep the scroll position in sync with the selected value.
+  const positioned = useRef(false);
+
+  // Keep the scroll position in sync with the selected value. The first position is set instantly:
+  // with the CSS smooth scrolling the wheel would visibly spin from 00 while its sheet slides in (jank on iOS).
+  // A plain effect, not a layout effect: the parent sheet's <dialog> only opens in its own layout effect.
   useEffect(() => {
     const column = ref.current;
-    if (column !== null && Math.round(column.scrollTop / ITEM_HEIGHT) !== index) {
-      column.scrollTop = index * ITEM_HEIGHT;
+    if (column === null || Math.round(column.scrollTop / ITEM_HEIGHT) === index) {
+      positioned.current = column !== null;
+      return;
     }
+    if (positioned.current) {
+      column.scrollTop = index * ITEM_HEIGHT;
+      return;
+    }
+    column.style.scrollBehavior = 'auto';
+    column.scrollTop = index * ITEM_HEIGHT;
+    column.style.scrollBehavior = '';
+    positioned.current = true;
   }, [index]);
 
   function handleScroll() {
