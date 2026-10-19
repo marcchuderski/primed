@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-10-19 – Produkt-Formular: Typ-Schalter
+- „Markenprodukt“ hat im Typ-Schalter mehr Platz: Spalten richten sich nach der Textlänge.
+
 ## 2026-10-19 – Mengen-Sheet kompakter
 - Fix: „Packung“ lief im Einheiten-Schalter über den Rand.
 - Mengenzahl und −/+ kleiner, damit „Hinzufügen“ näher rückt; Sheet-Titel kleiner, Schließen-Button oben am Titel.

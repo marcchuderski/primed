@@ -172,7 +172,7 @@ export function ProductSheet({
       {food !== undefined && (
         <div className={styles['group']}>
           <span className={styles['label']}>Typ</span>
-          <div className={styles['segment']} role="group" aria-label="Typ">
+          <div className={`${styles['segment'] ?? ''} ${styles['fit'] ?? ''}`} role="group" aria-label="Typ">
             {TYPES.map((t) => (
               <button
                 key={t.id}

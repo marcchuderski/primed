@@ -82,6 +82,11 @@
   background: var(--tonal);
 }
 
+/* Labels of different length ("Markenprodukt" vs. "Zutat"): columns follow the text, spare room is shared. */
+.fit {
+  grid-auto-columns: auto;
+}
+
 .segment button {
   height: 40px;
   border: none;
