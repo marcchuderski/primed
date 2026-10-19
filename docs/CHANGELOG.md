@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-19 – Sheets: Schließen-Animation
+- Bottom-Sheets fahren beim Schließen nach unten aus (220 ms), der Hintergrund blendet aus; bei „Bewegung reduzieren“ schließen sie sofort.
+- Profil: Username und Schloss in einer Zeile mit dem Label, Hinweis darunter in voller Breite.
+
 ## 2026-10-19 – Username fest
 - Der Username lässt sich nach dem Anlegen nicht mehr ändern; das Profil zeigt ihn mit Schloss-Symbol statt eines Eingabefelds. `PATCH /v1/profile` nimmt nur noch den Display-Namen an.
 
