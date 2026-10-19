@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Checks a running Primed instance for the security requirements in docs/SECURITY.md.
 # Usage: scripts/check-headers.sh https://primed.dev-pfeffermond.de [--insecure]
+# The probes for .env/.git look like an attack scan: a WAF (e.g. Imunify360) may block your IP; whitelist it for the check.
 set -euo pipefail
 
 BASE="${1:?Base URL required, e.g. https://primed.dev-pfeffermond.de}"
@@ -13,13 +14,13 @@ bad() { printf '  FAIL  %s\n' "$1"; fail=1; }
 
 check_header() { # url name expected-substring
   local value
-  value=$("${CURL[@]}" -D - -o /dev/null "$1" | tr -d '\r' | grep -i "^$2:" | head -1 | cut -d' ' -f2- || true)
+  value=$("${CURL[@]}" -D - -o /dev/null "$1" 2>/dev/null | tr -d '\r' | grep -i "^$2:" | head -1 | cut -d' ' -f2- || true)
   if [[ -n "$value" && "$value" == *"$3"* ]]; then pass "$2 on $1"; else bad "$2 on $1 (got: ${value:-none})"; fi
 }
 
 check_status() { # url expected-status [method]
   local status
-  status=$("${CURL[@]}" -o /dev/null -w '%{http_code}' -X "${3:-GET}" "$1")
+  status=$("${CURL[@]}" -o /dev/null -w '%{http_code}' -X "${3:-GET}" "$1" 2>/dev/null || true)
   if [[ "$status" == "$2" ]]; then pass "$1 → $2"; else bad "$1 → expected $2, got $status"; fi
 }
 
@@ -59,8 +60,12 @@ check_status "$BASE/api/v1/nope" 404
 
 echo "Nothing private is reachable"
 for path in .env .htaccess api/.htaccess api/../.env .git/config primed-app/.env bootstrap.php api/bootstrap.php composer.json api/composer.json; do
-  status=$("${CURL[@]}" -o /dev/null -w '%{http_code}' "$BASE/$path")
-  body=$("${CURL[@]}" "$BASE/$path" | head -c 4000)
+  status=$("${CURL[@]}" -o /dev/null -w '%{http_code}' "$BASE/$path" 2>/dev/null || true)
+  if [[ "$status" == "000" || -z "$status" ]]; then
+    bad "/$path: no connection (blocked by a firewall/WAF such as Imunify? whitelist your IP for the check)"
+    continue
+  fi
+  body=$("${CURL[@]}" "$BASE/$path" 2>/dev/null | head -c 4000 || true)
   if [[ "$status" == "403" || "$status" == "404" ]] || [[ "$body" == *'<div id="root">'* ]]; then
     pass "/$path not exposed ($status)"
   else
@@ -71,7 +76,7 @@ done
 echo "HTTP → HTTPS"
 http_url="${BASE/https:/http:}"
 for path in / /api/v1/health; do
-  status=$("${CURL[@]}" -o /dev/null -w '%{http_code} %{redirect_url}' "$http_url$path")
+  status=$("${CURL[@]}" -o /dev/null -w '%{http_code} %{redirect_url}' "$http_url$path" 2>/dev/null || true)
   if [[ "$status" == 30[18]\ https://* ]]; then pass "redirect $path ($status)"; else bad "no HTTPS redirect for $path ($status)"; fi
 done
 

@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-19 – Erster Deploy-Check (Teil 1)
+- Fund: auf Plesk fehlten alle Sicherheits-Header, weil nginx statische Dateien selbst auslieferte („Intelligente Bearbeitung statischer Dateien“); nach Abschalten alle Header-Prüfungen ok.
+- `check-headers.sh` bricht bei Verbindungsfehlern nicht mehr ab und weist auf eine mögliche WAF-Sperre (Imunify360) hin.
+
 ## 2026-10-19 – 8.1 Deploy-Vorbereitung
 - `scripts/build-release.sh`: baut ein hochladefertiges Paket (`httpdocs/`, `primed-app/`, `migrations/`) mit Selbstprüfung und Prüfsummen; `DEPLOYMENT.md` beschreibt Upload und Ablauf damit.
 
