@@ -14,7 +14,7 @@ export function AppShell({ user }: { user: User }) {
   const [tab, setTab] = useState<Tab>('heute');
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Apply the saved theme after login; flash-free start follows in 7.2.
+  // Apply the saved theme after login; also refreshes the local copy used for the flash-free start (7.2).
   useEffect(() => {
     fetchSettings()
       .then((s) => {

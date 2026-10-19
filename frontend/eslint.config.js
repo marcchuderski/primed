@@ -53,5 +53,11 @@ export default tseslint.config(
     },
     rules: { 'no-eval': 'error', 'no-implied-eval': 'error' },
   },
+  {
+    // Flash-free theme start (classic script, filled into index.html by tools/themeInit.ts).
+    files: ['tools/theme-init.js'],
+    languageOptions: { sourceType: 'script', globals: globals.browser },
+    rules: { 'no-eval': 'error', 'no-implied-eval': 'error' },
+  },
   prettier,
 );

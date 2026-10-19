@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-19 – 7.2 Theme flackerfrei
+- Hell/Dunkel aus dem Menü gilt jetzt ab dem ersten Bild, auch auf dem Login-Screen und beim Start der installierten App; Browser-/Statusleisten-Farbe passt sich an.
+- Die Auswahl wird zusätzlich auf dem Gerät gemerkt (nur das Theme); nach dem Löschen des Kontos wird sie vergessen.
+
 ## 2026-10-19 – 7.4 Animationen
 - Bestand geprüft: Sheets fahren von unten ein (280 ms, Scrim blendet mit), Tabs/Screens mit 150-ms-Crossfade, Balken füllen sich animiert, Login-Animation.
 - `prefers-reduced-motion`: jetzt auch kein weiches Scrollen mehr (Uhrzeit-Rad springt sofort).

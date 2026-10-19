@@ -184,3 +184,5 @@ Einträge und Gerichtszutaten speichern **Schnappschüsse**, damit spätere Prod
 ## Theme
 
 `data-theme` auf `<html>`: nicht gesetzt = System, sonst `light`/`dark` aus `user_settings.theme`. Tokens in `design/tokens.css`.
+
+Flackerfreier Start (7.2, D-148): `applyTheme` legt eine Kopie der Auswahl in `localStorage` (`primed.theme`, nur `light`/`dark`; bei „System“ und nach dem Löschen des Kontos entfernt). Das klassische Skript `tools/theme-init.js` wird vom Build-Plugin `tools/themeInit.ts` als `/assets/theme-init-<hash>.js` ausgeliefert (im Service-Worker-Precache, immutable) und am Ende von `<head>` eingebunden; es setzt `data-theme` und die `theme-color`-Metas vor dem ersten Zeichnen. Maßgeblich bleibt `user_settings.theme`: nach dem Login wird es geladen und die Kopie aktualisiert.

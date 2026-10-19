@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import * as authApi from '../../api/auth.ts';
+import { forgetTheme } from '../menu/theme.ts';
 import { AuthContext, type AuthState } from './useAuth.ts';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -51,6 +52,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const deleteAccount = useCallback(async (password: string) => {
     await authApi.deleteAccount(password);
+    forgetTheme();
     setState({ status: 'anonymous' });
   }, []);
 

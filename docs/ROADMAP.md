@@ -74,7 +74,7 @@ Reihenfolge (Nutzer, 2026-10-17): 7.1 und 7.3 vor Phase 6. Geändert (Nutzer, 20
 | ID | Item | Status |
 |---|---|---|
 | 7.1 | Menü und alle Einstellungen (inkl. Konto löschen mit Passwort, D-082; Tagesarten & Sollwerte mit Modal „Richtwerte ermitteln“, Screens 19/20, D-108) | fertig |
-| 7.2 | Theme-Schalter System/Hell/Dunkel (flackerfrei) | geplant |
+| 7.2 | Theme-Schalter System/Hell/Dunkel (flackerfrei) | fertig |
 | 7.3 | PWA: Manifest, Icons, Service Worker (nur App-Shell) | fertig |
 | 7.4 | Animationen (Sheets, Balken), `prefers-reduced-motion` | fertig (Bestand: Sheets, Crossfade, Balken, Login; ergänzt: kein weiches Scrollen bei Reduced Motion) |
 | 7.5 | Barrierefreiheit-Check, abschließendes Security Audit | geplant |
