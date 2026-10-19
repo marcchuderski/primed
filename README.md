@@ -15,6 +15,8 @@ Tagesarten mit eigenen Sollwerten, Meal-Prep-Vorrat, Barcode-Scan, regelbasierte
 | [`docs/ROADMAP.md`](docs/ROADMAP.md) | Umsetzungsplan mit Status |
 | [`docs/SECURITY.md`](docs/SECURITY.md) | Sicherheitsanforderungen und Audit-Log |
 | [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) | Deployment auf Plesk |
+| [`docs/BETRIEB.md`](docs/BETRIEB.md) | Betrieb: User-CLI, Backups, Logs, Störungen |
+| [`docs/ANLEITUNG.md`](docs/ANLEITUNG.md) | Anleitung für Nutzer (inkl. App-Installation) |
 | [`docs/CHANGELOG.md`](docs/CHANGELOG.md) | Änderungen |
 | [`design/DESIGN.md`](design/DESIGN.md) | Design-Richtlinien, Tokens, Screens |
 

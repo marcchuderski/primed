@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-19 – 7.6 Doku
+- Neu: `docs/BETRIEB.md` (Admin: User-CLI, Migrationen, Backups, Logs, Schlüsselwechsel, Störungen) und `docs/ANLEITUNG.md` (Nutzer: Login, App-Installation iPhone/Android, Bedienung, Einstellungen, Gesundheits-Hinweis, Daten).
+- `DEPLOYMENT.md` und `README.md` verlinken beide.
+
 ## 2026-10-19 – 7.2 Theme flackerfrei
 - Hell/Dunkel aus dem Menü gilt jetzt ab dem ersten Bild, auch auf dem Login-Screen und beim Start der installierten App; Browser-/Statusleisten-Farbe passt sich an.
 - Die Auswahl wird zusätzlich auf dem Gerät gemerkt (nur das Theme); nach dem Löschen des Kontos wird sie vergessen.

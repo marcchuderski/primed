@@ -290,3 +290,7 @@ Neue Einträge unten anhängen. Getroffene Entscheidungen werden nicht gelöscht
 **D-147 · Reduced Motion schaltet auch weiches Scrollen ab** – die globale Regel setzt zusätzlich `scroll-behavior: auto` (Uhrzeit-Rad). Eine Schließen-Animation für Sheets ist in DESIGN.md §8 nicht vorgesehen und wird nicht gebaut. · Claude · 2026-10-19
 
 **D-148 · Flackerfreier Theme-Start** – Kopie der Theme-Wahl in `localStorage` (`primed.theme`), gelesen von einem blockierenden klassischen Skript am Ende von `<head>` (eigene Datei unter `/assets/` mit Content-Hash, kein Inline-Skript). Die Kopie bleibt beim Abmelden erhalten (Geräte-Vorliebe, Login-Screen im gewählten Theme) und wird bei „System“ und nach dem Löschen des Kontos entfernt; maßgeblich bleibt der Server-Wert. `theme-color` folgt dem gewählten Theme. · Alternativen: Inline-Skript mit CSP-Hash (Hash muss bei jeder Änderung in `.htaccess` nachgezogen werden), Cookie (wird bei jedem Request mitgeschickt), nur Server-Wert (flackert bis nach `/auth/me` und `/settings`). · Claude · 2026-10-19
+
+**D-149 · Barrierefreiheit-Check gestrichen** – der A11y-Teil von 7.5 entfällt; 7.5 umfasst nur noch das abschließende Security Audit. Die Grundregeln aus DESIGN.md §10 gelten weiter. · Nutzer · 2026-10-19
+
+**D-150 · Doku-Aufteilung** – Einrichtung/Release bleiben in `DEPLOYMENT.md`, laufender Betrieb in `BETRIEB.md`, Nutzer-Anleitung in `ANLEITUNG.md` (Du-Form, Inhalt von Screen 18 und Hinweis aus Screen 20 wörtlich übernommen). · Claude · 2026-10-19

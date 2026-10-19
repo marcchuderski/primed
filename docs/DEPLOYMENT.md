@@ -1,6 +1,6 @@
 # Deployment (Plesk, manuell per SFTP)
 
-Wird von Claude Code mit jedem Schritt präzisiert (Befehle, Dateilisten, Migrationen).
+Wird von Claude Code mit jedem Schritt präzisiert (Befehle, Dateilisten, Migrationen). Laufender Betrieb (User-CLI, Backups, Logs, Störungen): [`BETRIEB.md`](BETRIEB.md). Anleitung für Nutzer: [`ANLEITUNG.md`](ANLEITUNG.md).
 
 ## Einmalig einrichten
 
