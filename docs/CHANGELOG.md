@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-10-19 – Fix: Sheets springen auf dem iPhone
+- Beim Öffnen stand das Sheet kurz zu hoch (Titel abgeschnitten, unten schien die Seite durch) und sprang dann an seinen Platz; Ursache war der automatische Fokus auf den Schließen-Button. Behoben.
+
 ## 2026-10-19 – App-Icon dunkel
 - Homescreen-Icon jetzt auf dunklem Grund (Night Court), Startbildschirm unter Android ebenfalls dunkel. Auf dem iPhone ggf. das Icon einmal vom Homescreen löschen und neu hinzufügen, iOS speichert es zwischen.
 

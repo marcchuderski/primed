@@ -12,6 +12,14 @@
   background: transparent;
   color: var(--text);
   overflow: hidden;
+  /* clip, not just hidden: a hidden box can still be scrolled by script, and iOS scrolled the dialog to reveal
+     the auto-focused close button while the sheet was still sliding in from below (sheet and scrim jumped up). */
+  overflow: clip;
+}
+
+/* The dialog itself takes the focus on open (no ring; the sheet title is announced instead). */
+.dialog:focus {
+  outline: none;
 }
 
 .dialog::backdrop {

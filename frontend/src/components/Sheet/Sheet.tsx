@@ -48,6 +48,10 @@ export function Sheet({
     }
     if (open && !dialog.open) {
       dialog.showModal();
+      // showModal focuses the first control, which is still below the screen while the sheet slides in; iOS then
+      // scrolls the dialog to show it. Undo that (older Safari without overflow: clip) and focus the dialog instead.
+      dialog.scrollTop = 0;
+      dialog.focus({ preventScroll: true });
     } else if (!open && dialog.open) {
       dialog.close();
     }
@@ -58,6 +62,10 @@ export function Sheet({
       ref={ref}
       className={styles['dialog']}
       aria-labelledby={titleId}
+      tabIndex={-1}
+      onScroll={(event) => {
+        event.currentTarget.scrollTop = 0;
+      }}
       onCancel={(event) => {
         event.preventDefault();
         onClose();
