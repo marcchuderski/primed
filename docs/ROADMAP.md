@@ -77,7 +77,7 @@ Reihenfolge (Nutzer, 2026-10-17): 7.1 und 7.3 vor Phase 6. Geändert (Nutzer, 20
 | 7.2 | Theme-Schalter System/Hell/Dunkel (flackerfrei) | fertig |
 | 7.3 | PWA: Manifest, Icons, Service Worker (nur App-Shell) | fertig |
 | 7.4 | Animationen (Sheets, Balken), `prefers-reduced-motion` | fertig (Bestand: Sheets, Crossfade, Balken, Login; ergänzt: kein weiches Scrollen bei Reduced Motion) |
-| 7.5 | ~~Barrierefreiheit-Check~~ (gestrichen, D-149), abschließendes Security Audit | fertig (A11y gestrichen, D-149; Audit siehe `SECURITY.md`; offen: Entscheidung Username-Änderung mit Passwort) |
+| 7.5 | ~~Barrierefreiheit-Check~~ (gestrichen, D-149), abschließendes Security Audit | fertig (A11y gestrichen, D-149; Audit siehe `SECURITY.md`; Fund 7 durch festen Username gelöst, D-152) |
 | 7.6 | Admin-Doku (Betrieb, Deployment, User-CLI) und Nutzer-Doku (inkl. PWA-Installation und Gesundheits-Hinweis aus dem Richtwerte-Modal) | fertig (`docs/BETRIEB.md`, `docs/ANLEITUNG.md`) |
 
 ## Später / vielleicht

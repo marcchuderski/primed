@@ -127,7 +127,7 @@ Implementiert: `GET /v1/health` → `{"status":"ok"}`.
 | Endpunkt | Zweck |
 |---|---|
 | `GET/PATCH /v1/settings` | Einstellungen lesen; ändern (jede Gruppe optional, innerhalb von `thresholds`/`shake` auch einzelne Felder; unbekannte Felder → 422): `theme`, `proteinDefault`, `checkpoint {offsetMin 60–300/15, pct 50–95/5, earliestMin 240–600/15}`, `earliestTrainingMin` 300–720/15, `tolerancePct` 1–15, `shakesEnabled` (bool, D-137), `thresholds {minProteinGap, bigShakeProtein, bigShakeKcal, lightMealKcal, restShakeFrom, richMilkKcal, overKcalProtein}`, `shake {proteinPowderFoodId (eigenes Produkt, nicht pro Stück, null erlaubt), powderG 10–80, liquids {milkLow, milkHigh, water} (mind. eine)}` |
-| `PATCH /v1/profile` | `{displayName, username}` + CSRF → `{user}` · 409 `username_taken` · 422 bei ungültigem Username |
+| `PATCH /v1/profile` | `{displayName}` + CSRF → `{user}` · 422 bei leerem Namen oder jedem weiteren Feld (Username ist fest, D-152) |
 | `POST /v1/account/delete` | `{password}` + CSRF → 204, Cookie gelöscht, alle Daten des Users gelöscht (D-082) · 422 `invalid_password` · 429 (Login-Rate-Limit, D-124) |
 | `GET/POST /v1/day-types`, `PATCH/DELETE /v1/day-types/{id}` | Tagesarten verwalten (Löschen: nicht, wenn in der Wochenvorlage benutzt; mindestens eine bleibt; weich gelöscht) |
 | `GET/PUT /v1/week-template` | Wochenvorlage (genau 7 Einträge) |

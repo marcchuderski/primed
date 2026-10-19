@@ -45,8 +45,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setState({ status: 'anonymous' });
   }, []);
 
-  const updateProfile = useCallback(async (displayName: string, username: string) => {
-    const user = await authApi.updateProfile(displayName, username);
+  const updateProfile = useCallback(async (displayName: string) => {
+    const user = await authApi.updateProfile(displayName);
     setState({ status: 'authenticated', user });
   }, []);
 

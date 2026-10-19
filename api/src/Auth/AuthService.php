@@ -166,23 +166,11 @@ final class AuthService
     }
 
     /**
-     * Changes display name and username (unique, D-079 rules).
+     * Changes the display name. The username is fixed after creation (D-152).
      */
-    public function updateProfile(AuthContext $context, string $displayName, string $username): User
+    public function updateProfile(AuthContext $context, string $displayName): User
     {
-        $normalized = UsernameNormalizer::normalize($username);
-        if (!UsernameNormalizer::isValid($normalized)) {
-            throw new HttpException(
-                422,
-                'validation_failed',
-                'Username: 3–32 Zeichen, nur a–z, 0–9, Punkt, Bindestrich, Unterstrich.',
-            );
-        }
-        $existing = $this->users->findByUsername($normalized);
-        if ($existing !== null && $existing->id !== $context->user->id) {
-            throw new HttpException(409, 'username_taken', 'Dieser Username ist schon vergeben.');
-        }
-        $this->users->updateProfile($context->user->id, $displayName, $normalized);
+        $this->users->updateDisplayName($context->user->id, $displayName);
         $this->logger->log('info', 'Profile updated', ['userId' => $context->user->id]);
 
         return $this->users->findById($context->user->id) ?? throw AuthException::unauthenticated();

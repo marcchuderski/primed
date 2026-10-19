@@ -258,11 +258,15 @@ describe('Menu and settings (7.1)', () => {
     renderMenu();
     await userEvent.click(screen.getByRole('button', { name: /Profil bearbeiten/ }));
     const name = await screen.findByLabelText('Display-Name');
+    // D-152: the username is shown, but there is no field to change it.
+    expect(screen.getByText('@marcch')).toBeInTheDocument();
+    expect(screen.queryByLabelText('Username')).not.toBeInTheDocument();
+    expect(screen.getAllByRole('textbox')).toHaveLength(1);
     expect(screen.getByRole('button', { name: 'Profil speichern' })).toBeDisabled();
     await userEvent.clear(name);
     await userEvent.type(name, 'Marc C.');
     await userEvent.click(screen.getByRole('button', { name: 'Profil speichern' }));
-    expect(auth.updateProfile).toHaveBeenCalledWith('Marc C.', 'marcch');
+    expect(auth.updateProfile).toHaveBeenCalledWith('Marc C.');
   });
 
   it('lists the settings in the agreed order', async () => {

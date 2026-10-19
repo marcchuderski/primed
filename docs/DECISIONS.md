@@ -296,3 +296,5 @@ Neue Einträge unten anhängen. Getroffene Entscheidungen werden nicht gelöscht
 **D-150 · Doku-Aufteilung** – Einrichtung/Release bleiben in `DEPLOYMENT.md`, laufender Betrieb in `BETRIEB.md`, Nutzer-Anleitung in `ANLEITUNG.md` (Du-Form, Inhalt von Screen 18 und Hinweis aus Screen 20 wörtlich übernommen). · Claude · 2026-10-19
 
 **D-151 · Funde aus dem Abschluss-Audit (7.5)** – DB-Fehler nur mit SQLSTATE loggen; IP-HMAC-Präfix (12 Hex) in Login-Ereignissen; OFF-Cache bei jedem Schreiben bereinigen (statt Zufall oder Cron, Index auf `fetched_at`); Sicherheits-Header ohne `<IfModule>` (fail closed); HTTPS-Weiterleitung auch in `api/.htaccess`; Client-IP hinter nginx, nginx-Direktauslieferung und Trusted Types werden im ersten Deploy-Check auf dem Server geprüft (lokal nicht prüfbar). · Claude · 2026-10-19
+
+**D-152 · Username fest** – vergeben nur beim Anlegen per CLI, danach weder in der App noch per API/CLI änderbar; das Profil zeigt ihn als feste Zeile mit Schloss. Ersetzt die Username-Änderung aus 7.1. · Alternativen: Änderung mit Passwort-Bestätigung, Änderung ohne Passwort (bisher). · Nutzer · 2026-10-19

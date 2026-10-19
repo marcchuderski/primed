@@ -12,7 +12,7 @@ export interface AuthContextValue {
   login: (username: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   logoutEverywhere: () => Promise<void>;
-  updateProfile: (displayName: string, username: string) => Promise<void>;
+  updateProfile: (displayName: string) => Promise<void>;
   deleteAccount: (password: string) => Promise<void>;
   retry: () => void;
 }

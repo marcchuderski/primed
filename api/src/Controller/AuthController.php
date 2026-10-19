@@ -88,12 +88,9 @@ final class AuthController
     public function updateProfile(Request $request, array $params): Response
     {
         $context = $this->requireAuth($request);
-        $input = Input::fromRequest($request);
-        $user = $this->c->auth()->updateProfile(
-            $context,
-            $input->text('displayName', 1, 64, 'Display-Name'),
-            $input->text('username', 3, 32, 'Username'),
-        );
+        // The username is fixed (D-152): only the display name can change; any other field is rejected.
+        $input = Input::fromRequest($request)->only('displayName');
+        $user = $this->c->auth()->updateProfile($context, $input->text('displayName', 1, 64, 'Display-Name'));
 
         return Response::json(['user' => $user->toPublic()]);
     }

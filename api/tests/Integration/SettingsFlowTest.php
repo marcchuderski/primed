@@ -87,33 +87,21 @@ final class SettingsFlowTest extends ApiTestCase
         self::assertSame(['proteinPowder' => null], $cleared['shakeFoods']);
     }
 
-    public function testProfileUpdateWithUniqueUsername(): void
+    public function testProfileChangesOnlyTheDisplayNameUsernameIsFixed(): void
     {
-        self::assertSame(409, $this->call('PATCH', '/api/v1/profile', [
-            'displayName' => 'Marc',
-            'username' => 'Freund',
-        ])->status);
-        self::assertSame(422, $this->call('PATCH', '/api/v1/profile', [
-            'displayName' => 'Marc',
-            'username' => 'a b',
-        ])->status);
-        self::assertSame(422, $this->call('PATCH', '/api/v1/profile', [
-            'displayName' => '',
-            'username' => 'marcch',
-        ])->status);
+        // D-152: the username cannot be changed, not even to a free or the own value.
+        foreach (['marc.c', 'marcch'] as $username) {
+            $response = $this->call('PATCH', '/api/v1/profile', ['displayName' => 'Marc', 'username' => $username]);
+            self::assertSame(422, $response->status, $username);
+        }
+        self::assertSame(422, $this->call('PATCH', '/api/v1/profile', ['displayName' => ''])->status);
 
-        $response = $this->call('PATCH', '/api/v1/profile', ['displayName' => 'Marc C.', 'username' => 'Marc.C']);
+        $response = $this->call('PATCH', '/api/v1/profile', ['displayName' => 'Marc C.']);
         self::assertSame(200, $response->status, $response->body);
         $user = self::json($response)['user'];
         self::assertIsArray($user);
         self::assertSame('Marc C.', $user['displayName']);
-        self::assertSame('marc.c', $user['username']);
-
-        // Keeping the own username is fine.
-        self::assertSame(200, $this->call('PATCH', '/api/v1/profile', [
-            'displayName' => 'Marc',
-            'username' => 'marc.c',
-        ])->status);
+        self::assertSame('marcch', $user['username']);
     }
 
     public function testAccountDeletionNeedsPasswordAndRemovesAllData(): void
@@ -152,7 +140,7 @@ final class SettingsFlowTest extends ApiTestCase
     public function testProfileAndDeletionNeedCsrf(): void
     {
         $cases = [
-            ['PATCH', '/api/v1/profile', '{"displayName":"X","username":"freund"}'],
+            ['PATCH', '/api/v1/profile', '{"displayName":"X"}'],
             ['POST', '/api/v1/account/delete', '{"password":"x"}'],
         ];
         foreach ($cases as [$method, $path, $body]) {

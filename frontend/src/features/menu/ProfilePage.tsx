@@ -1,3 +1,4 @@
+import { Lock } from 'lucide-react';
 import { useState, type SubmitEvent } from 'react';
 import { changePassword, type User } from '../../api/auth.ts';
 import { Button } from '../../components/Button/Button.tsx';
@@ -12,11 +13,10 @@ const MIN_PASSWORD = 12;
 
 const message = (e: unknown, fallback: string) => (e instanceof Error ? e.message : fallback);
 
-/** Profile: display name, username, password, account deletion (BRIEFING §12, D-082). */
+/** Profile: display name, fixed username (D-152), password, account deletion (BRIEFING §12, D-082). */
 export function ProfilePage({ user, onBack }: { user: User; onBack: () => void }) {
   const { updateProfile, deleteAccount } = useAuth();
   const [displayName, setDisplayName] = useState(user.displayName);
-  const [username, setUsername] = useState(user.username);
   const [profileBusy, setProfileBusy] = useState(false);
   const [profileMsg, setProfileMsg] = useState<{ ok: boolean; text: string } | null>(null);
 
@@ -32,14 +32,14 @@ export function ProfilePage({ user, onBack }: { user: User; onBack: () => void }
   const [deleteBusy, setDeleteBusy] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
-  const profileChanged = displayName.trim() !== user.displayName || username.trim() !== user.username;
+  const profileChanged = displayName.trim() !== user.displayName;
 
   async function saveProfile(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     setProfileBusy(true);
     setProfileMsg(null);
     try {
-      await updateProfile(displayName.trim(), username.trim());
+      await updateProfile(displayName.trim());
       setProfileMsg({ ok: true, text: 'Profil gespeichert.' });
     } catch (e) {
       setProfileMsg({ ok: false, text: message(e, 'Profil konnte nicht gespeichert werden.') });
@@ -87,6 +87,19 @@ export function ProfilePage({ user, onBack }: { user: User; onBack: () => void }
 
   return (
     <SettingsPage title="Profil" onBack={onBack}>
+      <div className={styles['card']}>
+        <div className={styles['row']}>
+          <span className={styles['rowTexts']}>
+            <span className={styles['rowLabel']}>Username</span>
+            <span className={styles['rowHint']}>Damit meldest du dich an. Lässt sich nicht ändern.</span>
+          </span>
+          <span className={styles['fixedValue']}>
+            @{user.username}
+            <Lock size={16} strokeWidth={2.2} aria-hidden="true" />
+          </span>
+        </div>
+      </div>
+
       <form className={styles['form']} onSubmit={(e) => void saveProfile(e)} noValidate>
         <TextField
           label="Display-Name"
@@ -95,18 +108,6 @@ export function ProfilePage({ user, onBack }: { user: User; onBack: () => void }
           autoComplete="nickname"
           onChange={(e) => {
             setDisplayName(e.target.value);
-          }}
-        />
-        <TextField
-          label="Username"
-          hint="3–32 Zeichen: a–z, 0–9, Punkt, Bindestrich, Unterstrich. Damit meldest du dich an."
-          value={username}
-          maxLength={32}
-          autoComplete="username"
-          autoCapitalize="none"
-          spellCheck={false}
-          onChange={(e) => {
-            setUsername(e.target.value);
           }}
         />
         {profileMsg !== null && (

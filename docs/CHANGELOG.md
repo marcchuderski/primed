@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-10-19 – Username fest
+- Der Username lässt sich nach dem Anlegen nicht mehr ändern; das Profil zeigt ihn mit Schloss-Symbol statt eines Eingabefelds. `PATCH /v1/profile` nimmt nur noch den Display-Namen an.
+
 ## 2026-10-19 – 7.5 Abschließendes Security Audit
 - Barrierefreiheit-Check gestrichen (Nutzer).
 - API: Datenbankfehler im Log nur noch als SQLSTATE; Login-Ereignisse mit kurzem IP-HMAC; Open-Food-Facts-Cache räumt sich selbst auf (> 30 Tage); Suchbegriffe mit ungültigem UTF-8 → 422.

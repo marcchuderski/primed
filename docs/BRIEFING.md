@@ -216,7 +216,7 @@ Aus Gerichten und Bibliothek die Optionen wählen, die die offenen Werte (bis Ch
 
 ## 12. Menü und Einstellungen
 
-- Profil (Display-Name, Username, Passwort ändern)
+- Profil (Display-Name ändern, Username nur anzeigen – fest ab Anlage, D-152; Passwort ändern)
 - Aktuelles Proteinpulver, Protein-Standard
 - Darstellung: System · Hell · Dunkel (überschreibt Geräteeinstellung)
 - Reihenfolge: Tagesarten & Sollwerte · Wochenvorlage · Checkpoints · Bewertung (Toleranz) · Shakes (Erklärung, An/Aus; bei an: Proteinpulver + Menge, Flüssigkeiten als Pills, Vorschlags-Schwellen)

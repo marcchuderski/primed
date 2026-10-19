@@ -49,8 +49,9 @@ function parseUser(data: unknown): User {
   throw new ApiError(200, 'invalid_response', 'Unerwartete Antwort vom Server.');
 }
 
-export async function updateProfile(displayName: string, username: string): Promise<User> {
-  return parseUser(await apiRequest('PATCH', '/profile', { displayName, username }));
+/** Only the display name can change; the username is fixed (D-152). */
+export async function updateProfile(displayName: string): Promise<User> {
+  return parseUser(await apiRequest('PATCH', '/profile', { displayName }));
 }
 
 /** Other sessions end; this one stays (BRIEFING §13). */

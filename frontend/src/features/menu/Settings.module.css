@@ -112,6 +112,18 @@
   color: var(--text-muted);
 }
 
+/* Read-only value on the right of a row (e.g. the fixed username), lock icon instead of a control. */
+.fixedValue {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 6px;
+  padding-right: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
 .link {
   display: flex;
   align-items: center;

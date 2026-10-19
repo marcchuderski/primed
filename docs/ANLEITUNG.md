@@ -6,7 +6,8 @@ Primed ist dein Ernährungsplan, der mit deinem Training mitdenkt: Kalorien, Pro
 
 1. Deinen Login (Username und Startpasswort) bekommst du von Marc. Eine Registrierung gibt es nicht.
 2. Öffne **https://primed.dev-pfeffermond.de** und melde dich an.
-3. Ändere das Startpasswort unter **Menü › Profil › Passwort ändern**, wenn du magst (mindestens 12 Zeichen; ein langer Satz ist ideal).
+3. Dein Username steht fest und lässt sich nicht ändern; den Anzeigenamen kannst du unter **Menü › Profil** anpassen.
+4. Ändere das Startpasswort unter **Menü › Profil › Passwort ändern**, wenn du magst (mindestens 12 Zeichen; ein langer Satz ist ideal).
 
 ## 2. Als App auf den Homescreen
 

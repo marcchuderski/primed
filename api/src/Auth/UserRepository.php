@@ -60,10 +60,9 @@ final class UserRepository
             ->execute([$passwordHash, Db::dateTime($changedAt), $userId]);
     }
 
-    public function updateProfile(int $userId, string $displayName, string $username): void
+    public function updateDisplayName(int $userId, string $displayName): void
     {
-        $this->pdo->prepare('UPDATE users SET display_name = ?, username = ? WHERE id = ?')
-            ->execute([$displayName, $username, $userId]);
+        $this->pdo->prepare('UPDATE users SET display_name = ? WHERE id = ?')->execute([$displayName, $userId]);
     }
 
     /**

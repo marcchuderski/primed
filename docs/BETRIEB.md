@@ -19,6 +19,7 @@ Eine Registrierung im Web gibt es nicht; Konten legt nur der Betreiber an (D-063
 
 | Aufgabe | Befehl | Hinweis |
 |---|---|---|
+| Username | wird nur beim Anlegen vergeben und ist danach **fest** (D-152); auch per CLI nicht änderbar. | – |
 | User anlegen (Freund) | `/opt/plesk/php/8.3/bin/php primed-app/bin/user-create.php` | fragt Username und Display-Name; erzeugt ein **zufälliges Startpasswort**, das einmalig angezeigt wird. Sicher übergeben (persönlich oder Messenger mit Ende-zu-Ende-Verschlüsselung, nicht per E-Mail). |
 | User mit eigenem Passwort | `… user-create.php --set-password` | Passwort verdeckt eingeben (mind. 12 Zeichen, keine häufigen Passwörter). |
 | Betreiber-Konto | `… user-create.php --set-password --owner-defaults` | zusätzlich die persönliche Wochenvorlage (D-080). |
