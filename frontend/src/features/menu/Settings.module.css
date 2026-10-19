@@ -112,13 +112,27 @@
   color: var(--text-muted);
 }
 
-/* Read-only value on the right of a row (e.g. the fixed username), lock icon instead of a control. */
+/* Read-only row (e.g. the fixed username): label and value with lock on one line, hint below at full width. */
+.fixedRow {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px 16px;
+}
+
+.fixedLine {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
 .fixedValue {
   display: flex;
-  flex-shrink: 0;
   align-items: center;
   gap: 6px;
-  padding-right: 8px;
+  min-width: 0;
+  overflow-wrap: anywhere;
   font-size: 15px;
   font-weight: 600;
   color: var(--text-muted);

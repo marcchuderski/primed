@@ -122,7 +122,7 @@ Bewertet wird nur die **kcal-Bilanz gegen das Tagessoll, Toleranz ±5 %**. Drei 
 
 **Verlauf:** Bilanzkarte mit kcal-Bilanz groß links, Ø Protein groß rechts (Akzent), darunter drei getrennte Status-Kacheln. Wochentabelle: Tage als Spalten, Merkmale als Zeilen, letzte Spalte **Σ Woche**, horizontal scrollbar.
 
-**Profil:** Username als feste Zeile oben (Label „Username“, Hinweis „Damit meldest du dich an. Lässt sich nicht ändern.“, rechts `@username` gedämpft mit Schloss-Icon), kein Eingabefeld (D-152). Darunter Display-Name, Passwort ändern, Konto löschen.
+**Profil:** Username als feste Karte oben: eine Zeile mit Label „Username“ links und `@username` gedämpft mit Schloss-Icon rechts, darunter in voller Breite der Hinweis „Damit meldest du dich an. Lässt sich nicht ändern.“; kein Eingabefeld (D-152). Darunter Display-Name, Passwort ändern, Konto löschen.
 
 **Footer** am Ende aller Seiten (Heute, Essen, Verlauf, Menü und Einstellungsseiten), nie in Sheets: kleines Logo, Version, gedämpft (D-145).
 

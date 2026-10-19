@@ -88,15 +88,15 @@ export function ProfilePage({ user, onBack }: { user: User; onBack: () => void }
   return (
     <SettingsPage title="Profil" onBack={onBack}>
       <div className={styles['card']}>
-        <div className={styles['row']}>
-          <span className={styles['rowTexts']}>
+        <div className={styles['fixedRow']}>
+          <span className={styles['fixedLine']}>
             <span className={styles['rowLabel']}>Username</span>
-            <span className={styles['rowHint']}>Damit meldest du dich an. Lässt sich nicht ändern.</span>
+            <span className={styles['fixedValue']}>
+              @{user.username}
+              <Lock size={16} strokeWidth={2.2} aria-hidden="true" />
+            </span>
           </span>
-          <span className={styles['fixedValue']}>
-            @{user.username}
-            <Lock size={16} strokeWidth={2.2} aria-hidden="true" />
-          </span>
+          <span className={styles['rowHint']}>Damit meldest du dich an. Lässt sich nicht ändern.</span>
         </div>
       </div>
 
