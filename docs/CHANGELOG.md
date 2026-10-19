@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-19 – 7.4 Animationen
+- Bestand geprüft: Sheets fahren von unten ein (280 ms, Scrim blendet mit), Tabs/Screens mit 150-ms-Crossfade, Balken füllen sich animiert, Login-Animation.
+- `prefers-reduced-motion`: jetzt auch kein weiches Scrollen mehr (Uhrzeit-Rad springt sofort).
+- Roadmap: alle restlichen Punkte (7.2, 7.4, 7.5, 7.6) vor den ersten Deploy-Check gezogen.
+
 ## 2026-10-18 – Footer auf allen Seiten
 - Logo und Version jetzt auch am Ende von Essen, Verlauf, Menü und den Einstellungsseiten (nicht in Sheets).
 

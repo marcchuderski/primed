@@ -60,6 +60,7 @@ a {
   border: 0;
 }
 
+/* DESIGN.md §8: with reduced motion only instant state changes (animations, transitions, smooth scrolling). */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -68,5 +69,6 @@ a {
     animation-delay: 0s !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0s !important;
+    scroll-behavior: auto !important;
   }
 }

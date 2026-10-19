@@ -284,3 +284,7 @@ Neue Einträge unten anhängen. Getroffene Entscheidungen werden nicht gelöscht
 **D-144 · Bibliothek wie „Zutat suchen“** – Essen › Bibliothek: Scan-Button in der Suchzeile, Online-Treffer (Open Food Facts) ab 3 Zeichen unter den eigenen Treffern, unten fest am Bildschirmrand „Scannen“ und „Produkt anlegen“. Scan: Bibliothekstreffer öffnet zum Bearbeiten, Online-Treffer und unbekannte Barcodes öffnen „Neues Produkt“ (vorausgefüllt) zum Prüfen; gespeichert wird erst mit „In Bibliothek speichern“. „Produkt anlegen“ übernimmt den Suchbegriff als Namen. · Nutzer · 2026-10-18
 
 **D-145 · Footer auf allen Seiten** – Logo + Version am Ende von Heute, Essen (Gerichte und Bibliothek, dort unter den festen Aktionen), Verlauf, Menü und allen Einstellungsseiten; nicht in Sheets und Dialogen. · Nutzer · 2026-10-18
+
+**D-146 · Restliche Roadmap vor dem Deploy-Check** – 7.4, 7.2, 7.5 und 7.6 werden vor dem ersten Deploy-Check umgesetzt (ändert die Reihenfolge vom 2026-10-17); „Später / vielleicht“ bleibt danach. · Nutzer · 2026-10-19
+
+**D-147 · Reduced Motion schaltet auch weiches Scrollen ab** – die globale Regel setzt zusätzlich `scroll-behavior: auto` (Uhrzeit-Rad). Eine Schließen-Animation für Sheets ist in DESIGN.md §8 nicht vorgesehen und wird nicht gebaut. · Claude · 2026-10-19
