@@ -22,7 +22,7 @@ Bei Abweichungen oder Lücken gilt die Arbeitsregel aus `CLAUDE.md`: Trade-offs 
 - **Zeichen:** P, dessen Bauch ein zu ca. ¾ gefüllter Fortschrittsring ist. Stiel liegt **über** dem Ring.
 - **Wortmarke:** „primed“ kleingeschrieben in Bricolage Grotesque 800, das „p“ in Akzentfarbe.
 - **Logo-Lockup in der App (verbindlich, wie Screen 18):** Zeichen als „p“ + „rimed“ auf gemeinsamer Grundlinie; Zeichen ≈ 0,81 × Schriftgröße hoch (viewBox `26 13 75 90`), Abstand ≈ 0,06 em, „rimed“ mit Laufweite −0,05 em. Gilt für Loading, Login, Footer und alle weiteren Screens; „primed“ mit Text-„p“ nur in Fließtext.
-- **App-Icon:** Zeichen auf Sand (`#ECE3D6`). Dateien in [`brand/`](brand/):
+- **App-Icon:** Zeichen auf Night Court (`#17191D`, Stiel `#E8E3DB`, Ring `#F27A4B`, D-160); Favicon im Browser-Tab bleibt auf Sand. Dateien in [`brand/`](brand/), gerendert aus `primed-icon.svg` mit Chrome (ImageMagick zeichnet den Ring-Bogen nicht):
   - `apple-touch-icon.png` (180 px, iOS rundet selbst)
   - `icon-192.png`, `icon-512.png` (PWA-Manifest)
   - `icon-maskable-512.png` (mit Sicherheitszone, `purpose: maskable`)

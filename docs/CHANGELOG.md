@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-10-19 – App-Icon dunkel
+- Homescreen-Icon jetzt auf dunklem Grund (Night Court), Startbildschirm unter Android ebenfalls dunkel. Auf dem iPhone ggf. das Icon einmal vom Homescreen löschen und neu hinzufügen, iOS speichert es zwischen.
+
 ## 2026-10-19 – Migration 012: schlanke Startbibliothek
 - Standard-Lebensmittel (BLS-Richtwerte wie Zwiebel, Banane, Reis …) und die sechs Start-Produkte sind für alle User aus der Bibliothek entfernt; eigene Einträge bleiben, der Verlauf bleibt vollständig.
 - Milch 1,5 % / 3,5 % bleibt, ist aber nur sichtbar, solange Shakes an sind.
