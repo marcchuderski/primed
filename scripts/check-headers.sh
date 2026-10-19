@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Checks a running Primed instance for the security requirements in docs/SECURITY.md.
 # Usage: scripts/check-headers.sh https://primed.dev-pfeffermond.de [--insecure]
-# The probes for .env/.git look like an attack scan: a WAF (e.g. Imunify360) may block your IP; whitelist it for the check.
+# The probes for .env/.git look like an attack scan: ModSecurity + Fail2Ban (Plesk) may ban your IP.
+# Run it from a throwaway connection (phone hotspot) or trust your IP in Fail2Ban for the duration of the check.
 set -euo pipefail
 
 BASE="${1:?Base URL required, e.g. https://primed.dev-pfeffermond.de}"
@@ -62,7 +63,7 @@ echo "Nothing private is reachable"
 for path in .env .htaccess api/.htaccess api/../.env .git/config primed-app/.env bootstrap.php api/bootstrap.php composer.json api/composer.json; do
   status=$("${CURL[@]}" -o /dev/null -w '%{http_code}' "$BASE/$path" 2>/dev/null || true)
   if [[ "$status" == "000" || -z "$status" ]]; then
-    bad "/$path: no connection (blocked by a firewall/WAF such as Imunify? whitelist your IP for the check)"
+    bad "/$path: no connection (IP banned by Fail2Ban/ModSecurity? unban in Plesk or use another connection)"
     continue
   fi
   body=$("${CURL[@]}" "$BASE/$path" 2>/dev/null | head -c 4000 || true)
