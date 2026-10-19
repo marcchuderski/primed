@@ -26,15 +26,27 @@ final class FoodsFlowTest extends ApiTestCase
         'packageAmount' => 450,
     ];
 
-    public function testStartLibraryContainsBlsReferencesAndWhey(): void
+    public function testStartLibraryIsMilkAndWheyOnly(): void
     {
-        $names = $this->names(self::json($this->call('GET', '/api/v1/foods?type=reference', null, 'freund')));
-        self::assertContains('Haferflocken', $names);
-        self::assertContains('Milch 1,5 %', $names);
-        self::assertCount(16, $names); // 14 BLS + 2 milks
+        $names = $this->names(self::json($this->call('GET', '/api/v1/foods', null, 'freund')));
+        self::assertEqualsCanonicalizing(['Milch 1,5 %', 'Milch 3,5 %', 'ESN Designer Whey Milk Chocolate'], $names);
 
         $whey = $this->call('GET', '/api/v1/foods/barcode/4250519647234', null, 'freund');
         self::assertSame('library', self::json($whey)['source']);
+    }
+
+    public function testStartMilkIsOnlyVisibleWhileShakesAreOn(): void
+    {
+        self::assertContains('Milch 1,5 %', $this->names(self::json($this->call('GET', '/api/v1/foods?q=Milch'))));
+
+        self::assertSame(200, $this->call('PATCH', '/api/v1/settings', ['shakesEnabled' => false])->status);
+        $names = $this->names(self::json($this->call('GET', '/api/v1/foods')));
+        self::assertNotContains('Milch 1,5 %', $names);
+        self::assertNotContains('Milch 3,5 %', $names);
+        self::assertContains('ESN Designer Whey Milk Chocolate', $names);
+
+        self::assertSame(200, $this->call('PATCH', '/api/v1/settings', ['shakesEnabled' => true])->status);
+        self::assertContains('Milch 3,5 %', $this->names(self::json($this->call('GET', '/api/v1/foods'))));
     }
 
     public function testCreateSearchUpdateDelete(): void

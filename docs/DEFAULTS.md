@@ -51,7 +51,7 @@ Tagesgrenze: 02:00 (Einträge bis 01:59 zählen zum Vortag).
 
 ## Shakes
 
-Shakes werden aus Bibliothekseinträgen berechnet: Milch + **Aktuelles Proteinpulver** (Einstellung).
+Shakes werden aus festen Milchwerten (seit D-139 im Code, `ShakeService::LIQUIDS`) und dem **aktuellen Proteinpulver** (Einstellung) berechnet. Startbibliothek für alle User seit Migration 012 (D-159): nur die beiden Milch-Einträge (in der Bibliothek nur sichtbar, solange Shakes an sind) und das Whey.
 
 | Bibliothekseintrag | Typ | Basis | kcal | Protein | KH | davon Zucker | Fett | Kategorie |
 |---|---|---|---|---|---|---|---|---|
@@ -93,7 +93,9 @@ Toleranz „im Rahmen“: **±5 %** vom kcal-Soll.
 | +5 bis +10 % | leichter Überschuss |
 | über +10 % | Überschuss |
 
-## Bibliothek: Startprodukte (aus dem bisherigen Ernährungsplan)
+## ~~Bibliothek: Startprodukte (aus dem bisherigen Ernährungsplan)~~
+
+Entfernt mit Migration 012 (D-159), für alle User; nur noch als Referenz:
 
 | Produkt | Bezug | kcal | Fett | KH | Zucker | Protein | Kategorie |
 |---|---|---|---|---|---|---|---|
@@ -104,7 +106,9 @@ Toleranz „im Rahmen“: **±5 %** vom kcal-Soll.
 | Lidl Müsli-Riegel | 1 Stück | 87 | 2,3 | 17,0 | 0,4 | 1,9 | Snacks & Riegel |
 | Lidl Chicken Nuggets | pro 100 g | 315 | 13,2 | 23,3 | 1,1 | 25,2 | Snacks & Riegel |
 
-## Richtwert-Grundliste (für alle User)
+## ~~Richtwert-Grundliste (für alle User)~~
+
+Entfernt mit Migration 012 (D-159), für alle User; nur noch als Referenz.
 
 Quelle: Max Rubner-Institut (2025): Bundeslebensmittelschlüssel (BLS), Version 4.0 – Deutsche Nährstoffdatenbank. Karlsruhe. DOI: 10.25826/Data20251217-134202-0. Lizenz CC BY 4.0 (Namensnennung Pflicht; Werte auf 0,1 gerundet, KH = „verfügbar“ ohne Ballaststoffe). Freigegeben ohne Einzelbestätigung (D-110). Alle pro 100 g:
 

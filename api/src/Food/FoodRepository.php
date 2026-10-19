@@ -36,14 +36,14 @@ final class FoodRepository
     /**
      * @param array{type: string, name: string, brand: string|null, barcode: string|null, category: string,
      *     basis: string, kcal: float, protein: float, carbs: float, sugar: float, fat: float,
-     *     packageAmount: float|null, source: string} $food
+     *     packageAmount: float|null, source: string, systemKey?: string|null} $food
      */
     public function create(int $userId, array $food, DateTimeImmutable $now): int
     {
         $this->pdo->prepare(
             'INSERT INTO foods (user_id, type, name, brand, barcode, category, basis, kcal, protein, carbs, sugar, fat,
-                                package_amount, source, created_at, updated_at)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                                package_amount, source, system_key, created_at, updated_at)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
         )->execute([
             $userId,
             $food['type'],
@@ -59,6 +59,7 @@ final class FoodRepository
             $food['fat'],
             $food['packageAmount'],
             $food['source'],
+            $food['systemKey'] ?? null,
             Db::dateTime($now),
             Db::dateTime($now),
         ]);
@@ -79,7 +80,8 @@ final class FoodRepository
         bool $includeIngredients,
         int $limit = 50,
     ): array {
-        $sql = 'SELECT ' . self::COLUMNS . ' FROM foods WHERE user_id = ? AND deleted_at IS NULL';
+        $sql = 'SELECT ' . self::COLUMNS . ' FROM foods WHERE user_id = ? AND deleted_at IS NULL
+                AND ' . self::visibleMilk('foods');
         $params = [$userId];
         if (!$includeIngredients && $type === null) {
             $sql .= " AND type <> 'ingredient'";
@@ -120,6 +122,7 @@ final class FoodRepository
                   FROM entries e
                   JOIN foods f ON f.id = e.food_id AND f.user_id = e.user_id
                  WHERE e.user_id = ? AND e.date >= ? AND f.deleted_at IS NULL AND f.type <> \'ingredient\'
+                   AND ' . self::visibleMilk('f') . '
                    AND (CASE WHEN e.time_min < ? THEN e.time_min + 1440 ELSE e.time_min END) BETWEEN ? AND ?
                  GROUP BY f.id
                  ORDER BY hits DESC, f.usage_count DESC, f.name
@@ -294,5 +297,14 @@ final class FoodRepository
             Row::nullableFloat($row, 'last_amount'),
             Row::nullableString($row, 'last_unit'),
         );
+    }
+
+    /**
+     * The start milks (system_key) only appear while the user has shakes on (D-159). Constant SQL, no input.
+     */
+    private static function visibleMilk(string $alias): string
+    {
+        return '(' . $alias . '.system_key IS NULL OR EXISTS (SELECT 1 FROM user_settings us
+                 WHERE us.user_id = ' . $alias . '.user_id AND us.shakes_enabled = 1))';
     }
 }

@@ -17,7 +17,7 @@ Wird von Claude Code mit jedem Schritt präzisiert (Befehle, Dateilisten, Migrat
 
 ## Erster Deploy-Check (einmalig, vor der Freigabe an Freunde)
 
-1. Erstes Release nach „Jedes Release“ einspielen, alle Migrationen `001`–`011` in Reihenfolge.
+1. Erstes Release nach „Jedes Release“ einspielen, alle Migrationen `001`–`012` in Reihenfolge.
 2. ✓ (2026-10-19, alle ok) `scripts/check-headers.sh https://primed.dev-pfeffermond.de` vom eigenen Rechner (nicht auf dem Server): alles `ok`. Die Proben auf `.env`/`.git` wirken wie ein Angriffs-Scan; Fail2Ban (Jail `plesk-apache`, zählt die 403-Antworten) sperrt dann die eigene IP (`Failed to connect`). Den Check daher über einen Wegwerf-Anschluss laufen lassen (Handy-Hotspot) oder die eigene IP für die Dauer des Checks unter Tools & Einstellungen › IP-Adressensperre (Fail2Ban) › Vertrauenswürdige IP-Adressen eintragen und danach wieder entfernen. Gesperrt? Dort unter „Gesperrte IP-Adressen“ entsperren. (inkl. Header auf `/assets/*.js` und HTTP→HTTPS für `/api/`).
 3. ✓ (2026-10-19) **Echte Client-IP prüfen** (Rate-Limit, D-061): je einmal mit falschem Passwort aus zwei verschiedenen Netzen anmelden (z. B. WLAN und Mobilfunk), dann in phpMyAdmin `SELECT HEX(ip_hash), attempted_at FROM login_attempts ORDER BY id DESC LIMIT 5;`. Die beiden Hashes **müssen verschieden** sein. Sind sie gleich, sieht Apache nur die Proxy-Adresse: in Plesk `mod_remoteip` (bzw. „Real IP“) für nginx → Apache aktivieren und erneut prüfen. Forward-Header werden in PHP bewusst nicht ausgewertet.
 4. Smoke-Test auf iPhone und Android: Login, App installieren (`ANLEITUNG.md`), Theme Hell/Dunkel (startet ohne Flackern), Eintrag anlegen/löschen, Barcode-Scan mit Kamera, offline öffnen („Keine Verbindung“).
@@ -43,4 +43,5 @@ Wird von Claude Code mit jedem Schritt präzisiert (Befehle, Dateilisten, Migrat
 
 | Nr. | Datei | Ausgeführt am |
 |---|---|---|
-| – | – | – |
+| 001–011 | `001_init.sql` … `011_shake_liquids.sql` | 2026-10-19 (erster Deploy) |
+| 012 | `012_lean_library.sql` | offen |

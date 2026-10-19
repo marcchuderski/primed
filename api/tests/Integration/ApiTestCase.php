@@ -65,6 +65,9 @@ abstract class ApiTestCase extends DatabaseTestCase
         foreach (['marcch' => true, 'freund' => false] as $username => $owner) {
             $id = $users->create($username, ucfirst($username), $hasher->hash(self::PASSWORD), $this->clock->now());
             $seeder->seed($id, $owner, $this->clock->now());
+            if ($owner) {
+                $this->addFixtureFoods($id);
+            }
         }
 
         $attempts = new LoginAttemptRepository($this->pdo);
@@ -157,5 +160,38 @@ abstract class ApiTestCase extends DatabaseTestCase
 
         /** @var array<string, mixed> $data */
         return $data;
+    }
+
+    /**
+     * Own library entries of the owner that the flows work with (the start library only has milk and whey, D-159).
+     * Same values as the former start products, so expected numbers stay meaningful.
+     */
+    private function addFixtureFoods(int $userId): void
+    {
+        $foods = new FoodRepository($this->pdo);
+        $rows = [
+            ['REWE Quarkcreme', 'product', 'dairy', 'per_100g', 67.0, 12.4, 3.2, 2.6, 0.5, 200.0],
+            ['REWE Dinkelbrötchen', 'product', 'bread', 'per_100g', 246.0, 10.0, 46.0, 2.7, 1.8, null],
+            ['DM Proteinriegel', 'product', 'snacks', 'per_unit', 163.0, 23.0, 12.0, 1.2, 4.6, null],
+            ['Reis, roh', 'reference', 'basics', 'per_100g', 351.0, 7.9, 77.1, 0.3, 0.6, null],
+            ['Olivenöl', 'reference', 'basics', 'per_100g', 899.0, 0.0, 0.0, 0.0, 99.9, null],
+        ];
+        foreach ($rows as [$name, $type, $category, $basis, $kcal, $protein, $carbs, $sugar, $fat, $package]) {
+            $foods->create($userId, [
+                'type' => $type,
+                'name' => $name,
+                'brand' => null,
+                'barcode' => null,
+                'category' => $category,
+                'basis' => $basis,
+                'kcal' => $kcal,
+                'protein' => $protein,
+                'carbs' => $carbs,
+                'sugar' => $sugar,
+                'fat' => $fat,
+                'packageAmount' => $package,
+                'source' => 'manual',
+            ], $this->clock->now());
+        }
     }
 }

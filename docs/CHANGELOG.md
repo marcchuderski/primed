@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-19 – Migration 012: schlanke Startbibliothek
+- Standard-Lebensmittel (BLS-Richtwerte wie Zwiebel, Banane, Reis …) und die sechs Start-Produkte sind für alle User aus der Bibliothek entfernt; eigene Einträge bleiben, der Verlauf bleibt vollständig.
+- Milch 1,5 % / 3,5 % bleibt, ist aber nur sichtbar, solange Shakes an sind.
+- Neue User starten nur mit Milch und Whey.
+
 ## 2026-10-19 – Ladezustände mit Platzhaltern
 - Heute, Verlauf, Menü, Bibliothek, Gerichte, Archiv, Hinzufügen, Zutat suchen, Proteinpulver, Vorschläge, Tagesart, Tagesarten und Wochenvorlage zeigen beim Laden ihr Layout mit pulsierenden Platzhaltern statt „Lädt …“ oder leerer Fläche; nichts springt mehr, wenn die Daten kommen.
 - Ladende Sheets öffnen in voller Höhe; das Hinzufügen-Sheet füllt sich auf einmal.
