@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-10-19 – Fix: Sheets auf iOS
+- Sheets wurden auf dem iPhone nur teilweise gezeichnet (Seite schien durch, Scrim fehlte); Ursache `will-change: transform`, entfernt.
+
 ## 2026-10-19 – Gerätetest: Fixes
 - Fix: Online-Treffer (z. B. „Banane“) ließen sich nicht eintragen („Der Barcode ist ungültig“), wenn Open Food Facts einen Code mit falscher Prüfziffer lieferte; sie werden jetzt ohne Barcode gespeichert.
 - Sheets öffnen ruhiger: Uhrzeit-Rad springt sofort auf die Uhrzeit statt sichtbar zu drehen, Such-Sheets haben von Anfang an volle Höhe.

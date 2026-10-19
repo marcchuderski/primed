@@ -44,8 +44,6 @@
   box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.12);
   overflow: hidden;
   animation: slide 280ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
-  /* Own compositing layer: the slide runs on the GPU and does not repaint the content (smooth on iOS). */
-  will-change: transform;
 }
 
 /* Search sheets (with a fixed header): full height from the first frame (screens 04/05). */
