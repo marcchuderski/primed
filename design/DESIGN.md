@@ -176,4 +176,4 @@ Statische Referenz-Mockups mit Beispieldaten (keine echten Werte), je Light und 
 | 17 | Meal Prep · Zutat | Zutat-Menge mit Einheiten-Umschalter |
 | 19 | Tagesarten & Sollwerte | Einstellungen: Protein-Standard, Tagesarten-Liste, „Neue Tagesart“, Hilfe-Zeile |
 | 20 | Richtwerte ermitteln | Modal (Sheet, volle Höhe): Schritte, Fragebogen kopieren, KI-Anbieter, Hinweise |
-| 18 | PWA-Installation | Anleitung Homescreen, nur für die Nutzer-Doku (wird nicht als App-Screen gebaut) |
+| 18 | PWA-Installation | Anleitung Homescreen, nur für die Nutzer-Doku (wird nicht als App-Screen gebaut); gerendert als `docs/assets/pwa-installation-{light,dark}.png` (1080 × 1880, „[Name]“ = Marc) |

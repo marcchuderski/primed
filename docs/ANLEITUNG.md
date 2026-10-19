@@ -13,6 +13,10 @@ Primed ist dein Ernährungsplan, der mit deinem Training mitdenkt: Kalorien, Pro
 
 Primed braucht keinen App Store. In 30 Sekunden liegt es als App auf deinem Homescreen.
 
+<img src="assets/pwa-installation-light.png" alt="Anleitung: Primed auf iPhone und Android zum Homescreen hinzufügen" width="360">
+
+Dieselbe Anleitung als Bild zum Weitergeben: [hell](assets/pwa-installation-light.png) · [dunkel](assets/pwa-installation-dark.png).
+
 **iPhone mit Safari**
 1. Link in **Safari** öffnen (nicht im Instagram- oder WhatsApp-Browser).
 2. Auf **Teilen** tippen (unten, eventuell erst über „…“).

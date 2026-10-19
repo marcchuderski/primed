@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-10-19 – Installationsanleitung als Bild
+- Screen 18 als PNG in Hell und Dunkel (`docs/assets/pwa-installation-*.png`, 1080 × 1880) zum Weitergeben an Freunde; in `ANLEITUNG.md` eingebunden.
+
 ## 2026-10-19 – Produkt-Formular: Typ-Schalter
 - „Markenprodukt“ hat im Typ-Schalter mehr Platz: Spalten richten sich nach der Textlänge.
 
