@@ -259,3 +259,12 @@
 .pill:disabled {
   cursor: default;
 }
+
+/* Changelog list (D-169). */
+.changes {
+  gap: 10px;
+  padding: 14px 16px 14px 34px;
+  list-style: disc;
+  font-size: 14px;
+  line-height: 1.45;
+}

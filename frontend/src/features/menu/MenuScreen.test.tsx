@@ -155,6 +155,20 @@ describe('Menu and settings (7.1)', () => {
     });
   });
 
+  it('opens the changelog; its newest version is the app version', async () => {
+    renderMenu();
+    const link = await screen.findByRole('button', { name: /^Changelog/ });
+    expect(link).toHaveTextContent(`Version ${__APP_VERSION__}`);
+    await userEvent.click(link);
+    expect(screen.getByRole('heading', { level: 1, name: 'Changelog' })).toBeInTheDocument();
+    expect(screen.getByRole('region', { name: `Version ${__APP_VERSION__}` })).toHaveTextContent(
+      '20.10.2026',
+    );
+    expect(screen.getByRole('region', { name: 'Version 1.0.0' })).toHaveTextContent('Erste Version.');
+    await userEvent.click(screen.getByRole('button', { name: 'Zurück' }));
+    expect(await screen.findByRole('heading', { level: 1, name: 'Menü' })).toBeInTheDocument();
+  });
+
   it('opens "Richtwerte ermitteln" with the questionnaire, copy button, start-page links and hints', async () => {
     const writeText = vi.fn<(text: string) => Promise<void>>().mockResolvedValue(undefined);
     Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true });

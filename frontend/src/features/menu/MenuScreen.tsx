@@ -14,7 +14,9 @@ import { Footer } from '../../components/Footer/Footer.tsx';
 import { Button } from '../../components/Button/Button.tsx';
 import { Bone } from '../../components/Skeleton/Skeleton.tsx';
 import { useAuth } from '../auth/useAuth.ts';
+import { ChangelogPage } from './ChangelogPage.tsx';
 import { CheckpointsPage } from './CheckpointsPage.tsx';
+import { RELEASES } from './changelog.ts';
 import { DayTypesPage } from './DayTypesPage.tsx';
 import { checkpointSummary, shakesSummary, weekSummary } from './menuSummaries.ts';
 import { ProfilePage } from './ProfilePage.tsx';
@@ -25,7 +27,7 @@ import { WeekTemplatePage } from './WeekTemplatePage.tsx';
 import styles from './MenuScreen.module.css';
 import common from './Settings.module.css';
 
-type Page = 'profile' | 'dayTypes' | 'week' | 'shakes' | 'checkpoints' | 'rating';
+type Page = 'profile' | 'dayTypes' | 'week' | 'shakes' | 'checkpoints' | 'rating' | 'changelog';
 
 const THEMES: { id: Settings['theme']; label: string }[] = [
   { id: 'system', label: 'System' },
@@ -91,6 +93,9 @@ export function MenuScreen({ user, onClose }: { user: User; onClose: () => void 
     load();
   };
 
+  if (page === 'changelog') {
+    return <ChangelogPage onBack={back} />;
+  }
   if (page !== null && data !== null) {
     const props = { settings: data.settings, onBack: back };
     switch (page) {
@@ -211,6 +216,27 @@ export function MenuScreen({ user, onClose }: { user: User; onClose: () => void 
               <ChevronRight size={20} strokeWidth={2.2} className={common['chevron']} aria-hidden="true" />
             </button>
           ))}
+        </div>
+      </section>
+
+      <section className={common['section']} aria-labelledby="menu-app">
+        <h2 id="menu-app" className={common['sectionLabel']}>
+          App
+        </h2>
+        <div className={common['card']}>
+          <button
+            type="button"
+            className={common['link']}
+            onClick={() => {
+              setPage('changelog');
+            }}
+          >
+            <span className={common['linkTexts']}>
+              <span className={common['linkName']}>Changelog</span>
+              <span className={common['linkMeta']}>Version {RELEASES[0]?.version}</span>
+            </span>
+            <ChevronRight size={20} strokeWidth={2.2} className={common['chevron']} aria-hidden="true" />
+          </button>
         </div>
       </section>
 
