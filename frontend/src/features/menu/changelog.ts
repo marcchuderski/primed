@@ -8,6 +8,15 @@ export interface Release {
 
 export const RELEASES: readonly Release[] = [
   {
+    version: '1.2.0',
+    date: '2026-10-20',
+    changes: [
+      'Treffsicherere Kategorien beim Scannen und in der Online-Suche',
+      'Proteinpulver landen in Supplements, fertige Shakes in Milchprodukte',
+      'Deine Bibliothek ist in die neuen Kategorien einsortiert',
+    ],
+  },
+  {
     version: '1.1.0',
     date: '2026-10-20',
     changes: [
