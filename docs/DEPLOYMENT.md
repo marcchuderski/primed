@@ -45,8 +45,8 @@ Wird von Claude Code mit jedem Schritt präzisiert (Befehle, Dateilisten, Migrat
 |---|---|---|
 | 001–011 | `001_init.sql` … `011_shake_liquids.sql` | 2026-10-19 (erster Deploy) |
 | 012 | `012_lean_library.sql` | 2026-10-19 |
-| 013 | `013_sauces_category.sql` | offen |
-| 014 | `014_supplements_meals.sql` | offen |
-| 015 | `015_reference_foods.sql` | offen |
-| 016 | `016_categories_v2.sql` | 2026-10-20 (laut Export bereits eingespielt) |
-| 017 | `017_recategorize_library.sql` | offen |
+| 013 | `013_sauces_category.sql` | 2026-10-20 |
+| 014 | `014_supplements_meals.sql` | 2026-10-20 |
+| 015 | `015_reference_foods.sql` | 2026-10-20 |
+| 016 | `016_categories_v2.sql` | 2026-10-20 |
+| 017 | `017_recategorize_library.sql` | 2026-10-20 |
