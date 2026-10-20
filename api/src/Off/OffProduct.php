@@ -21,6 +21,8 @@ final class OffProduct
         public readonly float $sugar,
         public readonly float $fat,
         public readonly ?float $packageAmount,
+        /** One serving in the basis unit (g or ml), from OFF `serving_quantity`; prefill for new products (D-168). */
+        public readonly ?float $servingAmount = null,
     ) {
     }
 
@@ -43,6 +45,7 @@ final class OffProduct
                 'fat' => $this->fat,
             ],
             'packageAmount' => $this->packageAmount,
+            'servingAmount' => $this->servingAmount,
         ];
     }
 
@@ -85,6 +88,13 @@ final class OffProduct
 
         $unit = is_string($p['product_quantity_unit'] ?? null) ? strtolower($p['product_quantity_unit']) : 'g';
         $quantity = self::number($p['product_quantity'] ?? null);
+        $basisUnit = $unit === 'ml' ? 'ml' : 'g';
+        $servingUnit = is_string($p['serving_quantity_unit'] ?? null) ? strtolower($p['serving_quantity_unit']) : null;
+        $serving = self::number($p['serving_quantity'] ?? null);
+        $servingFits = $servingUnit === null || $servingUnit === $basisUnit;
+        if ($serving !== null && ($serving <= 0 || $serving > 2000 || !$servingFits)) {
+            $serving = null;
+        }
 
         return new self(
             $code,
@@ -98,6 +108,7 @@ final class OffProduct
             round($sugar, 1),
             round($fat, 1),
             $quantity !== null && $quantity > 0 && $quantity <= 100000 ? round($quantity, 1) : null,
+            $serving === null ? null : round($serving, 1),
         );
     }
 

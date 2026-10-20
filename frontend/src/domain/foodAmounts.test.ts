@@ -41,9 +41,27 @@ describe('defaultAmount', () => {
     });
   });
 
-  it('falls back to 100 g/ml or one piece', () => {
-    expect(defaultAmount({ ...quark, basis: 'per_100ml' })).toEqual({ amount: 100, unit: 'ml' });
-    expect(defaultAmount({ ...quark, basis: 'per_unit' })).toEqual({ amount: 1, unit: 'stueck' });
+  it('falls back to one serving, a small pack, 100 g/ml or one piece', () => {
+    expect(defaultAmount({ ...quark, servingAmount: 30 })).toEqual({ amount: 30, unit: 'g' });
+    expect(defaultAmount({ ...quark, basis: 'per_100ml', servingAmount: 250 })).toEqual({
+      amount: 250,
+      unit: 'ml',
+    });
+    expect(defaultAmount({ ...quark, servingAmount: 30, lastAmount: 2, lastUnit: 'packung' })).toEqual({
+      amount: 2,
+      unit: 'packung',
+    });
+    expect(defaultAmount(quark)).toEqual({ amount: 1, unit: 'packung' });
+    expect(defaultAmount({ ...quark, packageAmount: 250 })).toEqual({ amount: 1, unit: 'packung' });
+    expect(defaultAmount({ ...quark, packageAmount: 500 })).toEqual({ amount: 100, unit: 'g' });
+    expect(defaultAmount({ ...quark, packageAmount: null, basis: 'per_100ml' })).toEqual({
+      amount: 100,
+      unit: 'ml',
+    });
+    expect(defaultAmount({ ...quark, basis: 'per_unit', servingAmount: 30 })).toEqual({
+      amount: 1,
+      unit: 'stueck',
+    });
   });
 });
 

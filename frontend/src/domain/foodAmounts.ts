@@ -15,7 +15,11 @@ export interface FoodLike {
   packageAmount: number | null;
   lastAmount?: number | null;
   lastUnit?: Unit | null;
+  servingAmount?: number | null;
 }
+
+/** Up to this package size, a new product starts with "1 Packung" (single packs, D-168). */
+export const SINGLE_PACK_MAX = 250;
 
 /** Nutrients of an amount (same rounding as the API snapshot), or null if the unit does not fit. */
 export function nutrientsFor(food: FoodLike, amount: number, unit: Unit): PerBasis | null {
@@ -31,7 +35,10 @@ export function nutrientsFor(food: FoodLike, amount: number, unit: Unit): PerBas
   return { kcal: r(n.kcal), protein: r(n.protein), carbs: r(n.carbs), sugar: r(n.sugar), fat: r(n.fat) };
 }
 
-/** Prefill (BRIEFING §5): the last used amount, otherwise 100 g/ml or 1 piece. */
+/**
+ * Prefill (BRIEFING §5, D-168): the last used amount; otherwise 1 piece, one serving (Open Food Facts),
+ * 1 Packung for small packs, else 100 g/ml.
+ */
 export function defaultAmount(food: FoodLike): { amount: number; unit: Unit } {
   const units = allowedUnits(food.basis, food.packageAmount);
   if (
@@ -46,5 +53,12 @@ export function defaultAmount(food: FoodLike): { amount: number; unit: Unit } {
   if (food.basis === 'per_unit') {
     return { amount: 1, unit: 'stueck' };
   }
-  return { amount: 100, unit: food.basis === 'per_100ml' ? 'ml' : 'g' };
+  const base: Unit = food.basis === 'per_100ml' ? 'ml' : 'g';
+  if (food.servingAmount !== undefined && food.servingAmount !== null && food.servingAmount > 0) {
+    return { amount: food.servingAmount, unit: base };
+  }
+  if (food.packageAmount !== null && food.packageAmount <= SINGLE_PACK_MAX && units.includes('packung')) {
+    return { amount: 1, unit: 'packung' };
+  }
+  return { amount: 100, unit: base };
 }

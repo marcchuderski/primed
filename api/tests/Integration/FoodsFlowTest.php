@@ -239,6 +239,35 @@ final class FoodsFlowTest extends ApiTestCase
         self::assertSame('meals', $pizza['product']['category']);
     }
 
+    public function testServingAmountFromOffAlsoFromTheCache(): void
+    {
+        $hit = static fn (string $code, mixed $serving, ?string $unit): array => [
+            'code' => $code,
+            'product_name' => 'Riegel',
+            'product_quantity' => 150,
+            'product_quantity_unit' => 'g',
+            'serving_quantity' => $serving,
+            'serving_quantity_unit' => $unit,
+            'nutriments' => ['energy-kcal_100g' => 400, 'proteins_100g' => 30, 'carbohydrates_100g' => 40,
+                'sugars_100g' => 5, 'fat_100g' => 12],
+        ];
+        $this->offFetcher->responses['search.openfoodfacts.org'] = (string) json_encode(['hits' => [
+            $hit('4006381333931', '25', 'g'),
+            $hit('4000417025005', 30, 'ml'), // unit does not fit the basis
+            $hit('96385074', 5000, null), // implausible
+        ]]);
+
+        for ($i = 0; $i < 2; $i++) { // second call is served from the cache
+            $products = self::json($this->call('GET', '/api/v1/off/search?q=riegel'))['products'] ?? null;
+            self::assertIsArray($products);
+            self::assertSame([25, null, null], array_map(
+                static fn (mixed $p): mixed => is_array($p) ? $p['servingAmount'] : 'x',
+                $products,
+            ));
+        }
+        self::assertCount(1, $this->offFetcher->requests);
+    }
+
     public function testBarcodeErrors(): void
     {
         self::assertSame(422, $this->call('GET', '/api/v1/foods/barcode/4006381333932')->status);

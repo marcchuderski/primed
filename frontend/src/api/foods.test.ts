@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { draftFromOff, type OffProduct } from './foods.ts';
+import { draftFromOff, parseOffProduct, type OffProduct } from './foods.ts';
 
 const banana: OffProduct = {
   barcode: '2000000000001',
@@ -9,6 +9,7 @@ const banana: OffProduct = {
   basis: 'per_100g',
   nutrients: { kcal: 95, protein: 1, carbs: 21, sugar: 17, fat: 0.2 },
   packageAmount: null,
+  servingAmount: null,
 };
 
 describe('draftFromOff', () => {
@@ -21,5 +22,15 @@ describe('draftFromOff', () => {
     expect(draft.barcode).toBeNull();
     expect(draft.name).toBe('Banane');
     expect(draft.source).toBe('off');
+  });
+});
+
+describe('parseOffProduct', () => {
+  it('reads the serving amount and treats a missing one (older cache entries) as unknown', () => {
+    const raw = { ...banana, nutrients: { ...banana.nutrients } };
+    expect(parseOffProduct({ ...raw, servingAmount: 118 }).servingAmount).toBe(118);
+    const withoutServing: Record<string, unknown> = { ...raw };
+    delete withoutServing['servingAmount'];
+    expect(parseOffProduct(withoutServing).servingAmount).toBeNull();
   });
 });

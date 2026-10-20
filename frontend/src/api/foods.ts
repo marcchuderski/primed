@@ -30,6 +30,8 @@ export interface OffProduct {
   basis: Basis;
   nutrients: EntryNutrients;
   packageAmount: number | null;
+  /** One serving in g or ml (the basis unit), if Open Food Facts knows it. */
+  servingAmount: number | null;
 }
 
 export interface FoodDraft {
@@ -141,6 +143,7 @@ export function parseOffProduct(v: unknown): OffProduct {
     basis: oneOf(BASES, p['basis']),
     nutrients: nutrients(p['nutrients']),
     packageAmount: optNum(p['packageAmount']),
+    servingAmount: p['servingAmount'] === undefined ? null : optNum(p['servingAmount']),
   };
 }
 

@@ -20,7 +20,7 @@ final class OffClient
     /** Search service (the legacy cgi/search.pl answers 503 since 2026). */
     private const SEARCH = 'https://search.openfoodfacts.org/search';
     private const FIELDS = 'code,product_name,product_name_de,brands,nutriments,product_quantity,'
-        . 'product_quantity_unit,categories_tags';
+        . 'product_quantity_unit,serving_quantity,serving_quantity_unit,categories_tags';
     private const HIT_TTL_DAYS = 30;
     private const MISS_TTL_DAYS = 1;
     private const SEARCH_TTL_DAYS = 1;
@@ -157,6 +157,7 @@ final class OffClient
                 ],
                 'product_quantity' => $item['packageAmount'] ?? null,
                 'product_quantity_unit' => ($item['basis'] ?? '') === 'per_100ml' ? 'ml' : 'g',
+                'serving_quantity' => $item['servingAmount'] ?? null,
                 'categories_tags' => [],
             ];
             $product = OffProduct::fromOff($raw);
@@ -173,6 +174,7 @@ final class OffClient
                     $product->sugar,
                     $product->fat,
                     $product->packageAmount,
+                    $product->servingAmount,
                 );
             }
         }
