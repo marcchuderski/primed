@@ -1,4 +1,7 @@
-/** User-facing release notes (menu › Changelog, D-169): short, plain words. Newest first; the first entry is the app version. */
+/**
+ * User-facing release notes (menu › Changelog, D-169). One style for every entry: "Stichwort: kurze Erklärung",
+ * plain words, no final period. Newest first; the first entry is the app version.
+ */
 export interface Release {
   version: string;
   /** ISO date (YYYY-MM-DD). */
@@ -11,8 +14,8 @@ export const RELEASES: readonly Release[] = [
     version: '1.3.0',
     date: '2026-10-20',
     changes: [
-      'Du kannst jetzt besser nachtragen: Tipp oben aufs Datum und wähl einen der letzten 7 Tage',
-      'Tage im Verlauf lassen sich antippen und öffnen',
+      'Leichter nachtragen: Datum oben antippen und einen der letzten 7 Tage wählen',
+      'Verlauf: Tage antippen, um sie zu öffnen',
       'Neuer Startscreen: übersichtlicher, Datum und Tagesart direkt nebeneinander',
     ],
   },
@@ -20,27 +23,27 @@ export const RELEASES: readonly Release[] = [
     version: '1.2.0',
     date: '2026-10-20',
     changes: [
-      'Treffsicherere Kategorien beim Scannen und in der Online-Suche',
-      'Proteinpulver landen in Supplements, fertige Shakes in Milchprodukte',
-      'Deine Bibliothek ist in die neuen Kategorien einsortiert',
+      'Bessere Kategorien: Produkte aus Scan und Online-Suche landen treffsicherer',
+      'Proteinpulver und Shakes: Pulver unter Supplements, fertige Shakes unter Milchprodukte',
+      'Deine Bibliothek: in die neuen Kategorien einsortiert',
     ],
   },
   {
     version: '1.1.0',
     date: '2026-10-20',
     changes: [
-      'Neue und verbesserte Kategorienstruktur',
-      'Übersichtlichere Suche mit Tabs',
-      'Über 100 Richtwerte für Bäckerei, Obst, Gemüse und Milchprodukte',
-      'Eintragen in Stück, z. B. 1 Brötchen',
-      'Passendere Startmenge bei neuen Produkten',
-      'Zahlen lassen sich direkt überschreiben',
-      'Changelog im Menü',
+      'Neue Kategorien: klarer aufgeteilt, z. B. Supplements und Fertigessen',
+      'Suche mit Tabs: Bibliothek, Online und Richtwerte mit Trefferzahl',
+      'Über 100 Richtwerte: Bäckerei, Obst, Gemüse und Milchprodukte ohne Etikett',
+      'Eintragen in Stück: z. B. 1 Brötchen, Gramm gehen weiterhin',
+      'Passendere Startmenge: neue Produkte starten mit einer Portion statt 100 g',
+      'Zahlen überschreiben: antippen markiert die Zahl, einfach lostippen',
+      'Changelog: alle Neuerungen hier im Menü',
     ],
   },
   {
     version: '1.0.0',
     date: '2026-10-19',
-    changes: ['Erste Version.'],
+    changes: ['Erste Version: Tagesziele, Einträge, Bibliothek, Gerichte und Verlauf'],
   },
 ];

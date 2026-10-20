@@ -164,7 +164,9 @@ describe('Menu and settings (7.1)', () => {
     expect(screen.getByRole('region', { name: `Version ${__APP_VERSION__}` })).toHaveTextContent(
       '20.10.2026',
     );
-    expect(screen.getByRole('region', { name: 'Version 1.0.0' })).toHaveTextContent('Erste Version.');
+    expect(screen.getByRole('region', { name: 'Version 1.0.0' })).toHaveTextContent(
+      'Erste Version: Tagesziele',
+    );
     await userEvent.click(screen.getByRole('button', { name: 'Zurück' }));
     expect(await screen.findByRole('heading', { level: 1, name: 'Menü' })).toBeInTheDocument();
   });
