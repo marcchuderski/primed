@@ -44,6 +44,8 @@ interface AddSheetProps {
   dishes?: Dish[];
   onPickDish?: (dish: Dish) => void;
   onCook?: () => void;
+  /** Logging on a past day: "Für Montag, 19.10." under the title (D-177). */
+  subtitle?: string | undefined;
   /** Shakes and dishes are still loading (placeholders until everything is there, D-157). */
   loading?: boolean;
 }
@@ -70,6 +72,7 @@ export function AddSheet({
   onPickDish,
   onCook,
   loading = false,
+  subtitle,
 }: AddSheetProps) {
   const [query, setQuery] = useState('');
   const [frequent, setFrequent] = useState<Food[] | null>(null);
@@ -240,6 +243,7 @@ export function AddSheet({
     <Sheet
       open={open}
       title="Hinzufügen"
+      subtitle={subtitle}
       onClose={onClose}
       tone="bg"
       header={

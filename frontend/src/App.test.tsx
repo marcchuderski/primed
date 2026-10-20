@@ -93,8 +93,8 @@ describe('App auth flow', () => {
     await userEvent.type(screen.getByLabelText('Passwort'), 'Kaffee mit Hafermilch 2026');
     await userEvent.click(screen.getByRole('button', { name: 'Einloggen' }));
 
-    expect(await screen.findByText('Hey, Marc.')).toBeInTheDocument();
-    expect(await screen.findByRole('heading', { name: 'Dienstag, 20. Okt.' })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: 'Hey, Marc.' })).toBeInTheDocument();
+    expect(await screen.findByRole('button', { name: /^Dienstag, 20\.10\./ })).toBeInTheDocument();
     const loginBody = fetchMock.mock.calls[1]?.[1]?.body;
     expect(typeof loginBody === 'string' ? (JSON.parse(loginBody) as unknown) : null).toEqual({
       username: 'marcch',

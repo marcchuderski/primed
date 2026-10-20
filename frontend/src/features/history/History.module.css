@@ -485,3 +485,37 @@
 .boneRight {
   align-items: flex-end;
 }
+
+/* Tappable days (D-178): week column heads as tiles, month cells as a full-size button. */
+.dayButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 12px;
+  background: var(--tonal);
+  color: var(--text);
+  font: 700 13px var(--font-text);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.dayButton svg {
+  color: var(--text-muted);
+}
+
+.cellButton {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.cellButton:focus-visible {
+  outline: 3px solid var(--accent);
+}

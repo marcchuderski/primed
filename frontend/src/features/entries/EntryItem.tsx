@@ -9,15 +9,18 @@ import styles from './EntryItem.module.css';
 const SWIPE_DELETE_PX = 72;
 const SWIPE_MAX_PX = 110;
 
-/** List entry (DESIGN.md §6): tap edits, swipe left deletes (after confirmation, D-052). */
+/**
+ * List entry (DESIGN.md §6): tap edits, swipe left deletes (after confirmation, D-052). Without handlers it is
+ * only shown (days older than the edit window, D-176).
+ */
 export function EntryItem({
   entry,
   onEdit,
   onDelete,
 }: {
   entry: Entry;
-  onEdit: (entry: Entry) => void;
-  onDelete: (entry: Entry) => void;
+  onEdit?: ((entry: Entry) => void) | undefined;
+  onDelete?: ((entry: Entry) => void) | undefined;
 }) {
   const start = useRef<{ x: number; y: number } | null>(null);
   const moved = useRef(false);
@@ -45,13 +48,35 @@ export function EntryItem({
 
   function up() {
     if (moved.current && offset <= -SWIPE_DELETE_PX) {
-      onDelete(entry);
+      onDelete?.(entry);
     }
     start.current = null;
     setOffset(0);
   }
 
   const n = entry.nutrients;
+  const content = (
+    <>
+      <span className={styles['texts']}>
+        <span className={styles['title']}>
+          {entry.name} · {entryAmountText(entry)}
+        </span>
+        <span className={styles['macros']}>
+          {formatInt(n.kcal)} kcal · <span className={styles['protein']}>{formatInt(n.protein)} g P</span> ·{' '}
+          {formatInt(n.carbs)} g KH · {formatInt(n.fat)} g F
+        </span>
+      </span>
+      <span className={styles['time']}>{formatClock(entry.timeMin)}</span>
+    </>
+  );
+
+  if (onEdit === undefined || onDelete === undefined) {
+    return (
+      <li className={styles['wrap']}>
+        <div className={styles['item']}>{content}</div>
+      </li>
+    );
+  }
 
   return (
     <li className={styles['wrap']}>
@@ -77,16 +102,7 @@ export function EntryItem({
         }}
         aria-label={`${entry.name}, ${entryAmountText(entry)}, ${formatClock(entry.timeMin)} Uhr. Bearbeiten`}
       >
-        <span className={styles['texts']}>
-          <span className={styles['title']}>
-            {entry.name} · {entryAmountText(entry)}
-          </span>
-          <span className={styles['macros']}>
-            {formatInt(n.kcal)} kcal · <span className={styles['protein']}>{formatInt(n.protein)} g P</span> ·{' '}
-            {formatInt(n.carbs)} g KH · {formatInt(n.fat)} g F
-          </span>
-        </span>
-        <span className={styles['time']}>{formatClock(entry.timeMin)}</span>
+        {content}
       </button>
     </li>
   );

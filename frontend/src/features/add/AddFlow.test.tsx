@@ -6,6 +6,7 @@ import { AddFlow } from './AddFlow.tsx';
 const day: Day = {
   date: '2026-10-19',
   isToday: true,
+  editable: true,
   dayTypeId: 1,
   dayTypeName: 'Ruhetag',
   isTraining: false,
@@ -145,7 +146,7 @@ describe('AddFlow', () => {
     expect(lastBody('/entries/shake')).toEqual({ date: '2026-10-19', timeMin: 885, shake: 'big_milk_low' });
   });
 
-  it('searches library, online and reference values in tabs with hit counts and logs with the prefilled amount, also for yesterday', async () => {
+  it('searches library, online and reference values in tabs with hit counts and logs with the prefilled amount', async () => {
     const onAdded = setup();
     await userEvent.type(screen.getByRole('searchbox', { name: 'Lebensmittel suchen' }), 'skyr');
 
@@ -171,14 +172,14 @@ describe('AddFlow', () => {
     await userEvent.click(within(library).getByRole('button', { name: /REWE Quarkcreme/ }));
     const sheet = screen.getByRole('dialog', { name: 'REWE Quarkcreme' });
     expect(within(sheet).getByLabelText(/Menge in/)).toHaveValue('1');
-    await userEvent.selectOptions(within(sheet).getByRole('combobox'), 'Gestern');
+    expect(within(sheet).queryByRole('combobox')).not.toBeInTheDocument(); // no day selection any more (D-177)
     await userEvent.click(within(sheet).getByRole('button', { name: 'Hinzufügen · 14:45' }));
 
     await waitFor(() => {
       expect(onAdded).toHaveBeenCalledOnce();
     });
     expect(lastBody('/entries')).toEqual({
-      date: '2026-10-18',
+      date: '2026-10-19',
       timeMin: 885,
       foodId: 3,
       amount: 1,

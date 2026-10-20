@@ -9,6 +9,7 @@ const settings: Settings = testSettings;
 const day: Day = {
   date: '2026-10-20',
   isToday: true,
+  editable: true,
   dayTypeId: 4,
   dayTypeName: 'Normal · Basketball',
   isTraining: true,

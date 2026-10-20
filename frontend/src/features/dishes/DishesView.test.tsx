@@ -166,6 +166,7 @@ describe('Dishes UI', () => {
     const day: Day = {
       date: '2026-10-19',
       isToday: true,
+      editable: true,
       dayTypeId: 1,
       dayTypeName: 'Ruhetag',
       isTraining: false,

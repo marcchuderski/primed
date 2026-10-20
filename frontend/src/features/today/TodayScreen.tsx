@@ -1,20 +1,22 @@
-import { ChevronDown, Dumbbell, Moon, Plus, WandSparkles } from 'lucide-react';
+import { Check, ChevronDown, Dumbbell, History, Lock, Moon, Plus, WandSparkles } from 'lucide-react';
 import { useEffect, useId, useState } from 'react';
-import { fetchSettings, fetchToday, type Day, type Settings } from '../../api/days.ts';
+import { fetchDay, fetchSettings, fetchToday, type Day, type Settings } from '../../api/days.ts';
 import { Footer } from '../../components/Footer/Footer.tsx';
 import { MacroBar } from '../../components/MacroBar/MacroBar.tsx';
 import { Bone, Loading, SkeletonRows } from '../../components/Skeleton/Skeleton.tsx';
 import { checkpointFor, eatenUntil, type Checkpoint } from '../../domain/checkpoint.ts';
 import { formatInt } from '../../domain/format.ts';
 import { greetingLine } from '../../domain/greeting.ts';
-import { fatReference, sumMacros } from '../../domain/targets.ts';
 import {
-  berlinLogicalDate,
-  berlinWallMinute,
-  formatClock,
-  formatDayTitle,
-  toLogicalMinute,
-} from '../../domain/time.ts';
+  EDIT_WINDOW_DAYS,
+  formatLongDay,
+  formatShortDay,
+  kcalDeviationPct,
+  pastDayDefaultTime,
+} from '../../domain/pastDay.ts';
+import { rateKcal, type KcalRating } from '../../domain/rating.ts';
+import { fatReference, sumMacros } from '../../domain/targets.ts';
+import { berlinLogicalDate, berlinWallMinute, formatClock, toLogicalMinute } from '../../domain/time.ts';
 import type { EntryMacros } from '../../domain/types.ts';
 import { deleteEntry, fetchEntries, updateEntry, type Entry } from '../../api/entries.ts';
 import { ConfirmDialog } from '../../components/ConfirmDialog/ConfirmDialog.tsx';
@@ -24,6 +26,7 @@ import { quantityFoodForEntry } from '../entries/entryQuantity.ts';
 import { QuantitySheet } from '../entries/QuantitySheet.tsx';
 import { AddFlow } from '../add/AddFlow.tsx';
 import { SuggestionsSheet } from '../suggestions/SuggestionsSheet.tsx';
+import { DayPickerSheet } from './DayPickerSheet.tsx';
 import { DayTypeSheet } from './DayTypeSheet.tsx';
 import { useNow } from './useNow.ts';
 import styles from './TodayScreen.module.css';
@@ -42,11 +45,25 @@ function toEntryMacros(entries: readonly Entry[], dayBoundaryMin: number): Entry
   return entries.map((e) => ({ ...e.nutrients, logicalMinute: toLogicalMinute(e.timeMin, dayBoundaryMin) }));
 }
 
-/** Screen 03 "Heute" (DESIGN.md §6, BRIEFING §4/§4a). */
-export function TodayScreen({ displayName }: { displayName: string }) {
+const RATING_LABEL: Record<KcalRating, string> = { ok: 'im Rahmen', low: 'unter Soll', high: 'über Soll' };
+
+/**
+ * Screen 03 "Heute" (DESIGN.md §6, BRIEFING §4/§4a) for today or a past day (D-178): `date` null shows today.
+ * Past days inside the edit window can be changed; older days are read only (D-176).
+ */
+export function TodayScreen({
+  displayName,
+  date = null,
+  onDateChange = () => undefined,
+}: {
+  displayName: string;
+  date?: string | null;
+  onDateChange?: (date: string | null) => void;
+}) {
   const [data, setData] = useState<TodayData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [pickerOpen, setPickerOpen] = useState(false);
+  const [dayPickerOpen, setDayPickerOpen] = useState(false);
   const [editing, setEditing] = useState<Entry | null>(null);
   const [adding, setAdding] = useState(false);
   const [suggesting, setSuggesting] = useState(false);
@@ -58,7 +75,7 @@ export function TodayScreen({ displayName }: { displayName: string }) {
 
   useEffect(() => {
     let cancelled = false;
-    Promise.all([fetchToday(), fetchSettings()])
+    Promise.all([date === null ? fetchToday() : fetchDay(date), fetchSettings()])
       .then(async ([day, settings]) => ({ day, settings, entries: await fetchEntries(day.date) }))
       .then((loaded) => {
         if (!cancelled) {
@@ -74,7 +91,7 @@ export function TodayScreen({ displayName }: { displayName: string }) {
     return () => {
       cancelled = true;
     };
-  }, [dayKey]);
+  }, [dayKey, date]);
 
   function replaceEntries(entries: Entry[]) {
     setData((current) => (current === null ? current : { ...current, entries }));
@@ -87,9 +104,19 @@ export function TodayScreen({ displayName }: { displayName: string }) {
   }
 
   const { day, settings } = data;
+  const isToday = day.isToday;
+  const editable = day.editable;
   const entries = toEntryMacros(data.entries, settings.dayBoundaryMin);
   const eaten = sumMacros(entries);
-  const checkpoint = checkpointFor(day, day.targets, settings.checkpoint);
+  // Checkpoints and suggestions only make sense for the running day (D-178).
+  const checkpoint = isToday ? checkpointFor(day, day.targets, settings.checkpoint) : null;
+  const rating =
+    isToday || data.entries.length === 0
+      ? null
+      : {
+          status: rateKcal(eaten.kcal, day.targets.kcal, settings.tolerancePct),
+          deviation: kcalDeviationPct(eaten.kcal, day.targets.kcal),
+        };
   const greeting = greetingLine({
     date: day.date,
     now: minuteNow,
@@ -108,59 +135,121 @@ export function TodayScreen({ displayName }: { displayName: string }) {
       ? `${day.dayTypeName} · ${formatClock(day.trainingStart)}`
       : day.dayTypeName;
 
-  return (
-    <div className={styles['screen']}>
-      <div className={styles['intro']}>
-        <p className={styles['greeting']}>
-          <strong>Hey, {displayName}.</strong> {greeting}
-        </p>
-        <h1 className={styles['title']}>{formatDayTitle(day.date)}</h1>
-      </div>
+  const dayTypeChip = (
+    <button
+      type="button"
+      className={styles['chip']}
+      aria-haspopup="dialog"
+      aria-label={editable ? `Tagesart: ${chipText}. Ändern` : `Tagesart: ${chipText}`}
+      disabled={!editable}
+      onClick={() => {
+        setPickerOpen(true);
+      }}
+    >
+      <ChipIcon size={16} strokeWidth={2.4} className={styles['chipIcon']} aria-hidden="true" />
+      <span className={styles['chipText']}>{chipText}</span>
+      {editable && <ChevronDown size={14} strokeWidth={2.4} aria-hidden="true" />}
+    </button>
+  );
 
+  // Date and day type look the same on every day; only the banner marks a past day (D-178).
+  const chipRow = (
+    <div className={styles['chips']}>
       <button
         type="button"
-        className={styles['chip']}
+        className={`${styles['chip'] ?? ''} ${styles['dateChip'] ?? ''}`}
         aria-haspopup="dialog"
-        aria-label={`Tagesart: ${chipText}. Ändern`}
+        aria-label={`${formatLongDay(day.date)}, anderen Tag wählen`}
         onClick={() => {
-          setPickerOpen(true);
+          setDayPickerOpen(true);
         }}
       >
-        <ChipIcon size={16} strokeWidth={2.4} className={styles['chipIcon']} aria-hidden="true" />
-        {chipText}
+        {formatShortDay(day.date)}
         <ChevronDown size={14} strokeWidth={2.4} aria-hidden="true" />
       </button>
+      {dayTypeChip}
+    </div>
+  );
 
-      <MacroCard day={day} checkpoint={checkpoint} entries={entries} eaten={eaten} />
+  return (
+    <div className={styles['screen']}>
+      {isToday ? (
+        <>
+          <div className={styles['intro']}>
+            <h1 className={styles['hello']}>Hey, {displayName}.</h1>
+            <p className={styles['greeting']}>{greeting}</p>
+          </div>
+          {chipRow}
+        </>
+      ) : (
+        <>
+          <div
+            className={`${styles['banner'] ?? ''} ${editable ? '' : (styles['readOnly'] ?? '')}`}
+            role="status"
+          >
+            {editable ? (
+              <History size={20} strokeWidth={2.2} aria-hidden="true" />
+            ) : (
+              <Lock size={18} strokeWidth={2.2} aria-hidden="true" />
+            )}
+            <span className={styles['bannerText']}>
+              {editable ? (
+                <strong>Du bearbeitest {formatShortDay(day.date)}</strong>
+              ) : (
+                <>
+                  <strong>Nur ansehen</strong>
+                  <span>Nachtragen geht bis {EDIT_WINDOW_DAYS} Tage zurück.</span>
+                </>
+              )}
+            </span>
+            <button
+              type="button"
+              className={styles['bannerButton']}
+              onClick={() => {
+                onDateChange(null);
+              }}
+            >
+              Zu heute
+            </button>
+          </div>
+          {chipRow}
+        </>
+      )}
+
+      <MacroCard day={day} checkpoint={checkpoint} entries={entries} eaten={eaten} rating={rating} />
 
       <section className={styles['section']} aria-labelledby="today-entries">
         <div className={styles['sectionHead']}>
           <h2 id="today-entries" className={styles['sectionTitle']}>
-            Heute
+            Einträge
           </h2>
           <div className={styles['actions']}>
-            <button
-              type="button"
-              className={styles['iconButton']}
-              aria-label="Vorschläge"
-              aria-haspopup="dialog"
-              onClick={() => {
-                setSuggesting(true);
-              }}
-            >
-              <WandSparkles size={20} strokeWidth={2} aria-hidden="true" />
-            </button>
-            <button
-              type="button"
-              className={`${styles['iconButton'] ?? ''} ${styles['add'] ?? ''}`}
-              aria-label="Hinzufügen"
-              aria-haspopup="dialog"
-              onClick={() => {
-                setAdding(true);
-              }}
-            >
-              <Plus size={20} strokeWidth={2.4} aria-hidden="true" />
-            </button>
+            {isToday && (
+              <button
+                type="button"
+                className={styles['iconButton']}
+                aria-label="Vorschläge"
+                aria-haspopup="dialog"
+                onClick={() => {
+                  setSuggesting(true);
+                }}
+              >
+                <WandSparkles size={20} strokeWidth={2} aria-hidden="true" />
+              </button>
+            )}
+            {editable && (
+              <button
+                type="button"
+                className={`${styles['iconButton'] ?? ''} ${styles['add'] ?? ''}`}
+                aria-label={isToday ? 'Hinzufügen' : `Für ${formatShortDay(day.date)} hinzufügen`}
+                aria-haspopup="dialog"
+                onClick={() => {
+                  setAdding(true);
+                }}
+              >
+                <Plus size={20} strokeWidth={2.4} aria-hidden="true" />
+              </button>
+            )}
           </div>
         </div>
         {data.entries.length === 0 ? (
@@ -168,7 +257,12 @@ export function TodayScreen({ displayName }: { displayName: string }) {
         ) : (
           <ul className={styles['list']}>
             {[...data.entries].reverse().map((entry) => (
-              <EntryItem key={entry.id} entry={entry} onEdit={setEditing} onDelete={setDeleting} />
+              <EntryItem
+                key={entry.id}
+                entry={entry}
+                onEdit={editable ? setEditing : undefined}
+                onDelete={editable ? setDeleting : undefined}
+              />
             ))}
           </ul>
         )}
@@ -201,6 +295,15 @@ export function TodayScreen({ displayName }: { displayName: string }) {
         <AddFlow
           day={day}
           eatenBefore={eaten}
+          pastDay={
+            isToday
+              ? undefined
+              : {
+                  defaultTime: pastDayDefaultTime(data.entries, settings.dayBoundaryMin),
+                  short: formatShortDay(day.date),
+                  long: formatLongDay(day.date),
+                }
+          }
           onClose={() => {
             setAdding(false);
           }}
@@ -282,6 +385,21 @@ export function TodayScreen({ displayName }: { displayName: string }) {
         }}
       />
 
+      {dayPickerOpen && (
+        <DayPickerSheet
+          today={dayKey}
+          selected={day.date}
+          tolerancePct={settings.tolerancePct}
+          onClose={() => {
+            setDayPickerOpen(false);
+          }}
+          onPick={(picked) => {
+            setDayPickerOpen(false);
+            onDateChange(picked === dayKey ? null : picked);
+          }}
+        />
+      )}
+
       {pickerOpen && (
         <DayTypeSheet
           open
@@ -305,11 +423,14 @@ function MacroCard({
   checkpoint,
   entries,
   eaten,
+  rating,
 }: {
   day: Day;
   checkpoint: Checkpoint | null;
   entries: EntryMacros[];
   eaten: ReturnType<typeof sumMacros>;
+  /** Past days: the rating as in the history (kcal ±tolerance), shown in the head of the card. */
+  rating: { status: KcalRating; deviation: number | null } | null;
 }) {
   const [open, setOpen] = useState<BarKey | null>(null);
   const popoverId = useId();
@@ -375,6 +496,25 @@ function MacroCard({
 
   return (
     <div className={styles['card']}>
+      {rating !== null && (
+        <div className={styles['ratingHead']}>
+          <span className={styles['ratingLabel']}>Tagesbilanz</span>
+          <span className={`${styles['rating'] ?? ''} ${styles[rating.status] ?? ''}`}>
+            {rating.status === 'ok' ? (
+              <Check size={14} strokeWidth={3} aria-hidden="true" />
+            ) : (
+              <span aria-hidden="true">{rating.status === 'low' ? '↓' : '↑'}</span>
+            )}
+            {RATING_LABEL[rating.status]}
+            {rating.deviation !== null && (
+              <span className={styles['ratingPct']}>
+                {rating.deviation > 0 ? '+' : rating.deviation < 0 ? '−' : '±'}
+                {Math.abs(rating.deviation)} %
+              </span>
+            )}
+          </span>
+        </div>
+      )}
       {bars.map((bar) => (
         <div key={bar.key} className={styles['barWrap']} data-macro-bar>
           <MacroBar
@@ -392,7 +532,12 @@ function MacroCard({
           />
           {open === bar.key && (
             <div id={popoverId} className={styles['popover']} role="status">
-              <BarDetails bar={bar} checkpoint={checkpoint} until={until} />
+              <BarDetails
+                bar={bar}
+                checkpoint={checkpoint}
+                until={until}
+                title={day.isToday ? 'Heute' : formatShortDay(day.date)}
+              />
             </div>
           )}
         </div>
@@ -424,17 +569,19 @@ function BarDetails({
   bar,
   checkpoint,
   until,
+  title,
 }: {
   bar: { key: BarKey; unit: string; target: number; eaten: number };
   checkpoint: Checkpoint | null;
   until: ReturnType<typeof sumMacros> | null;
+  title: string;
 }) {
   const unit = bar.unit === '' ? 'kcal' : bar.unit;
   if (checkpoint === null || until === null) {
     const open = bar.target - bar.eaten;
     return (
       <>
-        <span className={styles['popTitle']}>Heute</span>
+        <span className={styles['popTitle']}>{title}</span>
         <span className={`${styles['popMain'] ?? ''} num`}>
           {formatInt(bar.eaten)} von {formatInt(bar.target)} {unit} ·{' '}
           <strong>{open >= 0 ? `noch ${formatInt(open)}` : `${formatInt(-open)} drüber`}</strong>
@@ -464,12 +611,15 @@ function TodaySkeleton() {
   return (
     <Loading className={styles['screen']}>
       <div className={styles['intro']}>
+        <Bone width="58%" height={34} />
         <span className={styles['boneLine']}>
-          <Bone width="78%" height={14} />
+          <Bone width="86%" height={15} />
         </span>
-        <Bone width="68%" height={38} />
       </div>
-      <Bone width={168} height={40} radius="pill" />
+      <div className={styles['chips']}>
+        <Bone width={96} height={36} radius="pill" />
+        <Bone width={168} height={36} radius="pill" />
+      </div>
       <div className={styles['card']}>
         {['34%', '28%', '46%'].map((label) => (
           <span key={label} className={styles['boneBar']}>
@@ -487,7 +637,7 @@ function TodaySkeleton() {
       </div>
       <section className={styles['section']}>
         <div className={styles['sectionHead']}>
-          <h2 className={styles['sectionTitle']}>Heute</h2>
+          <h2 className={styles['sectionTitle']}>Einträge</h2>
           <div className={styles['actions']}>
             <Bone width={48} height={48} radius="pill" />
             <Bone width={48} height={48} radius="pill" />

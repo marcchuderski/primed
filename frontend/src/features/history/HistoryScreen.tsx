@@ -56,7 +56,12 @@ function shift(view: View, anchor: string, step: -1 | 1): string {
 }
 
 /** Screens 13–15: history by week, month and year (BRIEFING §11). */
-export function HistoryScreen() {
+export function HistoryScreen({
+  onOpenDay = () => undefined,
+}: {
+  /** Opens a day on the "Heute" tab (D-178); older days there are read only. */
+  onOpenDay?: (date: string, isToday: boolean) => void;
+} = {}) {
   const [settings, setSettings] = useState<Settings | null>(null);
   const [view, setView] = useState<View>('week');
   const [anchor, setAnchor] = useState<string | null>(null);
@@ -221,10 +226,18 @@ export function HistoryScreen() {
               days={days}
               summary={summary}
               tolerancePct={tolerance}
+              today={history.today}
+              onOpenDay={onOpenDay}
             />
           )}
           {view === 'month' && (
-            <MonthView dates={dateRange(range.from, range.to)} days={days} tolerancePct={tolerance} />
+            <MonthView
+              dates={dateRange(range.from, range.to)}
+              days={days}
+              tolerancePct={tolerance}
+              today={history.today}
+              onOpenDay={onOpenDay}
+            />
           )}
           {view === 'year' && <MonthList months={months} />}
         </>

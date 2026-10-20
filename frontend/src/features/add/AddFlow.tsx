@@ -13,7 +13,6 @@ import {
 } from '../../api/foods.ts';
 import { categoryLabel, displayName } from '../../domain/categories.ts';
 import { formatDecimal } from '../../domain/format.ts';
-import { recentDays } from '../../domain/dates.ts';
 import { defaultAmount, nutrientsFor } from '../../domain/foodAmounts.ts';
 import { berlinWallMinute, MINUTES_PER_DAY, roundUpToQuarterHour } from '../../domain/time.ts';
 import type { Macros } from '../../domain/types.ts';
@@ -62,12 +61,17 @@ export function AddFlow({
   eatenBefore,
   onClose,
   onAdded,
+  pastDay,
 }: {
   day: Day;
   eatenBefore: Macros;
   onClose: () => void;
   onAdded: (entry: Entry) => void;
+  /** Logging on a past day (D-177): preset time and the day's labels; today uses "now". */
+  pastDay?: { defaultTime: number; short: string; long: string } | undefined;
 }) {
+  const forDay = pastDay === undefined ? undefined : { short: pastDay.short, long: pastDay.long };
+  const startTime = () => pastDay?.defaultTime ?? nowMinute();
   const [view, setView] = useState<View>({ kind: 'search' });
   const [shakes, setShakes] = useState<Shake[]>([]);
   const [dishes, setDishes] = useState<Dish[]>([]);
@@ -128,7 +132,7 @@ export function AddFlow({
 
   async function logShake(shake: Shake) {
     try {
-      onAdded(await createShakeEntry({ date: day.date, timeMin: nowMinute(), shake: shake.id }));
+      onAdded(await createShakeEntry({ date: day.date, timeMin: startTime(), shake: shake.id }));
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Shake konnte nicht eingetragen werden.');
     }
@@ -142,6 +146,7 @@ export function AddFlow({
           shakes={shakes}
           dishes={dishes}
           loading={!quickReady}
+          subtitle={forDay === undefined ? undefined : `Für ${forDay.long}`}
           onPickDish={(dish) => {
             setView({ kind: 'dish', dish });
           }}
@@ -239,17 +244,17 @@ export function AddFlow({
               };
             },
           }}
-          initial={{ amount: Math.min(1, view.dish.portionsLeft), unit: 'portion', timeMin: nowMinute() }}
-          dates={recentDays(day.date)}
+          initial={{ amount: Math.min(1, view.dish.portionsLeft), unit: 'portion', timeMin: startTime() }}
+          forDay={forDay}
           targets={day.targets}
           eatenBefore={eatenBefore}
           onClose={() => {
             setView({ kind: 'search' });
           }}
-          onSubmit={async ({ amount, timeMin, date }) => {
+          onSubmit={async ({ amount, timeMin }) => {
             onAdded(
               await logDishPortion({
-                date: date ?? day.date,
+                date: day.date,
                 timeMin,
                 dishId: view.dish.id,
                 portions: amount,
@@ -266,19 +271,19 @@ export function AddFlow({
           food={quantityFood(view.item)}
           initial={{
             ...defaultAmount(view.item.source === 'library' ? view.item.food : view.item.product),
-            timeMin: nowMinute(),
+            timeMin: startTime(),
           }}
-          dates={recentDays(day.date)}
+          forDay={forDay}
           targets={day.targets}
           eatenBefore={eatenBefore}
           onClose={() => {
             setView({ kind: 'search' });
           }}
-          onSubmit={async ({ amount, unit, timeMin, date }) => {
+          onSubmit={async ({ amount, unit, timeMin }) => {
             const item = view.item;
             const food = item.source === 'library' ? item.food : await createFood(draftFromOff(item.product));
             const entry = await createEntry({
-              date: date ?? day.date,
+              date: day.date,
               timeMin,
               foodId: food.id,
               amount,

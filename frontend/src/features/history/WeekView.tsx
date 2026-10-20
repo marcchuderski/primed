@@ -1,3 +1,4 @@
+import { ChevronRight, Lock } from 'lucide-react';
 import { Fragment, type ReactNode } from 'react';
 import { formatInt } from '../../domain/format.ts';
 import {
@@ -8,6 +9,7 @@ import {
   type HistoryDay,
   type PeriodSummary,
 } from '../../domain/history.ts';
+import { isInWindow } from '../../domain/pastDay.ts';
 import { rateKcal } from '../../domain/rating.ts';
 import { Legend, StatusMark } from './StatusMark.tsx';
 import styles from './History.module.css';
@@ -20,11 +22,16 @@ export function WeekView({
   days,
   summary,
   tolerancePct,
+  today,
+  onOpenDay,
 }: {
   dates: string[];
   days: Map<string, HistoryDay>;
   summary: PeriodSummary;
   tolerancePct: number;
+  today: string;
+  /** Column heads open the day (D-178); days older than the edit window show a lock (read only). */
+  onOpenDay: (date: string, isToday: boolean) => void;
 }) {
   const cols = dates.map((date) => ({ date, day: days.get(date) }));
   const pct = (v: number | null) => (v === null ? '' : `${formatSigned(v)} %`);
@@ -56,11 +63,36 @@ export function WeekView({
               <th scope="col">
                 <span className={styles['srOnly']}>Wert</span>
               </th>
-              {cols.map(({ date }, i) => (
-                <th key={date} scope="col">
-                  {WEEKDAYS[i]} {Number(date.slice(8, 10))}.
-                </th>
-              ))}
+              {cols.map(({ date, day }, i) => {
+                const label = `${WEEKDAYS[i] ?? ''} ${String(Number(date.slice(8, 10)))}.`;
+                if (day === undefined) {
+                  return (
+                    <th key={date} scope="col">
+                      {label}
+                    </th>
+                  );
+                }
+                const editable = isInWindow(date, today);
+                return (
+                  <th key={date} scope="col">
+                    <button
+                      type="button"
+                      className={styles['dayButton']}
+                      aria-label={`${label} ${editable ? 'öffnen' : 'ansehen'}`}
+                      onClick={() => {
+                        onOpenDay(date, day.isToday);
+                      }}
+                    >
+                      {label}
+                      {editable ? (
+                        <ChevronRight size={12} strokeWidth={2.6} aria-hidden="true" />
+                      ) : (
+                        <Lock size={11} strokeWidth={2.6} aria-hidden="true" />
+                      )}
+                    </button>
+                  </th>
+                );
+              })}
               <th scope="col" className={styles['sum']}>
                 Σ Woche
               </th>

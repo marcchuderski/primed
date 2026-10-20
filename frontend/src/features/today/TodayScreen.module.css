@@ -10,23 +10,19 @@
   gap: 6px;
 }
 
-.greeting {
-  font-size: 15px;
-  line-height: 1.4;
-  color: var(--text-muted);
-}
-
-.greeting strong {
-  font-weight: 700;
-  color: var(--text);
-}
-
-.title {
+/* Header today (H1, D-178): greeting as title, situational sentence below. */
+.hello {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: 38px;
-  line-height: 1.02;
+  font-size: 34px;
+  line-height: 1.05;
   letter-spacing: -0.035em;
+}
+
+.greeting {
+  font-size: 16px;
+  line-height: 1.45;
+  color: var(--text-muted);
 }
 
 .chip {
@@ -45,7 +41,132 @@
 }
 
 .chipIcon {
+  flex-shrink: 0;
   color: var(--accent);
+}
+
+.chip:disabled {
+  border: 1px solid var(--input-border);
+  background: transparent;
+  cursor: default;
+}
+
+/* Long day type names are cut, so date and day type stay on one line. */
+.chipText {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.chips {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.chips .chip {
+  min-width: 0;
+  height: 36px;
+  padding: 0 12px;
+  gap: 6px;
+}
+
+.dateChip {
+  flex-shrink: 0;
+  border: 1px solid var(--input-border);
+  background: var(--surface);
+  white-space: nowrap;
+}
+
+/* Past day (D-178): which day is shown, and the way back. */
+.banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 10px 10px 16px;
+  border-radius: var(--r-item);
+  background: var(--accent-track);
+  color: var(--accent-text);
+}
+
+.banner.readOnly {
+  background: var(--tonal);
+  color: var(--text-muted);
+}
+
+.bannerText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  font-size: 14px;
+}
+
+.bannerText strong {
+  font-size: 15px;
+  color: var(--text);
+}
+
+.bannerButton {
+  flex-shrink: 0;
+  height: var(--touch);
+  padding: 0 16px;
+  border: none;
+  border-radius: var(--r-pill);
+  background: var(--surface);
+  color: var(--text);
+  font: 600 14px var(--font-text);
+  cursor: pointer;
+}
+
+/* Day rating on past days, in the head of the bars card (no repeated numbers). */
+.ratingHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.ratingLabel {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 12px;
+  border-radius: var(--r-pill);
+  font-size: 13px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.ratingPct {
+  margin-left: 2px;
+  font-weight: 500;
+}
+
+.rating.ok {
+  background: var(--status-ok-bg);
+  color: var(--status-ok-fg);
+}
+
+.rating.low {
+  background: var(--status-low-bg);
+  color: var(--status-low-fg);
+}
+
+.rating.high {
+  background: var(--status-high-bg);
+  color: var(--status-high-fg);
 }
 
 .card {

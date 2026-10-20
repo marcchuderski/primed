@@ -193,23 +193,6 @@
   color: var(--text-muted);
 }
 
-.dayRow {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-}
-
-.daySelect {
-  min-height: var(--touch);
-  padding: 0 12px;
-  border: 1px solid var(--input-border);
-  border-radius: 12px;
-  background: var(--surface);
-  color: var(--text);
-  font: 600 14px var(--font-text);
-}
-
 .now {
   height: 32px;
   padding: 0 12px;
@@ -304,4 +287,17 @@
   color: var(--status-high-fg);
   font-size: 14px;
   font-weight: 600;
+}
+
+/* Logging on a past day (D-177): which day the entry goes to. */
+.forDay {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: var(--r-input);
+  background: var(--accent-track);
+  color: var(--accent-text);
+  font: 700 14px var(--font-text);
 }

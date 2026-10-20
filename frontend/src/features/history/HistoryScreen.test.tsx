@@ -103,11 +103,11 @@ describe('HistoryScreen (6.2–6.4)', () => {
       expect(ranges()).toContain('2026-10-01..2026-10-31');
     });
     const calendar = await screen.findByRole('grid', { name: 'Kalender' });
-    expect(within(calendar).getByRole('gridcell', { name: '20.: heute' })).toBeInTheDocument();
+    expect(within(calendar).getByRole('button', { name: '20.: heute. öffnen' })).toBeInTheDocument();
     expect(
-      within(calendar).getByRole('gridcell', { name: '18.: über Soll, Trainingstag' }),
+      within(calendar).getByRole('button', { name: '18.: über Soll, Trainingstag. öffnen' }),
     ).toBeInTheDocument();
-    expect(within(calendar).getByRole('gridcell', { name: '17.: keine Einträge' })).toBeInTheDocument();
+    expect(within(calendar).getByRole('button', { name: '17.: keine Einträge. öffnen' })).toBeInTheDocument();
     expect(screen.getByRole('region', { name: 'Monatsbilanz bis heute' })).toBeInTheDocument();
   });
 

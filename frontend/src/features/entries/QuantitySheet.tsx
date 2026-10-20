@@ -1,4 +1,4 @@
-import { Minus, Plus } from 'lucide-react';
+import { History, Minus, Plus } from 'lucide-react';
 import { useState } from 'react';
 import type { EntryNutrients } from '../../api/entries.ts';
 import { Button } from '../../components/Button/Button.tsx';
@@ -45,9 +45,9 @@ interface QuantitySheetProps {
   targets: Targets;
   /** Eaten today without this entry. */
   eatenBefore: Macros;
-  onSubmit: (value: { amount: number; unit: Unit; timeMin: number; date: string | null }) => Promise<void>;
-  /** Add mode: selectable days for logging later (Nachtragen); the first entry is today. */
-  dates?: { value: string; label: string }[] | undefined;
+  onSubmit: (value: { amount: number; unit: Unit; timeMin: number }) => Promise<void>;
+  /** Logging on a past day (D-177): shown above the amount and in the button; no "Jetzt". */
+  forDay?: { short: string; long: string } | undefined;
   onDelete?: () => void;
   onClose: () => void;
 }
@@ -74,12 +74,11 @@ export function QuantitySheet({
   onSubmit,
   onDelete,
   onClose,
-  dates,
+  forDay,
 }: QuantitySheetProps) {
   const [unit, setUnit] = useState<Unit>(initial.unit);
   const [text, setText] = useState(formatDecimal(initial.amount));
   const [timeMin, setTimeMin] = useState(initial.timeMin);
-  const [date, setDate] = useState<string | null>(dates?.[0]?.value ?? null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -108,7 +107,7 @@ export function QuantitySheet({
     setBusy(true);
     setError(null);
     try {
-      await onSubmit({ amount, unit, timeMin, date });
+      await onSubmit({ amount, unit, timeMin });
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Speichern fehlgeschlagen.');
       setBusy(false);
@@ -135,6 +134,12 @@ export function QuantitySheet({
 
   return (
     <Sheet open={open} title={food.name} subtitle={food.subtitle} onClose={onClose} tone="bg">
+      {forDay !== undefined && (
+        <p className={styles['forDay']}>
+          <History size={18} strokeWidth={2.2} aria-hidden="true" />
+          Für {forDay.long}
+        </p>
+      )}
       <div className={styles['card']}>
         <div className={styles['segment']} role="group" aria-label="Einheit">
           {switcher.map((u) => (
@@ -228,39 +233,22 @@ export function QuantitySheet({
         </div>
       </div>
 
-      {isEntry && dates !== undefined && dates.length > 1 && (
-        <label className={styles['dayRow']}>
-          <span className={styles['label']}>Tag</span>
-          <select
-            className={styles['daySelect']}
-            value={date ?? ''}
-            onChange={(e) => {
-              setDate(e.target.value);
-            }}
-          >
-            {dates.map((d) => (
-              <option key={d.value} value={d.value}>
-                {d.label}
-              </option>
-            ))}
-          </select>
-        </label>
-      )}
-
       {isEntry && (
         <>
           <div className={styles['group']}>
             <div className={styles['groupHead']}>
               <span className={styles['label']}>Uhrzeit</span>
-              <button
-                type="button"
-                className={styles['now']}
-                onClick={() => {
-                  setTimeMin(nowRounded());
-                }}
-              >
-                Jetzt
-              </button>
+              {forDay === undefined && (
+                <button
+                  type="button"
+                  className={styles['now']}
+                  onClick={() => {
+                    setTimeMin(nowRounded());
+                  }}
+                >
+                  Jetzt
+                </button>
+              )}
             </div>
             <TimeWheel value={timeMin} onChange={setTimeMin} label="Uhrzeit" tone="surface" />
           </div>
@@ -324,7 +312,9 @@ export function QuantitySheet({
           ? onDelete === undefined
             ? 'Zur Zutatenliste hinzufügen'
             : 'Zutat übernehmen'
-          : `${mode === 'add' ? 'Hinzufügen' : 'Speichern'} · ${formatClock(timeMin)}`}
+          : mode === 'add' && forDay !== undefined
+            ? `Für ${forDay.short} hinzufügen · ${formatClock(timeMin)}`
+            : `${mode === 'add' ? 'Hinzufügen' : 'Speichern'} · ${formatClock(timeMin)}`}
       </Button>
       {mode !== 'add' && onDelete !== undefined && (
         <button type="button" className={styles['deleteLink']} onClick={onDelete}>

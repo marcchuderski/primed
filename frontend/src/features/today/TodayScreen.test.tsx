@@ -53,10 +53,12 @@ describe('TodayScreen', () => {
     mockApi(basketball);
     render(<TodayScreen displayName="Marc" />);
 
-    expect(await screen.findByRole('heading', { name: 'Dienstag, 20. Okt.' })).toBeInTheDocument();
-    expect(screen.getByText('Hey, Marc.').parentElement).toHaveTextContent(
-      'Hey, Marc. Noch 2½ Stunden bis zu deinem Pre-Workout.',
+    expect(await screen.findByRole('heading', { level: 1, name: 'Hey, Marc.' })).toBeInTheDocument();
+    expect(screen.getByText('Noch 2½ Stunden bis zu deinem Pre-Workout.')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Dienstag, 20.10., anderen Tag wählen' })).toHaveTextContent(
+      'Di, 20.10.',
     );
+    expect(screen.queryByRole('status', { name: '' })).toBeNull();
     expect(
       screen.getByRole('button', { name: 'Tagesart: Normal · Basketball · 20:00. Ändern' }),
     ).toBeInTheDocument();

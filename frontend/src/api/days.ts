@@ -4,6 +4,8 @@ import type { Targets } from '../domain/types.ts';
 export interface Day {
   date: string;
   isToday: boolean;
+  /** Entries and day type may be changed (today and 7 days back, D-176); older days are read only. */
+  editable: boolean;
   dayTypeId: number | null;
   dayTypeName: string;
   isTraining: boolean;
@@ -152,6 +154,7 @@ export function parseDay(value: unknown): Day {
   return {
     date: str(d['date']),
     isToday: bool(d['isToday']),
+    editable: d['editable'] === undefined ? true : bool(d['editable']),
     dayTypeId: nullableNum(d['dayTypeId']),
     dayTypeName: str(d['dayTypeName']),
     isTraining: bool(d['isTraining']),
