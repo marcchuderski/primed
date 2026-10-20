@@ -23,7 +23,7 @@ const foods = [
     lastUnit: 'packung',
   },
   { ...base, id: 9, type: 'reference', name: 'Magerquark', category: 'dairy', packageAmount: null },
-  { ...base, id: 11, type: 'ingredient', name: 'Kidneybohnen', category: 'basics', packageAmount: null },
+  { ...base, id: 11, type: 'ingredient', name: 'Kidneybohnen', category: 'meat', packageAmount: null },
 ];
 
 function urlOf(input: RequestInfo | URL): string {
@@ -95,7 +95,7 @@ describe('EssenScreen library', () => {
     expect(screen.getByRole('contentinfo')).toHaveTextContent('Bereit für heute.');
     expect(screen.getByRole('button', { name: /Magerquark/ })).toHaveTextContent('Richtwert');
 
-    await userEvent.click(screen.getByRole('button', { name: 'Grundnahrung' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Eiweiß & Fleisch' }));
     await waitFor(() => {
       expect(screen.queryByRole('button', { name: /Magerquark/ })).not.toBeInTheDocument();
     });

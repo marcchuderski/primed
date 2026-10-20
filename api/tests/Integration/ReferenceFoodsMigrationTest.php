@@ -42,8 +42,8 @@ final class ReferenceFoodsMigrationTest extends DatabaseTestCase
         $food->execute([$userId, 'reference', 'Milch 1,5 %', 'seed', 'milk_low']);
         $food->execute([$userId, 'product', 'Banane', 'manual', null]); // own food with a reference name
         $snapshot = static function () use ($pdo): array {
-            $rows = $pdo->query('SELECT id, type, name, category, basis, kcal, source, deleted_at
-                                   FROM foods ORDER BY id');
+            // Category left out: later migrations (016) re-sort categories.
+            $rows = $pdo->query('SELECT id, type, name, basis, kcal, source, deleted_at FROM foods ORDER BY id');
             self::assertNotFalse($rows);
 
             return $rows->fetchAll(PDO::FETCH_ASSOC);

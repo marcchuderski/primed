@@ -248,7 +248,7 @@ describe('AddFlow', () => {
     const roll = {
       id: 5,
       name: 'Weizenbrötchen',
-      category: 'bread',
+      category: 'grains',
       basis: 'per_100g',
       nutrients: { kcal: 270, protein: 9, carbs: 54, sugar: 2, fat: 1.5 },
       pieceWeight: 60,
@@ -266,7 +266,7 @@ describe('AddFlow', () => {
             id: 41,
             type: 'reference',
             name: 'Weizenbrötchen',
-            category: 'bread',
+            category: 'grains',
             nutrients: roll.nutrients,
             packageAmount: null,
             pieceWeight: 60,

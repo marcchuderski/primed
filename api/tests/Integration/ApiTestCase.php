@@ -171,10 +171,10 @@ abstract class ApiTestCase extends DatabaseTestCase
         $foods = new FoodRepository($this->pdo);
         $rows = [
             ['REWE Quarkcreme', 'product', 'dairy', 'per_100g', 67.0, 12.4, 3.2, 2.6, 0.5, 200.0],
-            ['REWE Dinkelbrötchen', 'product', 'bread', 'per_100g', 246.0, 10.0, 46.0, 2.7, 1.8, null],
+            ['REWE Dinkelbrötchen', 'product', 'grains', 'per_100g', 246.0, 10.0, 46.0, 2.7, 1.8, null],
             ['DM Proteinriegel', 'product', 'snacks', 'per_unit', 163.0, 23.0, 12.0, 1.2, 4.6, null],
-            ['Reis, roh', 'reference', 'basics', 'per_100g', 351.0, 7.9, 77.1, 0.3, 0.6, null],
-            ['Olivenöl', 'reference', 'basics', 'per_100g', 899.0, 0.0, 0.0, 0.0, 99.9, null],
+            ['Reis, roh', 'reference', 'grains', 'per_100g', 351.0, 7.9, 77.1, 0.3, 0.6, null],
+            ['Olivenöl', 'reference', 'sauces', 'per_100g', 899.0, 0.0, 0.0, 0.0, 99.9, null],
         ];
         foreach ($rows as [$name, $type, $category, $basis, $kcal, $protein, $carbs, $sugar, $fat, $package]) {
             $foods->create($userId, [

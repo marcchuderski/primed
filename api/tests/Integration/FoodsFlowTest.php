@@ -88,7 +88,7 @@ final class FoodsFlowTest extends ApiTestCase
                 ['sugar' => 5, 'carbs' => 4],
                 ['protein' => 60, 'carbs' => 30, 'fat' => 20],
                 ['kcal' => 1000],
-                ['category' => 'meat'],
+                ['category' => 'basics'],
                 ['basis' => 'per_kg'],
                 ['name' => ''],
                 ['kcal' => '63'],
@@ -187,7 +187,7 @@ final class FoodsFlowTest extends ApiTestCase
             'category' => 'sauces']);
         self::assertSame(201, $created->status, $created->body);
         $sauces = $this->names(self::json($this->call('GET', '/api/v1/foods?category=sauces')));
-        self::assertSame(['Olivenöl nativ'], $sauces);
+        self::assertEqualsCanonicalizing(['Olivenöl', 'Olivenöl nativ'], $sauces);
 
         $this->offFetcher->responses['/api/v2/product/4006381333931.json'] = (string) json_encode([
             'status' => 1,

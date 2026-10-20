@@ -23,7 +23,7 @@ final class ReferencesFlowTest extends ApiTestCase
         $this->pdo->prepare(
             "INSERT INTO reference_foods (name, category, basis, kcal, protein, carbs, sugar, fat, piece_weight,
                                           source, sort)
-             VALUES (?, 'bread', ?, ?, 10, 50, 2, 2, ?, 'Test', 9999)",
+             VALUES (?, 'grains', ?, ?, 10, 50, 2, 2, ?, 'Test', 9999)",
         )->execute([$name, $basis, $kcal, $pieceWeight]);
 
         return (int) $this->pdo->lastInsertId();

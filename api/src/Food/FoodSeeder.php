@@ -20,8 +20,8 @@ final class FoodSeeder
      *     string|null, string|null}>
      */
     private const SHARED = [
-        ['Milch 1,5 %', 'reference', 'drinks', 'per_100ml', 47, 3.4, 4.8, 4.8, 1.5, 1000, 'seed', null, 'milk_low'],
-        ['Milch 3,5 %', 'reference', 'drinks', 'per_100ml', 64, 3.3, 4.7, 4.7, 3.5, 1000, 'seed', null, 'milk_high'],
+        ['Milch 1,5 %', 'reference', 'dairy', 'per_100ml', 47, 3.4, 4.8, 4.8, 1.5, 1000, 'seed', null, 'milk_low'],
+        ['Milch 3,5 %', 'reference', 'dairy', 'per_100ml', 64, 3.3, 4.7, 4.7, 3.5, 1000, 'seed', null, 'milk_high'],
         [
             'ESN Designer Whey Milk Chocolate', 'product', 'supplements', 'per_100g', 374, 72.0, 5.9, 5.2, 5.3, 908,
             'seed', '4250519647234', null,

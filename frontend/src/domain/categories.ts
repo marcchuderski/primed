@@ -1,17 +1,27 @@
 export type Category =
-  'snacks' | 'dairy' | 'bread' | 'produce' | 'drinks' | 'basics' | 'sauces' | 'supplements' | 'meals';
+  | 'meat'
+  | 'dairy'
+  | 'grains'
+  | 'produce'
+  | 'sauces'
+  | 'snacks'
+  | 'drinks'
+  | 'meals'
+  | 'supplements'
+  | 'other';
 
-/** Library categories (BRIEFING §6). */
+/** Library categories in pill order (BRIEFING §6, D-172). */
 export const CATEGORIES: readonly { id: Category; label: string; short: string }[] = [
-  { id: 'snacks', label: 'Snacks & Riegel', short: 'Snacks' },
+  { id: 'meat', label: 'Fleisch, Fisch, Eier & pflanzliches Eiweiß', short: 'Eiweiß & Fleisch' },
   { id: 'dairy', label: 'Milchprodukte & Quark', short: 'Milchprodukte' },
-  { id: 'bread', label: 'Brot & Backwaren', short: 'Brot' },
+  { id: 'grains', label: 'Getreide, Brot & Beilagen', short: 'Getreide & Beilagen' },
   { id: 'produce', label: 'Obst & Gemüse', short: 'Obst & Gemüse' },
+  { id: 'sauces', label: 'Öle, Fette & Saucen', short: 'Öle & Saucen' },
+  { id: 'snacks', label: 'Snacks & Riegel', short: 'Snacks' },
   { id: 'drinks', label: 'Getränke & Shakes', short: 'Getränke' },
-  { id: 'basics', label: 'Grundnahrungsmittel', short: 'Grundnahrung' },
-  { id: 'sauces', label: 'Öle & Saucen', short: 'Öle & Saucen' },
-  { id: 'supplements', label: 'Supplements', short: 'Supplements' },
   { id: 'meals', label: 'Fertigessen', short: 'Fertigessen' },
+  { id: 'supplements', label: 'Supplements', short: 'Supplements' },
+  { id: 'other', label: 'Sonstiges', short: 'Sonstiges' },
 ];
 
 export function categoryLabel(id: string, variant: 'label' | 'short' = 'short'): string {

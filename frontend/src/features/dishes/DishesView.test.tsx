@@ -35,7 +35,7 @@ const rice = {
   name: 'Reis, roh',
   brand: null,
   barcode: null,
-  category: 'basics',
+  category: 'grains',
   basis: 'per_100g',
   nutrients: { kcal: 351, protein: 7.9, carbs: 77.1, sugar: 0.3, fat: 0.6 },
   packageAmount: null,

@@ -71,7 +71,7 @@ export function ProductSheet({
   const start: Partial<FoodDraft> = food === undefined ? (initial ?? {}) : { ...food, ...food.nutrients };
   const [name, setName] = useState(start.name ?? '');
   const [type, setType] = useState<FoodType>(start.type ?? 'product');
-  const [category, setCategory] = useState<Category>(start.category ?? 'snacks');
+  const [category, setCategory] = useState<Category>(start.category ?? 'other');
   const [basis, setBasis] = useState<Basis>(start.basis ?? 'per_100g');
   const [values, setValues] = useState<Record<Field, string>>({
     kcal: start.kcal === undefined ? '' : formatDecimal(start.kcal),

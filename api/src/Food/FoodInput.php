@@ -13,7 +13,7 @@ final class FoodInput
 {
     public const TYPES = ['product', 'reference', 'ingredient'];
     public const CATEGORIES = [
-        'snacks', 'dairy', 'bread', 'produce', 'drinks', 'basics', 'sauces', 'supplements', 'meals',
+        'meat', 'dairy', 'grains', 'produce', 'sauces', 'snacks', 'drinks', 'meals', 'supplements', 'other',
     ];
     public const BASES = ['per_100g', 'per_100ml', 'per_unit'];
 
