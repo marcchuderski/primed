@@ -20,6 +20,13 @@ import styles from './AddSheet.module.css';
 
 const ONLINE_MIN_CHARS = 3;
 
+type ResultTab = 'library' | 'online' | 'references';
+const TAB_LABELS: Record<ResultTab, string> = {
+  library: 'Bibliothek',
+  online: 'Online',
+  references: 'Richtwerte',
+};
+
 interface AddSheetProps {
   open: boolean;
   shakes: Shake[];
@@ -64,6 +71,8 @@ export function AddSheet({
   const [library, setLibrary] = useState<Food[] | null>(null);
   const [online, setOnline] = useState<OffProduct[] | null>(null);
   const [onlineError, setOnlineError] = useState<string | null>(null);
+  // null = follow the first tab with hits; set once the user picks a tab (reset with the query, D-166).
+  const [pickedTab, setPickedTab] = useState<ResultTab | null>(null);
   const trimmed = query.trim();
 
   useEffect(() => {
@@ -137,8 +146,16 @@ export function AddSheet({
     };
   }, [trimmed]);
 
-  const own = (library ?? []).filter((f) => f.type !== 'reference');
-  const references = (library ?? []).filter((f) => f.type === 'reference');
+  const own = library?.filter((f) => f.type !== 'reference') ?? null;
+  const references = library?.filter((f) => f.type === 'reference') ?? null;
+  const onlineEnabled = trimmed.length >= ONLINE_MIN_CHARS;
+  const counts: Record<ResultTab, number | null> = {
+    library: own?.length ?? null,
+    online: onlineEnabled ? (online?.length ?? (onlineError === null ? null : 0)) : 0,
+    references: references?.length ?? null,
+  };
+  const autoTab = (Object.keys(TAB_LABELS) as ResultTab[]).find((t) => (counts[t] ?? 0) > 0) ?? 'library';
+  const tab = pickedTab ?? autoTab;
 
   const sheetHeader = (
     <div className={styles['searchRow']}>
@@ -156,6 +173,7 @@ export function AddSheet({
             if (e.target.value.trim() === '') {
               setLibrary(null);
               setOnline(null);
+              setPickedTab(null);
             }
           }}
         />
@@ -163,6 +181,23 @@ export function AddSheet({
       <button type="button" className={styles['scan']} aria-label="Barcode scannen" onClick={onScan}>
         <ScanBarcode size={22} strokeWidth={2.2} aria-hidden="true" />
       </button>
+    </div>
+  );
+  const tabs = trimmed !== '' && (
+    <div className={styles['tabs']} role="group" aria-label="Treffer">
+      {(Object.keys(TAB_LABELS) as ResultTab[]).map((t) => (
+        <button
+          key={t}
+          type="button"
+          aria-pressed={tab === t}
+          onClick={() => {
+            setPickedTab(t);
+          }}
+        >
+          {TAB_LABELS[t]}{' '}
+          <span className={styles['count']}>{counts[t] === null ? '…' : String(counts[t])}</span>
+        </button>
+      ))}
     </div>
   );
   const sheetFooter = (
@@ -187,7 +222,12 @@ export function AddSheet({
       title="Hinzufügen"
       onClose={onClose}
       tone="bg"
-      header={sheetHeader}
+      header={
+        <>
+          {sheetHeader}
+          {tabs}
+        </>
+      }
       footer={sheetFooter}
     >
       {error !== null && (
@@ -259,34 +299,36 @@ export function AddSheet({
         </>
       ) : (
         <>
-          <section className={styles['section']} aria-label="Deine Bibliothek">
-            <h3 className={styles['sectionTitle']}>Deine Bibliothek</h3>
-            {library === null ? (
-              <Loading>
-                <SkeletonRows count={3} />
-              </Loading>
-            ) : own.length === 0 ? (
-              <p className={styles['empty']}>Noch nichts mit „{trimmed}“ gespeichert.</p>
-            ) : (
-              <FoodList foods={own} onPick={onPickFood} />
-            )}
-          </section>
-          {trimmed.length >= ONLINE_MIN_CHARS && (
+          {tab === 'library' && (
+            <section className={styles['section']} aria-label="Deine Bibliothek">
+              {own === null ? (
+                <Loading>
+                  <SkeletonRows count={3} />
+                </Loading>
+              ) : own.length === 0 ? (
+                <p className={styles['empty']}>Noch nichts mit „{trimmed}“ gespeichert.</p>
+              ) : (
+                <FoodList foods={own} onPick={onPickFood} />
+              )}
+            </section>
+          )}
+          {tab === 'online' && (
             <section className={styles['section']} aria-label="Online-Treffer">
               <h3 className={styles['sectionTitle']}>
-                Online-Treffer <small>Daten: Open Food Facts</small>
+                <small>Daten: Open Food Facts</small>
               </h3>
-              {onlineError !== null && <p className={styles['empty']}>{onlineError}</p>}
-              {online === null && onlineError === null && (
+              {!onlineEnabled && <p className={styles['empty']}>Ab {ONLINE_MIN_CHARS} Zeichen.</p>}
+              {onlineEnabled && onlineError !== null && <p className={styles['empty']}>{onlineError}</p>}
+              {onlineEnabled && online === null && onlineError === null && (
                 <Loading>
                   <SkeletonRows count={2} />
                 </Loading>
               )}
-              {online !== null && online.length === 0 && onlineError === null && (
+              {onlineEnabled && online !== null && online.length === 0 && onlineError === null && (
                 <p className={styles['empty']}>Keine Online-Treffer.</p>
               )}
               <ul className={styles['list']}>
-                {(online ?? []).map((product) => (
+                {(onlineEnabled ? (online ?? []) : []).map((product) => (
                   <li key={product.barcode}>
                     <button
                       type="button"
@@ -311,12 +353,17 @@ export function AddSheet({
               </ul>
             </section>
           )}
-          {references.length > 0 && (
+          {tab === 'references' && (
             <section className={styles['section']} aria-label="Richtwerte">
-              <h3 className={styles['sectionTitle']}>
-                Richtwerte · unverpackt <small>Quelle: BLS 4.0 (MRI, CC BY 4.0)</small>
-              </h3>
-              <FoodList foods={references} onPick={onPickFood} />
+              {references === null ? (
+                <Loading>
+                  <SkeletonRows count={2} />
+                </Loading>
+              ) : references.length === 0 ? (
+                <p className={styles['empty']}>Keine Richtwerte mit „{trimmed}“.</p>
+              ) : (
+                <FoodList foods={references} onPick={onPickFood} />
+              )}
             </section>
           )}
         </>

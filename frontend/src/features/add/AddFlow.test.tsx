@@ -144,18 +144,29 @@ describe('AddFlow', () => {
     expect(lastBody('/entries/shake')).toEqual({ date: '2026-10-19', timeMin: 885, shake: 'big_milk_low' });
   });
 
-  it('searches library, online and reference values and logs with the prefilled amount, also for yesterday', async () => {
+  it('searches library, online and reference values in tabs with hit counts and logs with the prefilled amount, also for yesterday', async () => {
     const onAdded = setup();
     await userEvent.type(screen.getByRole('searchbox', { name: 'Lebensmittel suchen' }), 'skyr');
 
-    const library = await screen.findByRole('region', { name: 'Deine Bibliothek' });
-    expect(await within(library).findByText('REWE Quarkcreme')).toBeInTheDocument();
-    expect(await screen.findByRole('region', { name: 'Richtwerte' })).toHaveTextContent('Skyr natur');
-    const onlineRegion = await screen.findByRole('region', { name: 'Online-Treffer' });
+    const tabs = await screen.findByRole('group', { name: 'Treffer' });
+    expect(await within(tabs).findByRole('button', { name: 'Bibliothek 1' })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
     expect(
-      await within(onlineRegion).findByText('Milram Skyr Natur', {}, { timeout: 2000 }),
+      await within(tabs).findByRole('button', { name: 'Online 1' }, { timeout: 2000 }),
     ).toBeInTheDocument();
+    expect(screen.queryByRole('region', { name: 'Richtwerte' })).not.toBeInTheDocument();
 
+    await userEvent.click(within(tabs).getByRole('button', { name: 'Richtwerte 1' }));
+    expect(screen.getByRole('region', { name: 'Richtwerte' })).toHaveTextContent('Skyr natur');
+    expect(screen.queryByRole('region', { name: 'Deine Bibliothek' })).not.toBeInTheDocument();
+    await userEvent.click(within(tabs).getByRole('button', { name: 'Online 1' }));
+    expect(screen.getByRole('region', { name: 'Online-Treffer' })).toHaveTextContent('Milram Skyr Natur');
+
+    await userEvent.click(within(tabs).getByRole('button', { name: 'Bibliothek 1' }));
+    const library = screen.getByRole('region', { name: 'Deine Bibliothek' });
+    expect(within(library).getByText('REWE Quarkcreme')).toBeInTheDocument();
     await userEvent.click(within(library).getByRole('button', { name: /REWE Quarkcreme/ }));
     const sheet = screen.getByRole('dialog', { name: 'REWE Quarkcreme' });
     expect(within(sheet).getByLabelText(/Menge in/)).toHaveValue('1');
@@ -177,7 +188,8 @@ describe('AddFlow', () => {
   it('saves an online product to the library before logging it', async () => {
     const onAdded = setup();
     await userEvent.type(screen.getByRole('searchbox', { name: 'Lebensmittel suchen' }), 'skyr');
-    const online = await screen.findByRole('region', { name: 'Online-Treffer' }, { timeout: 2000 });
+    await userEvent.click(await screen.findByRole('button', { name: 'Online 1' }, { timeout: 2000 }));
+    const online = screen.getByRole('region', { name: 'Online-Treffer' });
     await userEvent.click(
       await within(online).findByRole('button', { name: /Milram Skyr Natur/ }, { timeout: 2000 }),
     );
@@ -207,5 +219,38 @@ describe('AddFlow', () => {
     expect(await screen.findByRole('dialog', { name: 'Neues Produkt' })).toHaveTextContent(
       'Barcode 96385074 wird verknüpft.',
     );
+  });
+  it('jumps to the first tab with hits and shows reference values like milk there', async () => {
+    fetchMock.mockImplementation((input) => {
+      const url = urlOf(input);
+      if (url.endsWith('/shakes')) return respond({ shakes });
+      if (url.endsWith('/foods/frequent')) return respond({ foods: [] });
+      if (url.includes('/foods?q='))
+        return respond({ foods: [food({ id: 4, type: 'reference', name: 'Milch 1,5 %' })] });
+      if (url.includes('/off/search')) return respond({ products: [] });
+      return respond({ error: { code: 'x', message: `unexpected ${url}` } }, 500);
+    });
+    setup();
+    await userEvent.type(screen.getByRole('searchbox', { name: 'Lebensmittel suchen' }), 'milch');
+
+    expect(await screen.findByRole('button', { name: 'Richtwerte 1' })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
+    expect(screen.getByRole('region', { name: 'Richtwerte' })).toHaveTextContent('Milch 1,5 %');
+    expect(await screen.findByRole('button', { name: 'Online 0' }, { timeout: 2000 })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Bibliothek 0' })).toHaveAttribute('aria-pressed', 'false');
+  });
+
+  it('selects the whole amount on focus, so typing replaces it', async () => {
+    setup();
+    await userEvent.type(screen.getByRole('searchbox', { name: 'Lebensmittel suchen' }), 'skyr');
+    await userEvent.click(await screen.findByRole('button', { name: /REWE Quarkcreme/ }));
+    const amount = within(screen.getByRole('dialog', { name: 'REWE Quarkcreme' })).getByLabelText(/Menge in/);
+    expect(amount).toHaveValue('1');
+
+    await userEvent.click(amount);
+    await userEvent.keyboard('2');
+    expect(amount).toHaveValue('2');
   });
 });

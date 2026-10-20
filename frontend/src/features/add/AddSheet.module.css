@@ -207,3 +207,42 @@
   font-size: 12px;
   font-weight: 600;
 }
+
+/* Result tabs with hit counts (D-166), same look as the history segment. */
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4px;
+  padding: 4px;
+  border-radius: 16px;
+  background: var(--tonal);
+}
+
+.tabs button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 0;
+  height: 40px;
+  padding: 0 6px;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--text-muted);
+  font: 600 14px var(--font-text);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.tabs button[aria-pressed='true'] {
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 700;
+}
+
+.count {
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  color: var(--text-muted);
+}
