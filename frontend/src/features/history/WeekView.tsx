@@ -1,14 +1,7 @@
 import { ChevronRight, Lock } from 'lucide-react';
 import { Fragment, type ReactNode } from 'react';
 import { formatInt } from '../../domain/format.ts';
-import {
-  dayDeviationPct,
-  dayStatus,
-  formatSigned,
-  tableDayTypeName,
-  type HistoryDay,
-  type PeriodSummary,
-} from '../../domain/history.ts';
+import { dayStatus, tableDayTypeName, type HistoryDay, type PeriodSummary } from '../../domain/history.ts';
 import { isInWindow } from '../../domain/pastDay.ts';
 import { rateKcal } from '../../domain/rating.ts';
 import { fatReference } from '../../domain/targets.ts';
@@ -35,7 +28,6 @@ export function WeekView({
   onOpenDay: (date: string, isToday: boolean) => void;
 }) {
   const cols = dates.map((date) => ({ date, day: days.get(date) }));
-  const pct = (v: number | null) => (v === null ? '' : `${formatSigned(v)} %`);
 
   const cell = (day: HistoryDay | undefined, render: (d: HistoryDay) => ReactNode) => {
     if (day === undefined) {
@@ -131,7 +123,7 @@ export function WeekView({
                   {cell(day, (d) => (
                     <>
                       {formatInt(d.eaten.kcal)}
-                      <small>{d.isToday ? `/ ${formatInt(d.targets.kcal)}` : pct(dayDeviationPct(d))}</small>
+                      <small>/ {formatInt(d.targets.kcal)}</small>
                     </>
                   ))}
                 </Fragment>
@@ -140,9 +132,7 @@ export function WeekView({
                 {summary.days > 0 && (
                   <>
                     {formatInt(summary.eaten.kcal)}
-                    <small>
-                      / {formatInt(summary.targets.kcal)} · {pct(summary.deviationPct)}
-                    </small>
+                    <small>/ {formatInt(summary.targets.kcal)}</small>
                   </>
                 )}
               </td>

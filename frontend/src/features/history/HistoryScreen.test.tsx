@@ -78,6 +78,11 @@ describe('HistoryScreen (6.2–6.4)', () => {
     expect(within(table).getByText('läuft')).toBeInTheDocument();
     expect(within(table).getByText('1 Tag')).toBeInTheDocument();
 
+    // kcal like the other rows: actual / target, no percentages.
+    const kcalRow = within(table).getByRole('row', { name: /^kcal \d/ });
+    expect(kcalRow).toHaveTextContent('1.950/ 2.000');
+    expect(kcalRow).not.toHaveTextContent('%');
+
     // Fat and sugar show their reference values like on "Heute": fat = remaining kcal / 9, sugar 50 g.
     const fatRow = within(table).getByRole('row', { name: /^Fett/ });
     expect(fatRow).toHaveTextContent('60/ ~67');
