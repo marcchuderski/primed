@@ -77,6 +77,12 @@ describe('HistoryScreen (6.2–6.4)', () => {
     expect(within(table).getByRole('columnheader', { name: 'Σ Woche' })).toBeInTheDocument();
     expect(within(table).getByText('läuft')).toBeInTheDocument();
     expect(within(table).getByText('1 Tag')).toBeInTheDocument();
+
+    // Fat and sugar show their reference values like on "Heute": fat = remaining kcal / 9, sugar 50 g.
+    const fatRow = within(table).getByRole('row', { name: /^Fett/ });
+    expect(fatRow).toHaveTextContent('60/ ~67');
+    const sugarRow = within(table).getByRole('row', { name: /^Zucker/ });
+    expect(sugarRow).toHaveTextContent('40/ ~50');
   });
 
   it('opens a day from the week table; days older than the edit window are only viewed (D-178)', async () => {

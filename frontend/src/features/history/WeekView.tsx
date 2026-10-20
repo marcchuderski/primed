@@ -11,6 +11,7 @@ import {
 } from '../../domain/history.ts';
 import { isInWindow } from '../../domain/pastDay.ts';
 import { rateKcal } from '../../domain/rating.ts';
+import { fatReference } from '../../domain/targets.ts';
 import { Legend, StatusMark } from './StatusMark.tsx';
 import styles from './History.module.css';
 
@@ -193,22 +194,42 @@ export function WeekView({
               {cols.map(({ date, day }) => (
                 <Fragment key={date}>
                   {cell(day, (d) => (
-                    <span className={styles['muted']}>{formatInt(d.eaten.fat)}</span>
+                    <>
+                      <span className={styles['muted']}>{formatInt(d.eaten.fat)}</span>
+                      <small>/ ~{formatInt(fatReference(d.targets))}</small>
+                    </>
                   ))}
                 </Fragment>
               ))}
-              <td className={styles['sum']}>{summary.days > 0 && formatInt(summary.eaten.fat)}</td>
+              <td className={styles['sum']}>
+                {summary.days > 0 && (
+                  <>
+                    {formatInt(summary.eaten.fat)}
+                    <small>/ ~{formatInt(fatReference(summary.targets))}</small>
+                  </>
+                )}
+              </td>
             </tr>
             <tr>
               <th scope="row">Zucker</th>
               {cols.map(({ date, day }) => (
                 <Fragment key={date}>
                   {cell(day, (d) => (
-                    <span className={styles['muted']}>{formatInt(d.eaten.sugar)}</span>
+                    <>
+                      <span className={styles['muted']}>{formatInt(d.eaten.sugar)}</span>
+                      <small>/ ~{formatInt(d.targets.sugar)}</small>
+                    </>
                   ))}
                 </Fragment>
               ))}
-              <td className={styles['sum']}>{summary.days > 0 && formatInt(summary.eaten.sugar)}</td>
+              <td className={styles['sum']}>
+                {summary.days > 0 && (
+                  <>
+                    {formatInt(summary.eaten.sugar)}
+                    <small>/ ~{formatInt(summary.targets.sugar)}</small>
+                  </>
+                )}
+              </td>
             </tr>
           </tbody>
         </table>

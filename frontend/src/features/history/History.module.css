@@ -146,7 +146,8 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
-  padding: 10px 12px;
+  min-width: 0;
+  padding: 10px;
   border-radius: 14px;
 }
 
@@ -156,9 +157,11 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* One line: "✓ im Rahmen" must not wrap on narrow phones. */
 .tile span {
   font-size: 12px;
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .ok {

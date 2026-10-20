@@ -16,6 +16,7 @@ export const RELEASES: readonly Release[] = [
     changes: [
       'Leichter nachtragen: Datum oben antippen und einen der letzten 7 Tage wählen',
       'Verlauf: Tage antippen, um sie zu öffnen',
+      'Wochenansicht: Richtwerte für Fett und Zucker wie auf Heute',
       'Neuer Startscreen: übersichtlicher, Datum und Tagesart direkt nebeneinander',
     ],
   },
