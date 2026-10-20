@@ -144,4 +144,4 @@ Nicht änderbar, nicht pro Produkt; bei Basis Stück nicht verfügbar.
 
 ## Kategorien
 
-Snacks & Riegel · Milchprodukte & Quark · Brot & Backwaren · Obst & Gemüse · Getränke & Shakes · Grundnahrungsmittel (vorläufig, D-111) · Öle & Saucen (D-162) · Supplements · Fertigessen (D-165)
+Eiweiß & Fleisch (Fleisch, Fisch, Eier & pflanzliches Eiweiß) · Milchprodukte & Quark · Getreide & Beilagen (Getreide, Brot & Beilagen) · Obst & Gemüse · Öle & Saucen (Öle, Fette & Saucen) · Snacks & Riegel · Getränke & Shakes · Fertigessen · Supplements · Sonstiges (D-172; Pill-Kurzform jeweils vorne)

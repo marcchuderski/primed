@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-20 – Neue Kategorienstruktur und OFF-Zuordnung (Migration 016)
+- Zehn Kategorien in neuer Reihenfolge: Eiweiß & Fleisch · Milchprodukte · Getreide & Beilagen · Obst & Gemüse · Öle & Saucen · Snacks · Getränke · Fertigessen · Supplements · Sonstiges. „Brot“ geht in „Getreide & Beilagen“ auf, „Grundnahrung“ entfällt.
+- Migration `016_categories_v2`: bread → grains; alte Startwerte aus „Grundnahrung“ nach Name umsortiert, eigene Einträge dort → Sonstiges; Start-Milch → Milchprodukte; Richtwerte: Brot/Brötchen → Getreide, süßes Gebäck → Snacks, Ei → Eiweiß & Fleisch, Milch → Milchprodukte. OFF-Cache wird geleert.
+- Open-Food-Facts-Zuordnung neu (`OffCategoryMap`): Overrides, alle 91 OFF-Lebensmittelgruppen, Rettungsregeln über Kategorien, sonst Sonstiges (statt Snacks). Neue Produkte starten in „Sonstiges“.
+
 ## 2026-10-20 – Gemeinsame Richtwerte mit Stückgewicht (Migration 015)
 - Migration `015_reference_foods`: Tabelle `reference_foods` mit 110 unverpackten Lebensmitteln (BLS 4.0), neue Spalten `foods.piece_weight` und `foods.reference_food_id`. Die Start-Milch wird mit ihrem Richtwert verknüpft, sonst ändert sich an bestehenden Daten nichts.
 - Suche bei „Hinzufügen“ und bei Zutaten zeigt die gemeinsamen Richtwerte; der erste Tipp legt eine eigene Kopie an (gelöschte Kopie wird wiederhergestellt).
