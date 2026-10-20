@@ -10,11 +10,28 @@ namespace Primed\Off;
  * 2. the product's food group (the most specific one in GROUPS),
  * 3. rescue rules on categories for products without a food group,
  * 4. otherwise "other".
+ * Afterwards protein powders with poor OFF data are caught: text in unnormalised tags, ≥ 60 g protein per 100 g,
+ * or – only for products otherwise unknown – a powder word in the product name.
  * GROUPS lists all 91 OFF food groups (taxonomies/food_groups.json) with their depth (1 = top group).
  */
 final class OffCategoryMap
 {
     public const FALLBACK = 'other';
+
+    /** From this much protein per 100 g a drink, dairy product, snack or unknown product is a protein powder. */
+    public const POWDER_PROTEIN_MIN = 60.0;
+
+    /** Parts of unnormalised tags (e.g. "en:Nahrungsergänzungsmittel") that mark a supplement. */
+    private const SUPPLEMENT_WORDS = ['nahrungserg', 'proteinpulver', 'eiweisspulver', 'eiweißpulver', 'whey-protein'];
+
+    /** Name parts of protein powders; only used for otherwise unknown products (no OFF categories). */
+    private const POWDER_NAME_WORDS = [
+        'proteinpulver', 'protein pulver', 'protein powder', 'eiweißpulver', 'eiweisspulver', 'whey protein',
+        'whey isolat', 'iso whey', 'casein',
+    ];
+
+    /** Categories a protein powder is often wrongly sorted into. */
+    private const POWDER_SUSPECTS = ['drinks', 'dairy', 'snacks', 'other'];
 
     /** @var list<array{string, list<string>}> */
     private const OVERRIDES = [
@@ -183,8 +200,47 @@ final class OffCategoryMap
     /**
      * @param list<string> $categories OFF categories_tags
      * @param list<string> $groups OFF food_groups_tags
+     * @param float|null $protein protein per 100 g (null for per 100 ml)
      */
-    public static function category(array $categories, array $groups): string
+    public static function category(
+        array $categories,
+        array $groups,
+        ?float $protein = null,
+        string $name = '',
+    ): string {
+        $category = self::byTags($categories, $groups);
+        if ($category === 'supplements' || !in_array($category, self::POWDER_SUSPECTS, true)) {
+            return $category;
+        }
+        foreach ($categories as $tag) {
+            $lower = mb_strtolower($tag, 'UTF-8');
+            foreach (self::SUPPLEMENT_WORDS as $word) {
+                if (str_contains($lower, $word)) {
+                    return 'supplements';
+                }
+            }
+        }
+
+        if ($protein !== null && $protein >= self::POWDER_PROTEIN_MIN) {
+            return 'supplements';
+        }
+        if ($category === self::FALLBACK) {
+            $lower = mb_strtolower($name, 'UTF-8');
+            foreach (self::POWDER_NAME_WORDS as $word) {
+                if (str_contains($lower, $word)) {
+                    return 'supplements';
+                }
+            }
+        }
+
+        return $category;
+    }
+
+    /**
+     * @param list<string> $categories
+     * @param list<string> $groups
+     */
+    private static function byTags(array $categories, array $groups): string
     {
         foreach (self::OVERRIDES as [$category, $needles]) {
             if (array_intersect($needles, $categories) !== []) {

@@ -137,6 +137,28 @@ final class OffCategoryMapTest extends TestCase
         self::assertSame($expected, OffCategoryMap::category($categories, $groups));
     }
 
+    public function testCatchesProteinPowdersWithPoorOffData(): void
+    {
+        // ESN Designer Whey as listed by OFF (10/2026): an artificially sweetened beverage.
+        $whey = [['en:beverages-and-beverages-preparations', 'en:beverages', 'en:Nahrungsergänzungsmittel'],
+            ['en:beverages', 'en:artificially-sweetened-beverages']];
+        self::assertSame('supplements', OffCategoryMap::category(...$whey));
+        self::assertSame('supplements', OffCategoryMap::category(['de:proteinpulver'], []));
+        self::assertSame('supplements', OffCategoryMap::category(['en:beverages'], [], 72.0));
+        self::assertSame('supplements', OffCategoryMap::category([], [], 80.0), 'unknown, but 80 g protein');
+        self::assertSame('drinks', OffCategoryMap::category(['en:beverages'], [], 59.9));
+        self::assertSame('drinks', OffCategoryMap::category(['en:beverages'], [], null));
+        self::assertSame('supplements', OffCategoryMap::category([], [], 22.5, 'Strawberry Protein Powder'));
+        self::assertSame('supplements', OffCategoryMap::category([], [], null, 'Proteinpulver'));
+        $spread = [['en:chocolate-spreads'], ['en:sugary-snacks', 'en:sweets'], 21.0, 'Whey Protein Creme'];
+        self::assertSame('snacks', OffCategoryMap::category(...$spread), 'name rule only for unknown products');
+        self::assertSame('other', OffCategoryMap::category([], [], 23.0, 'No whey bar'));
+        $driedFish = [['en:fishes', 'en:dried-fishes'], ['en:fish-meat-eggs', 'en:fish-and-seafood'], 79.0];
+        self::assertSame('meat', OffCategoryMap::category(...$driedFish), 'dried fish stays meat');
+        $proteinPasta = [['en:pastas'], ['en:cereals-and-potatoes', 'en:cereals'], 65.0];
+        self::assertSame('grains', OffCategoryMap::category(...$proteinPasta));
+    }
+
     public function testCoversAll91FoodGroupsWithValidCategories(): void
     {
         self::assertCount(91, OffCategoryMap::GROUPS);
