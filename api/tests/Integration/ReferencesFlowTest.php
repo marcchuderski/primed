@@ -116,6 +116,20 @@ final class ReferencesFlowTest extends ApiTestCase
         self::assertSame(2, (int) $count->fetchColumn(), 'one per user, no second copy');
     }
 
+    public function testExactAndWordStartMatchesComeFirst(): void
+    {
+        $names = array_map(static fn (array $r): mixed => $r['name'] ?? null, $this->search('ei'));
+        self::assertSame('Ei', $names[0] ?? null, 'exact match first');
+        self::assertContains('Weizenbrötchen', $names, 'substring matches still found');
+        self::assertGreaterThan(
+            array_search('Ei', $names, true),
+            array_search('Weizenbrötchen', $names, true),
+        );
+
+        $potatoes = array_map(static fn (array $r): mixed => $r['name'] ?? null, $this->search('kart'));
+        self::assertSame(['Kartoffel', 'Süßkartoffel'], $potatoes, 'name starts with the query before a substring');
+    }
+
     public function testRejectsBadInput(): void
     {
         self::assertSame([], $this->search(''));

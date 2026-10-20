@@ -17,6 +17,7 @@ export const RELEASES: readonly Release[] = [
       'Leichter nachtragen: Datum oben antippen und einen der letzten 7 Tage wählen',
       'Verlauf: Tage antippen, um sie zu öffnen',
       'Wochenansicht: Richtwerte für Fett und Zucker wie auf Heute',
+      'Suche: passende Treffer zuerst, z. B. Ei vor Weizenbrötchen',
       'Neuer Startscreen: übersichtlicher, Datum und Tagesart direkt nebeneinander',
     ],
   },

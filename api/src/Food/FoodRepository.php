@@ -11,6 +11,13 @@ use Primed\Support\Row;
 
 final class FoodRepository
 {
+    /**
+     * Search ranking (D-179): exact name, name starts with the query, a word starts with it, anything else.
+     * Constant SQL; the query goes in as parameters (see matchRankParams).
+     */
+    private const MATCH_RANK = "CASE WHEN name = ? THEN 0 WHEN name LIKE ? ESCAPE '\\\\' THEN 1
+        WHEN name LIKE ? ESCAPE '\\\\' OR name LIKE ? ESCAPE '\\\\' THEN 2 ELSE 3 END";
+
     private const COLUMNS = 'id, type, name, brand, barcode, category, basis, kcal, protein, carbs, sugar, fat,
         package_amount, usage_count, last_amount, last_unit, piece_weight';
 
@@ -98,13 +105,17 @@ final class FoodRepository
             $sql .= ' AND type = ?';
             $params[] = $type;
         }
+        $order = 'usage_count DESC, name';
         if ($query !== null && $query !== '') {
             $like = '%' . addcslashes($query, '%_\\') . '%';
             $sql .= " AND (name LIKE ? ESCAPE '\\\\' OR brand LIKE ? ESCAPE '\\\\')";
             $params[] = $like;
             $params[] = $like;
+            // Exact and word-start matches first ("Ei" before "Weizenbrötchen", D-179).
+            $order = self::MATCH_RANK . ', ' . $order;
+            array_push($params, ...self::matchRankParams($query));
         }
-        $sql .= ' ORDER BY usage_count DESC, name LIMIT ' . max(1, min(100, $limit));
+        $sql .= ' ORDER BY ' . $order . ' LIMIT ' . max(1, min(100, $limit));
 
         return $this->fetchAll($sql, $params);
     }
@@ -329,10 +340,10 @@ final class FoodRepository
                 AND NOT EXISTS (SELECT 1 FROM foods f
                                  WHERE f.user_id = ? AND f.reference_food_id = r.id AND f.deleted_at IS NULL
                                    AND " . self::visibleMilk('f') . ')
-              ORDER BY r.sort, r.name
+              ORDER BY ' . self::MATCH_RANK . ', r.sort, r.name
               LIMIT ' . max(1, min(100, $limit)),
         );
-        $statement->execute([$like, $userId]);
+        $statement->execute([$like, $userId, ...self::matchRankParams($query)]);
         $references = [];
         foreach ($statement->fetchAll() as $row) {
             if (is_array($row)) {
@@ -341,6 +352,16 @@ final class FoodRepository
         }
 
         return $references;
+    }
+
+    /**
+     * @return list<string> parameters for MATCH_RANK, in order
+     */
+    private static function matchRankParams(string $query): array
+    {
+        $escaped = addcslashes($query, '%_\\');
+
+        return [$query, $escaped . '%', '% ' . $escaped . '%', '%(' . $escaped . '%'];
     }
 
     public function findReference(int $id): ?ReferenceFood

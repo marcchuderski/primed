@@ -268,6 +268,21 @@ final class FoodsFlowTest extends ApiTestCase
         self::assertCount(1, $this->offFetcher->requests);
     }
 
+    public function testLibrarySearchRanksExactAndWordStartMatchesFirst(): void
+    {
+        foreach (['Weizenbrei', 'Rühr-Ei mit Speck', 'Ei'] as $name) {
+            $created = $this->call('POST', '/api/v1/foods', [...self::SKYR, 'name' => $name, 'barcode' => null]);
+            self::assertSame(201, $created->status, $created->body);
+        }
+        $names = $this->names(self::json($this->call('GET', '/api/v1/foods?q=ei')));
+        self::assertSame('Ei', $names[0] ?? null);
+        $brei = array_search('Weizenbrei', $names, true);
+        $wordStart = array_search('Rühr-Ei mit Speck', $names, true);
+        self::assertIsInt($brei);
+        self::assertIsInt($wordStart);
+        self::assertLessThan($brei, $wordStart, 'a word starting with the query beats a substring');
+    }
+
     public function testBarcodeErrors(): void
     {
         self::assertSame(422, $this->call('GET', '/api/v1/foods/barcode/4006381333932')->status);

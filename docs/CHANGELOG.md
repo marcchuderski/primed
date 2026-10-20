@@ -4,6 +4,7 @@
 - API: Bearbeitungsfenster heute + 7 Tage für Anlegen, Ändern, Löschen von Einträgen und für die Tagesart (sonst 422; vorher keine Untergrenze, Ändern/Löschen ohne Datumsprüfung). `editable` im Tag. Alte Tage werden beim Lesen nicht mehr aus der aktuellen Vorlage angelegt.
 - Heute: neuer Kopf (Begrüßung als Titel, Datum- und Tagesart-Chip), Tagesauswahl (heute + 7 Tage mit kcal und Bewertung), vergangene Tage mit Banner „Du bearbeitest …“, Tagesbilanz statt Checkpoints/Vorschlägen, ältere Tage nur lesbar. Rücksprung auf heute bei Fokus und beim Tab „Heute“.
 - Nachtragen über alle Wege (Suche, Scan, Shakes, Gerichte) in den angezeigten Tag, Uhrzeit wie der letzte Eintrag des Tages bzw. 12:00; Mengen-Sheet ohne Tagesauswahl, mit „Für Montag, 19.10.“.
+- Suche (Bibliothek und Richtwerte, auch bei Zutaten): exakte Treffer zuerst, dann Name beginnt mit dem Begriff, dann Wortanfang, dann der Rest (D-179).
 - Zwei-Button-Zeilen einzeilig: Fuß von „Hinzufügen“ und „Zutat suchen“ (Abstand/Polster kleiner, kein Umbruch), Bestätigungsdialoge 358 px breit mit 15 px Buttons (auch „Endgültig löschen“).
 - Verlauf: Tage in Woche und Monat antippbar. Wochentabelle zeigt kcal wie die übrigen Zeilen als Ist / Soll (ohne Prozentangaben, auch in der Σ-Spalte) und bei Fett und Zucker die Richtwerte („/ ~67“ = Restkalorien, „/ ~50“), auch in der Σ-Spalte; Bilanz-Kacheln ohne Umbruch („✓ im Rahmen“ auf dem iPhone).
 
