@@ -3,6 +3,7 @@ import { useState } from 'react';
 import type { EntryNutrients } from '../../api/entries.ts';
 import { Button } from '../../components/Button/Button.tsx';
 import { Sheet } from '../../components/Sheet/Sheet.tsx';
+import { selectOnFocus } from '../../components/selectOnFocus.ts';
 import { TimeWheel } from '../../components/Wheel/TimeWheel.tsx';
 import { formatDecimal, formatInt } from '../../domain/format.ts';
 import { formatClock, roundUpToQuarterHour, berlinWallMinute, MINUTES_PER_DAY } from '../../domain/time.ts';
@@ -164,6 +165,7 @@ export function QuantitySheet({
                 className={styles['amount']}
                 style={{ width: `${String(Math.max(1, text.length) + 0.4)}ch` }}
                 inputMode="decimal"
+                onFocus={selectOnFocus}
                 aria-label={`Menge in ${unitLabel(unit, 2)}`}
                 value={text}
                 onChange={(e) => {

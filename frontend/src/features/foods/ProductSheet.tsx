@@ -3,6 +3,7 @@ import { useState } from 'react';
 import type { Food, FoodDraft, FoodType } from '../../api/foods.ts';
 import { Button } from '../../components/Button/Button.tsx';
 import { Sheet } from '../../components/Sheet/Sheet.tsx';
+import { selectOnFocus } from '../../components/selectOnFocus.ts';
 import { CATEGORIES, type Category } from '../../domain/categories.ts';
 import { formatDecimal } from '../../domain/format.ts';
 import type { Basis } from '../../domain/units.ts';
@@ -235,6 +236,7 @@ export function ProductSheet({
               <span className={styles['value']}>
                 <input
                   inputMode="decimal"
+                  onFocus={selectOnFocus}
                   aria-label={`${row.label} in ${row.unit(basis)}`}
                   value={values[row.field]}
                   placeholder="0"
