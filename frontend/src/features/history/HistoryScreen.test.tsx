@@ -79,6 +79,30 @@ describe('HistoryScreen (6.2–6.4)', () => {
     expect(within(table).getByText('1 Tag')).toBeInTheDocument();
   });
 
+  it('opens a day from the week table; days older than the edit window are only viewed (D-178)', async () => {
+    const extra = [...october, day('2026-10-12', 2000, 150)];
+    fetchMock.mockImplementation((input) => {
+      const url = new URL(urlOf(input), 'https://primed.test');
+      if (url.pathname.endsWith('/settings')) return respond({ settings: testSettings });
+      const from = url.searchParams.get('from') ?? '';
+      const to = url.searchParams.get('to') ?? '';
+      return respond({ today: '2026-10-20', days: extra.filter((d) => d.date >= from && d.date <= to) });
+    });
+    const onOpenDay = vi.fn();
+    render(<HistoryScreen onOpenDay={onOpenDay} />);
+
+    await userEvent.click(await screen.findByRole('button', { name: 'Mo 19. öffnen' }));
+    expect(onOpenDay).toHaveBeenLastCalledWith('2026-10-19', false);
+    await userEvent.click(screen.getByRole('button', { name: 'Di 20. öffnen' }));
+    expect(onOpenDay).toHaveBeenLastCalledWith('2026-10-20', true);
+    expect(screen.queryByRole('button', { name: /^Mi 21\./ })).not.toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole('button', { name: 'Vorherige Woche' }));
+    await userEvent.click(await screen.findByRole('button', { name: 'Mo 12. ansehen' }));
+    expect(onOpenDay).toHaveBeenLastCalledWith('2026-10-12', false);
+    expect(screen.getByRole('button', { name: 'Fr 16. öffnen' })).toBeInTheDocument();
+  });
+
   it('goes back a week and excludes empty and running days from the balance', async () => {
     render(<HistoryScreen />);
     await screen.findByText('KW 43');

@@ -58,7 +58,7 @@ describe('TodayScreen', () => {
     expect(screen.getByRole('button', { name: 'Dienstag, 20.10., anderen Tag wählen' })).toHaveTextContent(
       'Di, 20.10.',
     );
-    expect(screen.queryByRole('status', { name: '' })).toBeNull();
+    expect(screen.queryByText(/Du bearbeitest/)).not.toBeInTheDocument();
     expect(
       screen.getByRole('button', { name: 'Tagesart: Normal · Basketball · 20:00. Ändern' }),
     ).toBeInTheDocument();

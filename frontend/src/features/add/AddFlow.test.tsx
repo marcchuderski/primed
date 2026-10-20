@@ -303,6 +303,34 @@ describe('AddFlow', () => {
     expect(lastBody('/entries')).toMatchObject({ foodId: 41, amount: 1, unit: 'stueck' });
   });
 
+  it('logs into a past day with its preset time and says so (D-177)', async () => {
+    const onAdded = vi.fn();
+    const pastDay = { defaultTime: 1170, short: 'Mo, 19.10.', long: 'Montag, 19.10.' };
+    render(<AddFlow day={day} eatenBefore={zero} onClose={vi.fn()} onAdded={onAdded} pastDay={pastDay} />);
+    expect(screen.getByRole('dialog', { name: 'Hinzufügen' })).toHaveTextContent('Für Montag, 19.10.');
+
+    await userEvent.click(await screen.findByRole('button', { name: /Shake Groß · Milch 1,5 % eintragen/ }));
+    await waitFor(() => {
+      expect(onAdded).toHaveBeenCalledOnce();
+    });
+    expect(lastBody('/entries/shake')).toEqual({ date: '2026-10-19', timeMin: 1170, shake: 'big_milk_low' });
+  });
+
+  it('shows the past day in the quantity sheet and offers no "Jetzt"', async () => {
+    const pastDay = { defaultTime: 1170, short: 'Mo, 19.10.', long: 'Montag, 19.10.' };
+    render(<AddFlow day={day} eatenBefore={zero} onClose={vi.fn()} onAdded={vi.fn()} pastDay={pastDay} />);
+    await userEvent.type(screen.getByRole('searchbox', { name: 'Lebensmittel suchen' }), 'skyr');
+    await userEvent.click(await screen.findByRole('button', { name: /REWE Quarkcreme/ }));
+
+    const sheet = screen.getByRole('dialog', { name: 'REWE Quarkcreme' });
+    expect(within(sheet).getByText('Für Montag, 19.10.')).toBeInTheDocument();
+    expect(within(sheet).queryByRole('button', { name: 'Jetzt' })).not.toBeInTheDocument();
+    await userEvent.click(within(sheet).getByRole('button', { name: 'Für Mo, 19.10. hinzufügen · 19:30' }));
+    await waitFor(() => {
+      expect(lastBody('/entries')).toMatchObject({ date: '2026-10-19', timeMin: 1170 });
+    });
+  });
+
   it('selects the whole amount on focus, so typing replaces it', async () => {
     setup();
     await userEvent.type(screen.getByRole('searchbox', { name: 'Lebensmittel suchen' }), 'skyr');
