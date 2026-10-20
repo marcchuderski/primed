@@ -41,7 +41,8 @@ Danach einfach das Primed-Icon antippen. Ohne Internet zeigt die App „Keine Ve
 **Eintragen (+)**
 - Suche in deiner Bibliothek, wähle ein Gericht, einen Shake oder etwas, das du um diese Zeit oft isst.
 - **Scannen**: Barcode einer Packung (Kamera-Freigabe nötig). Unbekannte Produkte findet Primed oft online bei Open Food Facts; prüfe die Werte, bevor du speicherst.
-- Menge in g, ml, EL, TL oder Packung, Uhrzeit per Rad. Im Mengen-Sheet kannst du auch einen früheren Tag wählen und so **nachtragen**.
+- Menge in g, ml, EL, TL oder Packung, Uhrzeit per Rad.
+- **Nachtragen:** Tipp auf Heute auf das Datum und wähl einen der letzten 7 Tage, oder tipp im Verlauf auf einen Tag. Ein Banner zeigt, welchen Tag du gerade bearbeitest; alles, was du hinzufügst, landet dort. „Zu heute“ bringt dich zurück. Ältere Tage kannst du ansehen, aber nicht mehr ändern.
 - Einen Eintrag antippen = bearbeiten, zur Seite wischen = löschen.
 
 **Zauberstab**
