@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-20 – Supplements, Fertiggerichte, Treffer-Tabs, Zahlen markieren
+- Migration `014_supplements_meals`: neue Kategorien „Supplements“ und „Fertiggerichte & Restaurant“. Das Start-Proteinpulver liegt jetzt in Supplements (nur wenn es noch in „Getränke“ stand). Online-Treffer für Nahrungsergänzung/Proteinpulver bzw. Fertiggerichte/Pizza landen automatisch dort. Sonst bleiben alle Daten und Einstellungen unverändert.
+- Suche bei „Hinzufügen“: Tabs „Bibliothek · Online · Richtwerte“ mit Trefferzahl. Richtwerte wie Milch waren vorher ganz unten unter den Online-Treffern versteckt, und oben stand „Noch nichts gespeichert“.
+- Antippen der Menge (Mengen-Sheet) oder eines Nährwerts (Produkt-Formular) markiert die Zahl, Tippen ersetzt sie.
+
 ## 2026-10-19 – Installationsanleitung als Bild
 - Screen 18 als PNG in Hell und Dunkel (`docs/assets/pwa-installation-*.png`, 1080 × 1880) zum Weitergeben an Freunde; in `ANLEITUNG.md` eingebunden.
 
