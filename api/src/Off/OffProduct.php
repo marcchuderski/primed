@@ -103,7 +103,7 @@ final class OffProduct
             OffCategoryMap::category(
                 self::tags($p['categories_tags'] ?? null),
                 self::tags($p['food_groups_tags'] ?? null),
-                $unit === 'ml' ? null : $protein,
+                $protein,
                 $name,
             ),
             $unit === 'ml' ? 'per_100ml' : 'per_100g',

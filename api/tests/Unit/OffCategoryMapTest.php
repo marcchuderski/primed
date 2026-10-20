@@ -159,6 +159,21 @@ final class OffCategoryMapTest extends TestCase
         self::assertSame('grains', OffCategoryMap::category(...$proteinPasta));
     }
 
+    public function testReadyToDrinkShakesAreNoSupplements(): void
+    {
+        $shake = ['en:dietary-supplements', 'en:bodybuilding-supplements', 'en:protein-shakes'];
+        self::assertSame('dairy', OffCategoryMap::category($shake, [], 8.0, 'High Protein Drink Typ Pistazie'));
+        self::assertSame('dairy', OffCategoryMap::category($shake, [], 5.1, 'Stay Strong Kakao Milch'));
+        self::assertSame('drinks', OffCategoryMap::category($shake, [], 4.0, 'Isoclear Protein Drink'));
+        self::assertSame('dairy', OffCategoryMap::category([], [], 10.0, 'High Protein Shake Banane'));
+        self::assertSame('supplements', OffCategoryMap::category($shake, [], 81.0, 'Gourmet Premium Pro Protein'));
+        self::assertSame('other', OffCategoryMap::category([], [], 23.0, 'Vegan Shape Shake'), 'powder, not a drink');
+        $creatine = ['en:dietary-supplements', 'en:bodybuilding-supplements'];
+        self::assertSame('supplements', OffCategoryMap::category($creatine, [], 0.0, 'Creatine Monohydrate Powder'));
+        $bar = [['en:snacks'], [], 10.0, 'Protein Drink Bar'];
+        self::assertSame('snacks', OffCategoryMap::category(...$bar), 'only supplements or unknown products');
+    }
+
     public function testCoversAll91FoodGroupsWithValidCategories(): void
     {
         self::assertCount(91, OffCategoryMap::GROUPS);

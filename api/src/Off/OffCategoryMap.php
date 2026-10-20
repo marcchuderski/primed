@@ -12,6 +12,7 @@ namespace Primed\Off;
  * 4. otherwise "other".
  * Afterwards protein powders with poor OFF data are caught: text in unnormalised tags, ≥ 60 g protein per 100 g,
  * or – only for products otherwise unknown – a powder word in the product name.
+ * Ready-to-drink protein shakes are no supplement (D-175): → dairy (milk based), clear whey drinks → drinks.
  * GROUPS lists all 91 OFF food groups (taxonomies/food_groups.json) with their depth (1 = top group).
  */
 final class OffCategoryMap
@@ -29,6 +30,9 @@ final class OffCategoryMap
         'proteinpulver', 'protein pulver', 'protein powder', 'eiweißpulver', 'eiweisspulver', 'whey protein',
         'whey isolat', 'iso whey', 'casein',
     ];
+
+    /** Up to this much protein per 100 g/ml a "protein shake" is ready to drink (usually 4–12 g), not a powder. */
+    public const SHAKE_PROTEIN_MAX = 15.0;
 
     /** Categories a protein powder is often wrongly sorted into. */
     private const POWDER_SUSPECTS = ['drinks', 'dairy', 'snacks', 'other'];
@@ -200,7 +204,7 @@ final class OffCategoryMap
     /**
      * @param list<string> $categories OFF categories_tags
      * @param list<string> $groups OFF food_groups_tags
-     * @param float|null $protein protein per 100 g (null for per 100 ml)
+     * @param float|null $protein protein per 100 g or 100 ml
      */
     public static function category(
         array $categories,
@@ -208,7 +212,26 @@ final class OffCategoryMap
         ?float $protein = null,
         string $name = '',
     ): string {
-        $category = self::byTags($categories, $groups);
+        $category = self::powder(self::byTags($categories, $groups), $categories, $protein, $name);
+        if (!in_array($category, ['supplements', self::FALLBACK], true) || $protein === null) {
+            return $category;
+        }
+        $lower = mb_strtolower($name, 'UTF-8');
+        $shake = in_array('en:protein-shakes', $categories, true)
+            || str_contains($lower, 'shake') || str_contains($lower, 'drink');
+        if (!$shake || $protein > self::SHAKE_PROTEIN_MAX) {
+            return $category;
+        }
+
+        // Clear whey drinks are water based.
+        return str_contains($lower, 'clear') ? 'drinks' : 'dairy';
+    }
+
+    /**
+     * @param list<string> $categories
+     */
+    private static function powder(string $category, array $categories, ?float $protein, string $name): string
+    {
         if ($category === 'supplements' || !in_array($category, self::POWDER_SUSPECTS, true)) {
             return $category;
         }
