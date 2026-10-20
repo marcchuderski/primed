@@ -100,7 +100,10 @@ final class OffProduct
             $code,
             self::clip($name, 120),
             $brand === '' ? null : $brand,
-            self::category($p['categories_tags'] ?? null),
+            OffCategoryMap::category(
+                self::tags($p['categories_tags'] ?? null),
+                self::tags($p['food_groups_tags'] ?? null),
+            ),
             $unit === 'ml' ? 'per_100ml' : 'per_100g',
             round($kcal, 1),
             round($protein, 1),
@@ -112,28 +115,12 @@ final class OffProduct
         );
     }
 
-    private static function category(mixed $tags): string
+    /**
+     * @return list<string>
+     */
+    private static function tags(mixed $tags): array
     {
-        $tags = is_array($tags) ? array_filter($tags, 'is_string') : [];
-        $map = [
-            'supplements' => ['en:dietary-supplements', 'en:bodybuilding-supplements', 'en:protein-powders'],
-            'meals' => ['en:meals', 'en:prepared-meals', 'en:frozen-ready-meals', 'en:pizzas'],
-            'drinks' => ['en:beverages', 'en:milks', 'en:plant-based-beverages'],
-            'sauces' => [
-                'en:sauces', 'en:condiments', 'en:dressings', 'en:mayonnaises', 'en:ketchup', 'en:fats',
-                'en:vegetable-oils', 'en:olive-oils',
-            ],
-            'dairy' => ['en:dairies', 'en:cheeses', 'en:yogurts', 'en:quarks', 'en:fresh-cheeses'],
-            'bread' => ['en:breads', 'en:bakery-products', 'en:pastries'],
-            'produce' => ['en:fruits', 'en:vegetables', 'en:fruits-and-vegetables-based-foods'],
-        ];
-        foreach ($map as $category => $needles) {
-            if (array_intersect($needles, $tags) !== []) {
-                return $category;
-            }
-        }
-
-        return 'snacks';
+        return is_array($tags) ? array_values(array_filter($tags, 'is_string')) : [];
     }
 
     private static function text(mixed $value): ?string

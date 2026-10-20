@@ -7,6 +7,7 @@ namespace Primed\Off;
 use DateTimeImmutable;
 use JsonException;
 use PDO;
+use Primed\Food\FoodInput;
 use Primed\Support\Clock;
 use Primed\Support\Db;
 
@@ -20,7 +21,8 @@ final class OffClient
     /** Search service (the legacy cgi/search.pl answers 503 since 2026). */
     private const SEARCH = 'https://search.openfoodfacts.org/search';
     private const FIELDS = 'code,product_name,product_name_de,brands,nutriments,product_quantity,'
-        . 'product_quantity_unit,serving_quantity,serving_quantity_unit,categories_tags';
+        . 'product_quantity_unit,serving_quantity,serving_quantity_unit,categories_tags,'
+        . 'food_groups_tags';
     private const HIT_TTL_DAYS = 30;
     private const MISS_TTL_DAYS = 1;
     private const SEARCH_TTL_DAYS = 1;
@@ -166,7 +168,9 @@ final class OffClient
                     $product->barcode,
                     $product->name,
                     $product->brand,
-                    is_string($item['category'] ?? null) ? $item['category'] : $product->category,
+                    // Only categories that still exist (the cache may predate a category change, D-172).
+                    is_string($item['category'] ?? null) && in_array($item['category'], FoodInput::CATEGORIES, true)
+                        ? $item['category'] : $product->category,
                     $product->basis,
                     $product->kcal,
                     $product->protein,
