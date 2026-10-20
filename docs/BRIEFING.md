@@ -120,13 +120,14 @@ Oben auf „Heute“: „Hey, [Display-Name].“ (fett, Textfarbe), direkt dahin
 - Gelöschte Produkte verschwinden aus Bibliothek und Suche; vergangene Einträge bleiben dank Schnappschuss unverändert.
 - Online-Suche (Open Food Facts): gefiltert auf Deutschland/Deutsch, höchstens 10 Treffer, Hinweis „Daten: Open Food Facts“ (Lizenz ODbL).
 - Richtwerte stammen aus dem Bundeslebensmittelschlüssel (BLS 4.0, CC BY 4.0); die Quellenangabe wird in der App angezeigt (Bibliothek/Suche).
+- **Gemeinsame Richtwerte (D-170, D-171):** rund 110 unverpackte Lebensmittel (Brötchen & Gebäck, Brot, Süßes vom Bäcker, Obst, Gemüse, Milchprodukte, Ei, Milch) für alle User, nur lesbar. Sie erscheinen in der Suche (Tab „Richtwerte“, auch bei Zutaten für Gerichte); beim ersten Antippen entsteht eine eigene Kopie in der Bibliothek. Zählbares hat ein **Stückgewicht**: Einheit „Stück“ neben g, vorbelegt 1 Stück (z. B. 1 Brötchen ≈ 60 g, Brot: 1 Stück = 1 Scheibe).
 - Filter: Kategorie als Pill-Reihe, Typ hinter einem Filter-Button.
 - Alles, was einmal eingetragen wird, landet automatisch in der Bibliothek (Kategorie wird vorgeschlagen und bestätigt).
 
 ## 7. Hinzufügen-Ablauf
 
 1. **„+“** öffnet den Schnell-Eintrag (Bottom-Sheet): Suche mit Scan-Button, Gerichte (mit übrigen Portionen), Shakes, „Häufig um diese Zeit“. Fest unten: „Gericht zubereiten“ und „Produkt anlegen“.
-2. **Suche** zeigt drei Gruppen: eigene Bibliothek · Online-Treffer (Open Food Facts) · Richtwerte. Fest unten: „Barcode scannen“ und „Neu anlegen“.
+2. **Suche** zeigt drei Tabs mit Trefferzahl: Bibliothek · Online (Open Food Facts) · Richtwerte (D-166). Fest unten: „Barcode scannen“ und „Neu anlegen“.
 3. **Menge:** Einheiten-Umschalter (g · ml · EL · TL · Packung, siehe Einträge), große Zahl mit −/+, Umrechnungszeile, Schnellwahl passend zur Einheit (z. B. 100 g / 150 g / Packung oder 1 / 2 / 3 EL), Nährwerte dieser Portion, Uhrzeit-Rad, getrennte Karte „Danach offen“ mit Mini-Balken.
 4. **Scan:** Produkt gefunden → Menge. Nicht gefunden → Produkt anlegen.
 5. **Produkt anlegen:** Name, Kategorie, Segment „Nährwerte angeben pro 100 g · 100 ml · Stück“ („So, wie es auf der Packung steht“), Werte als **Stepper-Liste** mit eigener Schrittweite pro Wert (kcal ±20, Protein/KH/Zucker ±1, Fett ±0,5, Packung ±50; Packungseinheit folgt der Basis). Zahl antippen öffnet die Tastatur. Gescannter Barcode wird verknüpft. Danach direkt zur Menge.

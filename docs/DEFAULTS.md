@@ -106,6 +106,10 @@ Entfernt mit Migration 012 (D-159), für alle User; nur noch als Referenz:
 | Lidl Müsli-Riegel | 1 Stück | 87 | 2,3 | 17,0 | 0,4 | 1,9 | Snacks & Riegel |
 | Lidl Chicken Nuggets | pro 100 g | 315 | 13,2 | 23,3 | 1,1 | 25,2 | Snacks & Riegel |
 
+## Gemeinsame Richtwerte (Migration 015, D-170, D-171)
+
+110 unverpackte Lebensmittel in `reference_foods`, Werte und Quellen (BLS-Code, Stückgewicht-Quelle) direkt in `api/migrations/015_reference_foods.sql`. Gruppen: Brötchen & Gebäck (17), Brot je Scheibe (8), Süßes vom Bäcker (15, ohne Franzbrötchen), Obst (23), Gemüse (24), Milchprodukte (20), Ei, Milch 1,5 % / 3,5 %. Nährwerte BLS 4.0 inkl. Errata; Milch, Kefir, Buttermilch je 100 ml (Dichte 1,03 g/ml). Stückgewichte: USDA FoodData Central (Obst/Gemüse) bzw. dokumentierte Schätzung typischer Bäckereigrößen.
+
 ## ~~Richtwert-Grundliste (für alle User)~~
 
 Entfernt mit Migration 012 (D-159), für alle User; nur noch als Referenz.

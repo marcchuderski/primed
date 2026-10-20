@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-20 – Gemeinsame Richtwerte mit Stückgewicht (Migration 015)
+- Migration `015_reference_foods`: Tabelle `reference_foods` mit 110 unverpackten Lebensmitteln (BLS 4.0), neue Spalten `foods.piece_weight` und `foods.reference_food_id`. Die Start-Milch wird mit ihrem Richtwert verknüpft, sonst ändert sich an bestehenden Daten nichts.
+- Suche bei „Hinzufügen“ und bei Zutaten zeigt die gemeinsamen Richtwerte; der erste Tipp legt eine eigene Kopie an (gelöschte Kopie wird wiederhergestellt).
+- Neue Einheit „Stück“ für Lebensmittel mit Stückgewicht (g/ml-Basis), vorbelegt 1 Stück, Umrechnung „1 Stück = 60 g“; in Einträgen und Gerichten, API und Frontend gleich gerechnet (gemeinsame Testfälle).
+
 ## 2026-10-20 – Version 1.1.0: Changelog im Menü, Portionen bei neuen Produkten
 - App-Version 1.1.0 (vorher 1.0.0, intern 0.1.0); Menü › App › Changelog zeigt die Neuerungen je Version.
 - Neue Produkte aus Barcode-Scan und Online-Suche starten mit der Portionsgröße von Open Food Facts; ohne Portion mit „1 Packung“ bei Packungen bis 250 g/ml, sonst 100 g/ml. Ab dem zweiten Mal gilt wie bisher die zuletzt genutzte Menge.
