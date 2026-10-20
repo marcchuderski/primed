@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-10-20 – Proteinpulver trotz lückenhafter OFF-Daten erkennen
+- Supplements auch bei nicht normalisierten Tags („Nahrungsergänzungsmittel“, „Proteinpulver“ …), ab 60 g Protein pro 100 g (statt Getränke/Milchprodukte/Snacks/Sonstiges) und – nur ohne OFF-Kategorie – über Wörter im Produktnamen.
+
 ## 2026-10-20 – Bestehende Bibliothek neu sortiert (Migration 017)
 - Einmalige Neusortierung der Live-Bibliothek in die neuen Kategorien: Eier, Salami, Rostbratwurst, Backfisch, Chicken Nuggets → Eiweiß & Fleisch; Brötchen, Mischbrot, Pommes → Getreide & Beilagen; Sojasauce → Öle & Saucen; Milch → Milchprodukte; gebratener Reis → Fertigessen. Nur Zeilen mit unveränderter Kategorie.
 
