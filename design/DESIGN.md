@@ -10,7 +10,7 @@ Bei Abweichungen oder Lücken gilt die Arbeitsregel aus `CLAUDE.md`: Trade-offs 
 
 - **Ruhig und minimalistisch.** Ein Screen, eine Aufgabe. Kein Dashboard-Dschungel.
 - **Der aktuelle Tag steht im Mittelpunkt.** Startscreen ist immer „Heute“.
-- **Klare visuelle Hierarchie:** Tag → Tagesart → Balken → Einträge.
+- **Klare visuelle Hierarchie (D-178):** Begrüßung → Datum und Tagesart (als Chips) → Balken → Einträge. Das Datum ist Bedienelement, nicht Überschrift.
 - **Weiche Übergänge.** Flächen heben sich nur minimal voneinander ab, Kontrast entsteht durch Schrift und Akzentfarbe, nicht durch harte Flächenwechsel.
 - **Orange ist positiv.** Die Akzentfarbe markiert Protein, Hauptaktionen und Trainingsbezug, niemals Fehler oder Überschreitungen.
 - **Zahlen zuerst.** Große, gut lesbare Zahlen mit gleich breiten Ziffern.
@@ -70,7 +70,7 @@ Bewertet wird nur die **kcal-Bilanz gegen das Tagessoll, Toleranz ±5 %**. Drei 
 
 | Rolle | Schrift | Größe / Gewicht |
 |---|---|---|
-| Screen-Titel (Tag, „Essen“, „Verlauf“) | Bricolage Grotesque | 34–38 px / 800, Laufweite −0,035 em |
+| Screen-Titel („Hey, [Name].“ auf Heute, „Essen“, „Verlauf“) | Bricolage Grotesque | 34–38 px / 800, Laufweite −0,035 em |
 | Abschnitt („Heute“, Sheet-Titel) | Bricolage Grotesque | 24–26 px / 800 |
 | Große Zahlen (Menge, Bilanz) | Bricolage Grotesque | 36–104 px / 800, `tabular-nums` |
 | Fließtext, Listentitel | Inter | 15–16 px / 600 für Titel, 400–500 für Text |
@@ -100,11 +100,15 @@ Bewertet wird nur die **kcal-Bilanz gegen das Tagessoll, Toleranz ±5 %**. Drei 
 - Oben drei Text-Tabs: Heute · Essen · Verlauf. Aktiver Tab fett mit Akzent-Unterstrich. Rechts Menü-Icon.
 - Keine Bottom-Navigation.
 
-**Begrüßung (Heute):** über dem Datum eine Zeile „Hey, [Name].“ (Inter 15 px, 700, `--text`) gefolgt vom situativen Satz (Inter 15 px, 400, `--text-muted`) im selben Absatz; bricht sauber auf höchstens zwei Zeilen um. Regeln in `docs/BRIEFING.md` §4a.
+**Kopf „Heute“ (H1, D-178):** „Hey, [Name].“ als Screen-Titel (Bricolage 34 px), darunter der situative Satz (Inter 16 px, `--text-muted`, Regeln in `docs/BRIEFING.md` §4a). Darunter **eine Zeile mit zwei Chips**: Datum-Chip („Di, 20.10.“ + ˅, Rahmen `--input-border` auf `--surface`, öffnet die Tagesauswahl) und Tagesart-Chip (tonal, lange Namen mit „…“). Mockups: `design/proposals/vergangene-tage/` (H1 = `h1-kopf-begruessung`).
+
+**Vergangener Tag (b2/e, D-178):** gleiche Chip-Zeile wie heute, ohne Begrüßung; darüber ein **Banner**: im Bearbeitungsfenster „Du bearbeitest Mo, 19.10.“ (Verlaufs-Icon, `--accent-track`/`--accent-text`), älter „Nur ansehen · Nachtragen geht bis 7 Tage zurück.“ (Schloss, tonal); rechts „Zu heute“. In der Balken-Karte oben „Tagesbilanz“ mit Status-Pill („✓ im Rahmen −2 %“, Statusfarben §3, ohne Interpunkt). Keine Checkpoints, Trainings-Marker, Vorschläge; ältere Tage ohne „+“, Einträge nur Anzeige, Tagesart-Chip deaktiviert (Rahmen statt Fläche, ohne ˅).
+
+**Tagesauswahl (a2b, D-178):** Sheet (`tone="bg"`) mit Hinweis und heute + 7 Tagen als Karten (`--surface`, 18 px Radius, 8 px Abstand): „Heute · Di, 20.10.“ / „Gestern · …“, Tagesart, kcal und Status-Markierung; der angezeigte Tag mit Akzent-Rahmen.
 
 **Tagesart-Picker (Screen 08):** Ist eine Trainings-Tagesart gewählt, zeigt die Liste nur die Auswahl plus „Auswahl ändern“ (Trainingszeit rückt ins Blickfeld). Dauer-Pills 30 · 60 · 90 · 120 min als 2×2-Raster, gleich hoch wie das Uhrzeit-Rad (96 px).
 
-**Tagesart-Chip** unter dem Titel, tonal, öffnet den Tagesart-Picker (Bottom-Sheet).
+**Tagesart-Chip** neben dem Datum-Chip, tonal, öffnet den Tagesart-Picker (Bottom-Sheet).
 
 **Listeneintrag:** Titel + Menge, darunter Makrozeile (Protein in `--accent-text`), Uhrzeit rechts. Wischen löscht, Tap bearbeitet. Keine Mahlzeiten-Slots.
 
@@ -161,7 +165,7 @@ Statische Referenz-Mockups mit Beispieldaten (keine echten Werte), je Light und 
 |---|---|---|
 | 01 | Loading | ~~Animiertes Logo~~ entfällt (D-096), Animation jetzt im Login |
 | 02 | Login | Lockup + Claim „Primed for performance.“ (wie Screen 18, `--accent-text`, 24 px), Username, Passwort |
-| 03 | Heute | Tag, Tagesart, Balken, Einträge |
+| 03 | Heute | Begrüßung, Datum-/Tagesart-Chips, Balken, Einträge (neu: H1 in `proposals/vergangene-tage/`, D-178) |
 | 04 | Hinzufügen | Suche, Scan, Gerichte, Shakes, Häufig; unten „Gericht zubereiten“ · „Produkt anlegen“ |
 | 05 | Suche | Bibliothek, Online-Treffer, Richtwerte, Neu anlegen |
 | 06 | Menge | Einheit, Menge, Uhrzeit, „Danach offen“ |

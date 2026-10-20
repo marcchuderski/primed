@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-20 – Version 1.3.0: Vergangene Tage ansehen und nachtragen
+- API: Bearbeitungsfenster heute + 7 Tage für Anlegen, Ändern, Löschen von Einträgen und für die Tagesart (sonst 422; vorher keine Untergrenze, Ändern/Löschen ohne Datumsprüfung). `editable` im Tag. Alte Tage werden beim Lesen nicht mehr aus der aktuellen Vorlage angelegt.
+- Heute: neuer Kopf (Begrüßung als Titel, Datum- und Tagesart-Chip), Tagesauswahl (heute + 7 Tage mit kcal und Bewertung), vergangene Tage mit Banner „Du bearbeitest …“, Tagesbilanz statt Checkpoints/Vorschlägen, ältere Tage nur lesbar. Rücksprung auf heute bei Fokus und beim Tab „Heute“.
+- Nachtragen über alle Wege (Suche, Scan, Shakes, Gerichte) in den angezeigten Tag, Uhrzeit wie der letzte Eintrag des Tages bzw. 12:00; Mengen-Sheet ohne Tagesauswahl, mit „Für Montag, 19.10.“.
+- Verlauf: Tage in Woche und Monat antippbar.
+
 ## 2026-10-20 – Fertige Protein-Shakes zu Milchprodukte
 - Supplements sind nur noch Pulver, Gels, Kapseln. Fertige Protein-Shakes und -Drinks (bis 15 g Protein pro 100 g/ml, Tag `protein-shakes` oder „Shake“/„Drink“ im Namen) → Milchprodukte, klare Whey-Drinks („Clear“) → Getränke.
 

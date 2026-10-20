@@ -64,7 +64,7 @@ Darstellung: Auf den Balken für kcal, Protein und KH sitzt ein Marker an der Po
 
 ## 4a. Begrüßung (Heute)
 
-Oben auf „Heute“: „Hey, [Display-Name].“ (fett, Textfarbe), direkt dahinter ein kurzer situativer Satz (normale Stärke, gedämpft). Darunter wie bisher das Datum als H1. Regelbasiert, ohne KI, als reine Funktion in `frontend/src/domain/`. Der Satz aktualisiert sich beim Öffnen und nach jedem neuen Eintrag. Die erste passende Regel gewinnt:
+Oben auf „Heute“: „Hey, [Display-Name].“ als Überschrift, darunter ein kurzer situativer Satz (gedämpft); darunter Datum und Tagesart als Chips (D-178). Regelbasiert, ohne KI, als reine Funktion in `frontend/src/domain/`. Der Satz aktualisiert sich beim Öffnen und nach jedem neuen Eintrag. Die erste passende Regel gewinnt:
 
 | # | Bedingung | Satz |
 |---|---|---|
@@ -104,7 +104,7 @@ Oben auf „Heute“: „Hey, [Display-Name].“ (fett, Textfarbe), direkt dahin
 - Der Nährwert-Schnappschuss wird immer aus der **umgerechneten Menge in g bzw. ml** (bei Basis Stück: Stückzahl) berechnet; Menge und Einheit wie eingegeben werden mitgespeichert.
 - **Letzte verwendete Menge** eines Lebensmittels ist vorausgefüllt. Beim ersten Mal: 1 Stück (Stück-Basis), sonst die Portion laut Open Food Facts, sonst „1 Packung“ bis 250 g/ml, sonst 100 g/ml (D-168).
 - Jeder Eintrag speichert einen **Nährwert-Schnappschuss**. Spätere Änderungen am Produkt verändern vergangene Einträge nicht.
-- Nachtragen für **vergangene** Tage ist möglich (Datum wechseln), Einträge für zukünftige Tage nicht. Checkpoints rechnen mit der eingetragenen Uhrzeit.
+- **Vergangene Tage (D-176–D-178):** Auf „Heute“ öffnet der Datum-Chip die Tagesauswahl (heute + 7 Tage zurück), im Verlauf lässt sich jeder Tag mit Daten antippen. Der ganze Screen zeigt dann diesen Tag; „+“ und alle Hinzufügen-Wege (Suche, Scan, Shakes, Gerichte) tragen dort ein, Bearbeiten und Löschen wie an heute, die Tagesart lässt sich ändern (nur dieser Tag, Sollwerte neu, Vorlage bleibt). Ein Banner zeigt „Du bearbeitest …“ mit „Zu heute“; beim erneuten Öffnen/Fokussieren und beim Tippen auf den Tab „Heute“ springt die App auf heute. Statt Checkpoints und Vorschlägen gibt es die Tagesbilanz wie im Verlauf. Uhrzeit vorbelegt mit dem letzten Eintrag des Tages, sonst 12:00. Ältere Tage sind nur lesbar. Der Server erzwingt das Fenster (sonst 422); zukünftige Tage gehen nie. Die frühere Tagesauswahl im Mengen-Sheet entfällt.
 - Wischen löscht **nach Bestätigungsdialog**, Tap bearbeitet.
 
 ## 6. Bibliothek

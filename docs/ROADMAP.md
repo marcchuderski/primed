@@ -87,6 +87,12 @@ Reihenfolge (Nutzer, 2026-10-17): 7.1 und 7.3 vor Phase 6. Geändert (Nutzer, 20
 | 8.1 | Deploy-Vorbereitung: Release-Paket per Skript (`scripts/build-release.sh`), Ablauf in `DEPLOYMENT.md` | fertig |
 | 8.2 | Erster Deploy-Check auf Plesk (`DEPLOYMENT.md` › „Erster Deploy-Check“) | in Arbeit (Header-Check und Client-IP bestanden, Gerätetest läuft; offen: Trusted Types, weitere Funde vom Nutzer) |
 
+## Phase 9 – Nach dem Start
+
+| ID | Item | Status |
+|---|---|---|
+| 9.1 | Vergangene Tage ansehen und nachtragen (Tageswechsel, Banner, Tagesbilanz, Verlauf antippbar, Fenster 7 Tage auf dem Server), neuer Kopf auf Heute (D-176–D-178) | fertig |
+
 ## Später / vielleicht
 
 | ID | Item | Status |
