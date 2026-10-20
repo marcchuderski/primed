@@ -35,7 +35,7 @@ Ein User hat sein Passwort vergessen: `user-password.php` ausführen, neues Pass
 
 - Dateien `api/migrations/NNN_*.sql`, immer **in Reihenfolge** und **nach einem DB-Backup** über phpMyAdmin (SQL-Tab, Dateiinhalt einfügen) oder mit dem zweiten DB-User mit DDL-Rechten.
 - Jede Migration trägt sich in `schema_migrations` ein. Stand: `SELECT * FROM schema_migrations ORDER BY version;`
-- Erster Deploy: `001` bis `016` nacheinander. Sonst nur die neuen, z. B. `013` bis `016`. Ausgeführte Migrationen in der Tabelle in `DEPLOYMENT.md` nachtragen.
+- Erster Deploy: `001` bis `017` nacheinander. Sonst nur die neuen, z. B. `013` bis `017`. Ausgeführte Migrationen in der Tabelle in `DEPLOYMENT.md` nachtragen.
 
 ## Backups und Wiederherstellung
 

@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-10-20 – Bestehende Bibliothek neu sortiert (Migration 017)
+- Einmalige Neusortierung der Live-Bibliothek in die neuen Kategorien: Eier, Salami, Rostbratwurst, Backfisch, Chicken Nuggets → Eiweiß & Fleisch; Brötchen, Mischbrot, Pommes → Getreide & Beilagen; Sojasauce → Öle & Saucen; Milch → Milchprodukte; gebratener Reis → Fertigessen. Nur Zeilen mit unveränderter Kategorie.
+
 ## 2026-10-20 – Neue Kategorienstruktur und OFF-Zuordnung (Migration 016)
 - Zehn Kategorien in neuer Reihenfolge: Eiweiß & Fleisch · Milchprodukte · Getreide & Beilagen · Obst & Gemüse · Öle & Saucen · Snacks · Getränke · Fertigessen · Supplements · Sonstiges. „Brot“ geht in „Getreide & Beilagen“ auf, „Grundnahrung“ entfällt.
 - Migration `016_categories_v2`: bread → grains; alte Startwerte aus „Grundnahrung“ nach Name umsortiert, eigene Einträge dort → Sonstiges; Start-Milch → Milchprodukte; Richtwerte: Brot/Brötchen → Getreide, süßes Gebäck → Snacks, Ei → Eiweiß & Fleisch, Milch → Milchprodukte. OFF-Cache wird geleert.
