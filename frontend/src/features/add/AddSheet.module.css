@@ -174,9 +174,12 @@
 }
 
 .footer button {
-  padding: 0 10px;
+  /* Both labels on one line at 390 px (measured: "Gericht zubereiten" 125.6 px at 14 px). */
+  gap: 6px;
+  padding: 0 8px;
   font-size: 14px;
   line-height: 1.2;
+  white-space: nowrap;
 }
 
 .dishes {

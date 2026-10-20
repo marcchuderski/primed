@@ -1,5 +1,5 @@
 .dialog {
-  width: min(340px, calc(100% - 40px));
+  width: min(358px, calc(100% - 32px));
   padding: 22px 20px 18px;
   border: none;
   border-radius: var(--r-card);
@@ -30,4 +30,11 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
+}
+
+/* Both buttons alike and on one line, also "Endgültig löschen" (130 px at 15 px). */
+.actions button {
+  padding: 0 10px;
+  font-size: 15px;
+  white-space: nowrap;
 }
