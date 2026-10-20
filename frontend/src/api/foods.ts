@@ -48,7 +48,17 @@ export interface FoodDraft {
   source?: 'manual' | 'off';
 }
 
-const CATEGORIES = ['snacks', 'dairy', 'bread', 'produce', 'drinks', 'basics', 'sauces'] as const;
+const CATEGORIES = [
+  'snacks',
+  'dairy',
+  'bread',
+  'produce',
+  'drinks',
+  'basics',
+  'sauces',
+  'supplements',
+  'meals',
+] as const;
 const BASES = ['per_100g', 'per_100ml', 'per_unit'] as const;
 const TYPES = ['product', 'reference', 'ingredient'] as const;
 const UNITS = ['g', 'ml', 'el', 'tl', 'packung', 'stueck'] as const;

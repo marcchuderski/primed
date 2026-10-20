@@ -204,6 +204,41 @@ final class FoodsFlowTest extends ApiTestCase
         self::assertSame('sauces', $online['product']['category']);
     }
 
+    public function testSupplementsAndMealsCategories(): void
+    {
+        $supplements = $this->names(self::json($this->call('GET', '/api/v1/foods?category=supplements')));
+        self::assertSame(['ESN Designer Whey Milk Chocolate'], $supplements);
+
+        $created = $this->call('POST', '/api/v1/foods', [...self::SKYR, 'name' => 'Döner Hähnchen', 'barcode' => null,
+            'category' => 'meals', 'basis' => 'per_unit']);
+        self::assertSame(201, $created->status, $created->body);
+        $meals = $this->names(self::json($this->call('GET', '/api/v1/foods?category=meals')));
+        self::assertSame(['Döner Hähnchen'], $meals);
+
+        $product = static fn (string $code, array $tags): string => (string) json_encode([
+            'status' => 1,
+            'product' => [
+                'code' => $code,
+                'product_name_de' => 'Test',
+                'categories_tags' => $tags,
+                'nutriments' => ['energy-kcal_100g' => 380, 'proteins_100g' => 70, 'carbohydrates_100g' => 8,
+                    'sugars_100g' => 4, 'fat_100g' => 6],
+            ],
+        ]);
+        $this->offFetcher->responses['/api/v2/product/4006381333931.json'] = $product('4006381333931', [
+            'en:dietary-supplements', 'en:bodybuilding-supplements', 'en:protein-powders',
+        ]);
+        $this->offFetcher->responses['/api/v2/product/4000417025005.json'] = $product('4000417025005', [
+            'en:meals', 'en:pizzas-pies-and-quiches', 'en:pizzas', 'en:cheeses',
+        ]);
+        $powder = self::json($this->call('GET', '/api/v1/foods/barcode/4006381333931'));
+        self::assertIsArray($powder['product']);
+        self::assertSame('supplements', $powder['product']['category']);
+        $pizza = self::json($this->call('GET', '/api/v1/foods/barcode/4000417025005'));
+        self::assertIsArray($pizza['product']);
+        self::assertSame('meals', $pizza['product']['category']);
+    }
+
     public function testBarcodeErrors(): void
     {
         self::assertSame(422, $this->call('GET', '/api/v1/foods/barcode/4006381333932')->status);

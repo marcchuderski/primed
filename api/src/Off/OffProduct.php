@@ -105,6 +105,8 @@ final class OffProduct
     {
         $tags = is_array($tags) ? array_filter($tags, 'is_string') : [];
         $map = [
+            'supplements' => ['en:dietary-supplements', 'en:bodybuilding-supplements', 'en:protein-powders'],
+            'meals' => ['en:meals', 'en:prepared-meals', 'en:frozen-ready-meals', 'en:pizzas'],
             'drinks' => ['en:beverages', 'en:milks', 'en:plant-based-beverages'],
             'sauces' => [
                 'en:sauces', 'en:condiments', 'en:dressings', 'en:mayonnaises', 'en:ketchup', 'en:fats',
