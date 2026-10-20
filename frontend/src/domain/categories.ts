@@ -11,7 +11,7 @@ export const CATEGORIES: readonly { id: Category; label: string; short: string }
   { id: 'basics', label: 'Grundnahrungsmittel', short: 'Grundnahrung' },
   { id: 'sauces', label: 'Öle & Saucen', short: 'Öle & Saucen' },
   { id: 'supplements', label: 'Supplements', short: 'Supplements' },
-  { id: 'meals', label: 'Fertiggerichte & Restaurant', short: 'Fertig & Restaurant' },
+  { id: 'meals', label: 'Fertigessen', short: 'Fertigessen' },
 ];
 
 export function categoryLabel(id: string, variant: 'label' | 'short' = 'short'): string {

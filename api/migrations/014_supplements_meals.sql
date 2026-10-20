@@ -1,4 +1,4 @@
--- 014_supplements_meals: categories "Supplements" and "Fertiggerichte & Restaurant" (D-165).
+-- 014_supplements_meals: categories "Supplements" and "Fertigessen" (D-165).
 -- The start protein powder moves to Supplements, but only where it is still in the old default category.
 
 ALTER TABLE foods
