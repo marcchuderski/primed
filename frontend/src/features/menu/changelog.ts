@@ -13,6 +13,8 @@ export const RELEASES: readonly Release[] = [
     changes: [
       'Neue Kategorien „Supplements“ und „Fertigessen“. Dein Standard-Proteinpulver liegt jetzt in Supplements.',
       'Suche bei „Hinzufügen“ mit Tabs: Bibliothek, Online und Richtwerte, jeweils mit Trefferzahl.',
+      'Rund 110 Richtwerte für Unverpacktes (Bäckerei, Obst, Gemüse, Milchprodukte) aus dem Bundeslebensmittelschlüssel. Du findest sie im Tab „Richtwerte“, sie landen erst in deiner Bibliothek, wenn du sie benutzt.',
+      'Brötchen, Obst & Co. kannst du in Stück eintragen, z. B. 1 Brötchen ≈ 60 g. Gramm gehen weiterhin.',
       'Neue Produkte aus Barcode-Scan und Online-Suche starten mit einer Portion bzw. einer kleinen Packung statt 100 g.',
       'Tippst du auf eine Zahl, wird sie markiert und du kannst direkt überschreiben.',
       'Changelog im Menü.',

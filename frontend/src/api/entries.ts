@@ -25,6 +25,7 @@ export interface Entry {
   /** Current basis and package size of the food (null if unknown). */
   basis: Basis | null;
   packageAmount: number | null;
+  pieceWeight: number | null;
 }
 
 const UNITS = ['g', 'ml', 'el', 'tl', 'packung', 'stueck', 'portion'] as const;
@@ -51,6 +52,7 @@ function parseEntry(value: unknown): Entry {
   const nu = value['nutrients'];
   const basis = BASES.find((b) => b === value['basis']) ?? null;
   const pkg = value['packageAmount'];
+  const piece = value['pieceWeight'];
   return {
     id: n(value['id']),
     date,
@@ -71,6 +73,7 @@ function parseEntry(value: unknown): Entry {
     },
     basis,
     packageAmount: pkg === null || pkg === undefined ? null : n(pkg),
+    pieceWeight: piece === null || piece === undefined ? null : n(piece),
   };
 }
 

@@ -6,8 +6,10 @@ import {
   fetchFrequentFoods,
   searchFoods,
   searchOnline,
+  searchReferences,
   type Food,
   type OffProduct,
+  type ReferenceFood,
 } from '../../api/foods.ts';
 import { Button } from '../../components/Button/Button.tsx';
 import { Sheet } from '../../components/Sheet/Sheet.tsx';
@@ -32,6 +34,8 @@ interface AddSheetProps {
   shakes: Shake[];
   onPickFood: (food: Food) => void;
   onPickOnline: (product: OffProduct) => void;
+  /** A shared reference value not in the library yet (D-170). */
+  onPickReference: (reference: ReferenceFood) => void;
   onShake: (shake: Shake) => void;
   onScan: () => void;
   onCreate: (name: string) => void;
@@ -56,6 +60,7 @@ export function AddSheet({
   shakes,
   onPickFood,
   onPickOnline,
+  onPickReference,
   onShake,
   onScan,
   onCreate,
@@ -69,6 +74,7 @@ export function AddSheet({
   const [query, setQuery] = useState('');
   const [frequent, setFrequent] = useState<Food[] | null>(null);
   const [library, setLibrary] = useState<Food[] | null>(null);
+  const [shared, setShared] = useState<ReferenceFood[] | null>(null);
   const [online, setOnline] = useState<OffProduct[] | null>(null);
   const [onlineError, setOnlineError] = useState<string | null>(null);
   // null = follow the first tab with hits; set once the user picks a tab (reset with the query, D-166).
@@ -112,6 +118,18 @@ export function AddSheet({
             setLibrary([]);
           }
         });
+      searchReferences(trimmed)
+        .then((references) => {
+          if (!cancelled) {
+            setShared(references);
+          }
+        })
+        .catch(() => {
+          // Optional: own reference values still show.
+          if (!cancelled) {
+            setShared([]);
+          }
+        });
     }, 200);
     return () => {
       cancelled = true;
@@ -148,11 +166,12 @@ export function AddSheet({
 
   const own = library?.filter((f) => f.type !== 'reference') ?? null;
   const references = library?.filter((f) => f.type === 'reference') ?? null;
+  const referenceCount = references === null || shared === null ? null : references.length + shared.length;
   const onlineEnabled = trimmed.length >= ONLINE_MIN_CHARS;
   const counts: Record<ResultTab, number | null> = {
     library: own?.length ?? null,
     online: onlineEnabled ? (online?.length ?? (onlineError === null ? null : 0)) : 0,
-    references: references?.length ?? null,
+    references: referenceCount,
   };
   const autoTab = (Object.keys(TAB_LABELS) as ResultTab[]).find((t) => (counts[t] ?? 0) > 0) ?? 'library';
   const tab = pickedTab ?? autoTab;
@@ -172,6 +191,7 @@ export function AddSheet({
             setQuery(e.target.value);
             if (e.target.value.trim() === '') {
               setLibrary(null);
+              setShared(null);
               setOnline(null);
               setPickedTab(null);
             }
@@ -355,14 +375,20 @@ export function AddSheet({
           )}
           {tab === 'references' && (
             <section className={styles['section']} aria-label="Richtwerte">
-              {references === null ? (
+              {references === null || shared === null ? (
                 <Loading>
                   <SkeletonRows count={2} />
                 </Loading>
-              ) : references.length === 0 ? (
+              ) : references.length + shared.length === 0 ? (
                 <p className={styles['empty']}>Keine Richtwerte mit „{trimmed}“.</p>
               ) : (
-                <FoodList foods={references} onPick={onPickFood} />
+                <>
+                  <FoodList foods={references} onPick={onPickFood} />
+                  <ReferenceList references={shared} onPick={onPickReference} />
+                  {shared.length > 0 && (
+                    <p className={styles['source']}>Quelle: BLS 4.0 (Max Rubner-Institut, CC BY 4.0)</p>
+                  )}
+                </>
               )}
             </section>
           )}
@@ -411,6 +437,43 @@ function FoodList({
           </li>
         );
       })}
+    </ul>
+  );
+}
+
+/** Shared reference values (D-170): per 100 g/ml, with the piece weight if there is one. */
+export function ReferenceList({
+  references,
+  onPick,
+}: {
+  references: ReferenceFood[];
+  onPick: (reference: ReferenceFood) => void;
+}) {
+  return (
+    <ul className={styles['list']}>
+      {references.map((reference) => (
+        <li key={reference.id}>
+          <button
+            type="button"
+            className={styles['item']}
+            onClick={() => {
+              onPick(reference);
+            }}
+          >
+            <span className={styles['itemTexts']}>
+              <span className={styles['itemName']}>{reference.name}</span>
+              <span className={styles['itemMeta']}>
+                {formatInt(reference.nutrients.kcal)} kcal ·{' '}
+                <span className={styles['protein']}>{formatInt(reference.nutrients.protein)} g P</span> ·{' '}
+                {basisLabel(reference.basis)}
+                {reference.pieceWeight !== null &&
+                  ` · 1 Stück ≈ ${formatInt(reference.pieceWeight)} ${reference.basis === 'per_100ml' ? 'ml' : 'g'}`}
+              </span>
+            </span>
+            <span className={styles['tag']}>Richtwert</span>
+          </button>
+        </li>
+      ))}
     </ul>
   );
 }

@@ -3,6 +3,7 @@ import type { Day } from '../../api/days.ts';
 import { createEntry, createShakeEntry, fetchShakes, type Entry, type Shake } from '../../api/entries.ts';
 import { fetchDishes, logDishPortion, type Dish } from '../../api/dishes.ts';
 import {
+  adoptReference,
   createFood,
   draftFromOff,
   lookupBarcode,
@@ -46,7 +47,8 @@ function quantityFood(
     subtitle: `${categoryLabel(f.category)} · ${isNew ? 'Neu · wird gespeichert' : basisLabel(f.basis)}`,
     basis: f.basis,
     packageAmount: f.packageAmount,
-    units: allowedUnits(f.basis, f.packageAmount),
+    pieceWeight: item.source === 'library' ? item.food.pieceWeight : null,
+    units: allowedUnits(f.basis, f.packageAmount, item.source === 'library' ? item.food.pieceWeight : null),
     nutrientsFor: (amount, unit) => nutrientsFor(f, amount, unit),
   };
 }
@@ -153,6 +155,16 @@ export function AddFlow({
           }}
           onPickOnline={(product) => {
             setView({ kind: 'quantity', item: { source: 'off', product } });
+          }}
+          onPickReference={(reference) => {
+            setError(null);
+            adoptReference(reference.id)
+              .then((food) => {
+                setView({ kind: 'quantity', item: { source: 'library', food } });
+              })
+              .catch((e: unknown) => {
+                setError(e instanceof Error ? e.message : 'Richtwert konnte nicht geladen werden.');
+              });
           }}
           onShake={(shake) => void logShake(shake)}
           onScan={() => {

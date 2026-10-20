@@ -15,6 +15,8 @@ export interface EditorIngredient {
   /** Values per basis (per 100 g/ml or per piece). */
   perBasis: PerBasis;
   packageAmount: number | null;
+  /** g or ml of one piece on a g/ml basis (D-170). */
+  pieceWeight: number | null;
   amount: number;
   unit: FoodUnit;
 }
@@ -22,16 +24,11 @@ export interface EditorIngredient {
 let counter = 0;
 const nextKey = () => `i${String(++counter)}`;
 
-/** Meal prep default (BRIEFING §8): the whole package, otherwise 100 g/ml or one piece. */
+/** Meal prep default (BRIEFING §8): the whole package, otherwise one piece (also with a piece weight) or 100 g/ml. */
 export function ingredientFromFood(food: Food): EditorIngredient {
   const pkg = food.packageAmount !== null && food.packageAmount > 0;
-  const unit: FoodUnit = pkg
-    ? 'packung'
-    : food.basis === 'per_unit'
-      ? 'stueck'
-      : food.basis === 'per_100ml'
-        ? 'ml'
-        : 'g';
+  const pieces = food.basis === 'per_unit' || (food.pieceWeight !== null && food.pieceWeight > 0);
+  const unit: FoodUnit = pkg ? 'packung' : pieces ? 'stueck' : food.basis === 'per_100ml' ? 'ml' : 'g';
   return {
     key: nextKey(),
     foodId: food.id,
@@ -40,6 +37,7 @@ export function ingredientFromFood(food: Food): EditorIngredient {
     basis: food.basis,
     perBasis: food.nutrients,
     packageAmount: food.packageAmount,
+    pieceWeight: food.pieceWeight,
     amount: pkg || unit === 'stueck' ? 1 : 100,
     unit,
   };
@@ -71,6 +69,7 @@ export function ingredientFromDish(i: DishIngredient): EditorIngredient | null {
       fat: n.fat * factor,
     },
     packageAmount: i.unit === 'packung' && i.amount > 0 ? i.quantity / i.amount : null,
+    pieceWeight: i.unit === 'stueck' && basis !== 'per_unit' && i.amount > 0 ? i.quantity / i.amount : null,
     amount: i.amount,
     unit: i.unit,
   };
@@ -79,7 +78,7 @@ export function ingredientFromDish(i: DishIngredient): EditorIngredient | null {
 export function ingredientNutrients(i: EditorIngredient): PerBasis {
   return (
     nutrientsFor(
-      { basis: i.basis, nutrients: i.perBasis, packageAmount: i.packageAmount },
+      { basis: i.basis, nutrients: i.perBasis, packageAmount: i.packageAmount, pieceWeight: i.pieceWeight },
       i.amount,
       i.unit,
     ) ?? {

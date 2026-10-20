@@ -246,3 +246,9 @@
   font-weight: 500;
   color: var(--text-muted);
 }
+
+/* Attribution under the shared reference values (BLS licence, D-170). */
+.source {
+  font-size: 12px;
+  color: var(--text-muted);
+}

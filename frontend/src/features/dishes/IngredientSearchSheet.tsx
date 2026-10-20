@@ -1,12 +1,20 @@
 import { Plus, ScanBarcode, Search } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { searchFoods, searchOnline, type Food, type OffProduct } from '../../api/foods.ts';
+import {
+  searchFoods,
+  searchOnline,
+  searchReferences,
+  type Food,
+  type OffProduct,
+  type ReferenceFood,
+} from '../../api/foods.ts';
 import { Button } from '../../components/Button/Button.tsx';
 import { Sheet } from '../../components/Sheet/Sheet.tsx';
 import { Loading, SkeletonRows } from '../../components/Skeleton/Skeleton.tsx';
 import { displayName } from '../../domain/categories.ts';
 import { formatInt } from '../../domain/format.ts';
 import { basisLabel } from '../../domain/units.ts';
+import { ReferenceList } from '../add/AddSheet.tsx';
 import styles from '../add/AddSheet.module.css';
 
 /** Search for a dish ingredient: library incl. ingredients and reference values, plus Open Food Facts. */
@@ -15,6 +23,7 @@ export function IngredientSearchSheet({
   dishName,
   onPickFood,
   onPickOnline,
+  onPickReference,
   onScan,
   onCreate,
   onClose,
@@ -23,6 +32,7 @@ export function IngredientSearchSheet({
   dishName: string;
   onPickFood: (food: Food) => void;
   onPickOnline: (product: OffProduct) => void;
+  onPickReference: (reference: ReferenceFood) => void;
   onScan: () => void;
   onCreate: (name: string) => void;
   onClose: () => void;
@@ -30,6 +40,7 @@ export function IngredientSearchSheet({
   const [query, setQuery] = useState('');
   const [foods, setFoods] = useState<Food[] | null>(null);
   const [online, setOnline] = useState<OffProduct[]>([]);
+  const [shared, setShared] = useState<ReferenceFood[]>([]);
   const trimmed = query.trim();
 
   useEffect(() => {
@@ -44,6 +55,31 @@ export function IngredientSearchSheet({
         .catch(() => {
           if (!cancelled) {
             setFoods([]);
+          }
+        });
+    }, 200);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(id);
+    };
+  }, [trimmed]);
+
+  // Shared reference values (D-170), only while searching.
+  useEffect(() => {
+    if (trimmed === '') {
+      return;
+    }
+    let cancelled = false;
+    const id = window.setTimeout(() => {
+      searchReferences(trimmed)
+        .then((list) => {
+          if (!cancelled) {
+            setShared(list);
+          }
+        })
+        .catch(() => {
+          if (!cancelled) {
+            setShared([]);
           }
         });
     }, 200);
@@ -161,6 +197,15 @@ export function IngredientSearchSheet({
           ))}
         </ul>
       </section>
+
+      {trimmed !== '' && shared.length > 0 && (
+        <section className={styles['section']} aria-label="Richtwerte">
+          <h3 className={styles['sectionTitle']}>
+            Richtwerte <small>Quelle: BLS 4.0 (MRI, CC BY 4.0)</small>
+          </h3>
+          <ReferenceList references={shared} onPick={onPickReference} />
+        </section>
+      )}
 
       {online.length > 0 && (
         <section className={styles['section']} aria-label="Online-Treffer">

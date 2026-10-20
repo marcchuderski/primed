@@ -12,6 +12,7 @@ const food = (over: Partial<Food>): Food => ({
   basis: 'per_100g',
   nutrients: { kcal: 100, protein: 10, carbs: 10, sugar: 1, fat: 1 },
   packageAmount: null,
+  pieceWeight: null,
   usageCount: 2,
   lastAmount: 150,
   lastUnit: 'g',

@@ -16,9 +16,21 @@ export interface Food {
   basis: Basis;
   nutrients: EntryNutrients;
   packageAmount: number | null;
+  /** g or ml of one piece on a g/ml basis: enables the unit Stück (D-170). */
+  pieceWeight: number | null;
   usageCount: number;
   lastAmount: number | null;
   lastUnit: Unit | null;
+}
+
+/** A shared reference value (D-170), not yet in the library; picking it adopts a copy. */
+export interface ReferenceFood {
+  id: number;
+  name: string;
+  category: Category;
+  basis: Basis;
+  nutrients: EntryNutrients;
+  pieceWeight: number | null;
 }
 
 /** A product from Open Food Facts, not yet in the library. */
@@ -127,6 +139,7 @@ export function parseFood(v: unknown): Food {
     basis: oneOf(BASES, f['basis']),
     nutrients: nutrients(f['nutrients']),
     packageAmount: optNum(f['packageAmount']),
+    pieceWeight: optNum(f['pieceWeight']),
     usageCount: num(f['usageCount']),
     lastAmount: optNum(f['lastAmount']),
     lastUnit: f['lastUnit'] === null ? null : oneOf(UNITS, f['lastUnit']),
@@ -205,6 +218,32 @@ export async function searchOnline(q: string): Promise<OffProduct[]> {
     throw invalid();
   }
   return list.map(parseOffProduct);
+}
+
+function parseReference(v: unknown): ReferenceFood {
+  const r = rec(v);
+  return {
+    id: num(r['id']),
+    name: str(r['name']),
+    category: oneOf(CATEGORIES, r['category']),
+    basis: oneOf(BASES, r['basis']),
+    nutrients: nutrients(r['nutrients']),
+    pieceWeight: optNum(r['pieceWeight']),
+  };
+}
+
+/** Shared reference values matching the query that are not in the library yet (D-170). */
+export async function searchReferences(q: string): Promise<ReferenceFood[]> {
+  const list = rec(await apiRequest('GET', `/references?q=${encodeURIComponent(q.trim())}`))['references'];
+  if (!Array.isArray(list)) {
+    throw invalid();
+  }
+  return list.map(parseReference);
+}
+
+/** The user's copy of a reference value (created on first use). */
+export async function adoptReference(id: number): Promise<Food> {
+  return parseFood(rec(await apiRequest('POST', `/references/${String(id)}/adopt`))['food']);
 }
 
 export async function fetchFood(id: number): Promise<Food> {

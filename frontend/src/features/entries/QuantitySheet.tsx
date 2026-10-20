@@ -12,7 +12,7 @@ import {
   baseUnit,
   quickAmounts,
   stepFor,
-  SWITCHER_UNITS,
+  switcherUnits,
   toQuantity,
   unitLabel,
   type Basis,
@@ -26,6 +26,8 @@ export interface QuantityFood {
   subtitle: string;
   basis: Basis;
   packageAmount: number | null;
+  /** g or ml of one piece on a g/ml basis (unit Stück, D-170). */
+  pieceWeight?: number | null;
   /** Units that may be chosen (others are shown disabled). */
   units: Unit[];
   /** Nutrients for an amount in a unit, or null if not computable. */
@@ -83,8 +85,8 @@ export function QuantitySheet({
 
   const amount = parseAmount(text);
   const nutrients = amount === null ? null : food.nutrientsFor(amount, unit);
-  const switcher =
-    food.switcher ?? (food.basis === 'per_unit' ? (['stueck', 'packung'] as Unit[]) : SWITCHER_UNITS);
+  const pieceWeight = food.pieceWeight ?? null;
+  const switcher = food.switcher ?? switcherUnits(food.basis, pieceWeight);
   const isEntry = mode !== 'ingredient';
   const base = baseUnit(food.basis);
 
@@ -114,10 +116,12 @@ export function QuantitySheet({
   }
 
   let conversion: string | null = null;
-  if (amount !== null && unit !== 'g' && unit !== 'ml' && unit !== 'stueck' && unit !== 'portion') {
+  const converts =
+    unit === 'stueck' ? food.basis !== 'per_unit' : unit !== 'g' && unit !== 'ml' && unit !== 'portion';
+  if (amount !== null && converts) {
     try {
-      const quantity = toQuantity(food.basis, unit, amount, food.packageAmount);
-      const one = toQuantity(food.basis, unit, 1, food.packageAmount);
+      const quantity = toQuantity(food.basis, unit, amount, food.packageAmount, pieceWeight);
+      const one = toQuantity(food.basis, unit, 1, food.packageAmount, pieceWeight);
       conversion = `= ${formatDecimal(quantity)} ${base} · 1 ${unitLabel(unit)} = ${formatDecimal(one)} ${base}`;
     } catch {
       conversion = null;

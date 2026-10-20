@@ -12,7 +12,7 @@ export function quantityFoodForEntry(entry: Entry): QuantityFood {
       ? entry.unit === 'portion'
         ? []
         : [entry.unit]
-      : allowedUnits(basis, entry.packageAmount);
+      : allowedUnits(basis, entry.packageAmount, entry.pieceWeight);
 
   return {
     name: entry.name,
@@ -22,6 +22,7 @@ export function quantityFoodForEntry(entry: Entry): QuantityFood {
         : `Eintrag · pro ${basis === 'per_unit' ? 'Stück' : `100 ${baseUnit(basis)}`}`,
     basis: basis ?? 'per_100g',
     packageAmount: entry.packageAmount,
+    pieceWeight: entry.pieceWeight,
     units,
     nutrientsFor: (amount: number, unit: Unit): EntryNutrients | null => {
       let quantity: number;
@@ -29,7 +30,7 @@ export function quantityFoodForEntry(entry: Entry): QuantityFood {
         quantity = entry.quantity * (amount / entry.amount);
       } else if (basis !== null) {
         try {
-          quantity = toQuantity(basis, unit, amount, entry.packageAmount);
+          quantity = toQuantity(basis, unit, amount, entry.packageAmount, entry.pieceWeight);
         } catch {
           return null;
         }

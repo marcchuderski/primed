@@ -96,6 +96,7 @@ describe('AddFlow', () => {
       if (url.endsWith('/shakes')) return respond({ shakes });
       if (url.endsWith('/foods/frequent')) return respond({ foods: [quark] });
       if (url.includes('/foods?q=')) return respond({ foods: [quark, skyrRef] });
+      if (url.includes('/references?q=')) return respond({ references: [] });
       if (url.includes('/off/search')) return respond({ products: [offSkyr] });
       if (url.includes('/foods/barcode/96385074'))
         return respond({ error: { code: 'not_found', message: 'x' } }, 404);
@@ -227,6 +228,7 @@ describe('AddFlow', () => {
       if (url.endsWith('/foods/frequent')) return respond({ foods: [] });
       if (url.includes('/foods?q='))
         return respond({ foods: [food({ id: 4, type: 'reference', name: 'Milch 1,5 %' })] });
+      if (url.includes('/references?q=')) return respond({ references: [] });
       if (url.includes('/off/search')) return respond({ products: [] });
       return respond({ error: { code: 'x', message: `unexpected ${url}` } }, 500);
     });
@@ -240,6 +242,64 @@ describe('AddFlow', () => {
     expect(screen.getByRole('region', { name: 'Richtwerte' })).toHaveTextContent('Milch 1,5 %');
     expect(await screen.findByRole('button', { name: 'Online 0' }, { timeout: 2000 })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Bibliothek 0' })).toHaveAttribute('aria-pressed', 'false');
+  });
+
+  it('adopts a shared reference value and prefills one piece with its weight', async () => {
+    const roll = {
+      id: 5,
+      name: 'Weizenbrötchen',
+      category: 'bread',
+      basis: 'per_100g',
+      nutrients: { kcal: 270, protein: 9, carbs: 54, sugar: 2, fat: 1.5 },
+      pieceWeight: 60,
+    };
+    fetchMock.mockImplementation((input, init) => {
+      const url = urlOf(input);
+      if (url.endsWith('/shakes')) return respond({ shakes });
+      if (url.endsWith('/foods/frequent')) return respond({ foods: [] });
+      if (url.includes('/foods?q=')) return respond({ foods: [] });
+      if (url.includes('/references?q=')) return respond({ references: [roll] });
+      if (url.includes('/off/search')) return respond({ products: [] });
+      if (url.endsWith('/references/5/adopt') && init?.method === 'POST')
+        return respond({
+          food: food({
+            id: 41,
+            type: 'reference',
+            name: 'Weizenbrötchen',
+            category: 'bread',
+            nutrients: roll.nutrients,
+            packageAmount: null,
+            pieceWeight: 60,
+            lastAmount: null,
+            lastUnit: null,
+          }),
+        });
+      if (url.endsWith('/entries') && init?.method === 'POST') return respond({ entry: entry({}) }, 201);
+      return respond({ error: { code: 'x', message: `unexpected ${url}` } }, 500);
+    });
+    const onAdded = setup();
+    await userEvent.type(screen.getByRole('searchbox', { name: 'Lebensmittel suchen' }), 'brötchen');
+
+    expect(await screen.findByRole('button', { name: 'Richtwerte 1' })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
+    const region = screen.getByRole('region', { name: 'Richtwerte' });
+    expect(region).toHaveTextContent('1 Stück ≈ 60 g');
+    await userEvent.click(within(region).getByRole('button', { name: /Weizenbrötchen/ }));
+
+    const sheet = await screen.findByRole('dialog', { name: 'Weizenbrötchen' });
+    expect(within(sheet).getByLabelText(/Menge in/)).toHaveValue('1');
+    expect(within(sheet).getByRole('button', { name: 'Stück' })).toHaveAttribute('aria-pressed', 'true');
+    expect(within(sheet).getByRole('button', { name: 'g' })).toBeEnabled();
+    expect(within(sheet).getByText('= 60 g · 1 Stück = 60 g')).toBeInTheDocument();
+    expect(within(sheet).getByText('162')).toBeInTheDocument(); // 60 g × 2.7 kcal
+
+    await userEvent.click(within(sheet).getByRole('button', { name: /^Hinzufügen/ }));
+    await waitFor(() => {
+      expect(onAdded).toHaveBeenCalledOnce();
+    });
+    expect(lastBody('/entries')).toMatchObject({ foodId: 41, amount: 1, unit: 'stueck' });
   });
 
   it('selects the whole amount on focus, so typing replaces it', async () => {

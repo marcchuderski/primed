@@ -1,7 +1,14 @@
 import { Minus, Plus, ScanBarcode, Search } from 'lucide-react';
 import { useState } from 'react';
 import { createDish, updateDish, type Dish } from '../../api/dishes.ts';
-import { createFood, draftFromOff, lookupBarcode, type Food, type FoodDraft } from '../../api/foods.ts';
+import {
+  adoptReference,
+  createFood,
+  draftFromOff,
+  lookupBarcode,
+  type Food,
+  type FoodDraft,
+} from '../../api/foods.ts';
 import { Button } from '../../components/Button/Button.tsx';
 import { Sheet } from '../../components/Sheet/Sheet.tsx';
 import { formatDecimal, formatInt } from '../../domain/format.ts';
@@ -37,7 +44,7 @@ function amountText(i: EditorIngredient): string {
     return base;
   }
   try {
-    const q = toQuantity(i.basis, i.unit, i.amount, i.packageAmount);
+    const q = toQuantity(i.basis, i.unit, i.amount, i.packageAmount, i.pieceWeight);
     return `${base} · ${formatDecimal(q)} ${i.basis === 'per_100ml' ? 'ml' : 'g'}`;
   } catch {
     return base;
@@ -300,6 +307,14 @@ export function DishEditorSheet({
             setSub({ kind: 'none' });
           }}
           onPickFood={addFood}
+          onPickReference={(reference) => {
+            adoptReference(reference.id)
+              .then(addFood)
+              .catch((e: unknown) => {
+                setError(e instanceof Error ? e.message : 'Richtwert konnte nicht geladen werden.');
+                setSub({ kind: 'none' });
+              });
+          }}
           onPickOnline={(product) => {
             createFood({ ...draftFromOff(product), type: 'ingredient' })
               .then(addFood)
@@ -353,7 +368,12 @@ export function DishEditorSheet({
             subtitle: `Zutat für ${name === '' ? 'dein Gericht' : name} · ${basisLabel(sub.ingredient.basis)}`,
             basis: sub.ingredient.basis,
             packageAmount: sub.ingredient.packageAmount,
-            units: allowedUnits(sub.ingredient.basis, sub.ingredient.packageAmount),
+            pieceWeight: sub.ingredient.pieceWeight,
+            units: allowedUnits(
+              sub.ingredient.basis,
+              sub.ingredient.packageAmount,
+              sub.ingredient.pieceWeight,
+            ),
             nutrientsFor: (amount, unit) =>
               unit === 'portion' ? null : ingredientNutrients({ ...sub.ingredient, amount, unit }),
           }}
