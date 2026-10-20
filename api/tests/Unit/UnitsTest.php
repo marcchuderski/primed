@@ -14,7 +14,7 @@ final class UnitsTest extends TestCase
     /**
      * Shared cases: frontend/src/domain/units.cases.json (same file is used by the frontend tests).
      *
-     * @return iterable<string, array{string, string, float, float|null, float}>
+     * @return iterable<string, array{string, string, float, float|null, float|null, float}>
      */
     public static function cases(): iterable
     {
@@ -25,12 +25,13 @@ final class UnitsTest extends TestCase
         foreach ($cases as $case) {
             self::assertIsArray($case);
             /** @var array{name: string, basis: string, unit: string, amount: float|int,
-             *     packageAmount: float|int|null, quantity: float|int} $case */
+             *     packageAmount: float|int|null, pieceWeight: float|int|null, quantity: float|int} $case */
             yield $case['name'] => [
                 $case['basis'],
                 $case['unit'],
                 (float) $case['amount'],
                 $case['packageAmount'] === null ? null : (float) $case['packageAmount'],
+                $case['pieceWeight'] === null ? null : (float) $case['pieceWeight'],
                 (float) $case['quantity'],
             ];
         }
@@ -42,9 +43,14 @@ final class UnitsTest extends TestCase
         string $unit,
         float $amount,
         ?float $package,
+        ?float $pieceWeight,
         float $expected,
     ): void {
-        self::assertEqualsWithDelta($expected, Units::toQuantity($basis, $unit, $amount, $package), 0.001);
+        self::assertEqualsWithDelta(
+            $expected,
+            Units::toQuantity($basis, $unit, $amount, $package, $pieceWeight),
+            0.001,
+        );
     }
 
     public function testRejectsUnitsThatDoNotFitTheBasis(): void

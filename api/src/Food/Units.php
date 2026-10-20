@@ -31,10 +31,19 @@ final class Units
     }
 
     /**
-     * Converts the entered amount to the basis quantity: grams, millilitres or pieces.
+     * Converts the entered amount to the basis quantity: grams, millilitres or pieces. Stück on a g/ml basis
+     * needs a piece weight (D-170).
      */
-    public static function toQuantity(string $basis, string $unit, float $amount, ?float $packageAmount): float
-    {
+    public static function toQuantity(
+        string $basis,
+        string $unit,
+        float $amount,
+        ?float $packageAmount,
+        ?float $pieceWeight = null,
+    ): float {
+        if ($unit === 'stueck' && $basis !== 'per_unit' && $pieceWeight !== null && $pieceWeight > 0) {
+            return $amount * $pieceWeight;
+        }
         if (!in_array($unit, self::allowedFor($basis), true)) {
             throw Input::invalid('Diese Einheit passt nicht zum Produkt.');
         }

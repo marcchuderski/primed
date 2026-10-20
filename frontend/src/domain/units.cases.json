@@ -5,7 +5,8 @@
     "unit": "g",
     "amount": 150,
     "packageAmount": null,
-    "quantity": 150
+    "quantity": 150,
+    "pieceWeight": null
   },
   {
     "name": "two tablespoons solid",
@@ -13,7 +14,8 @@
     "unit": "el",
     "amount": 2,
     "packageAmount": null,
-    "quantity": 30
+    "quantity": 30,
+    "pieceWeight": null
   },
   {
     "name": "teaspoon solid",
@@ -21,7 +23,8 @@
     "unit": "tl",
     "amount": 1,
     "packageAmount": null,
-    "quantity": 5
+    "quantity": 5,
+    "pieceWeight": null
   },
   {
     "name": "half a package",
@@ -29,7 +32,8 @@
     "unit": "packung",
     "amount": 0.5,
     "packageAmount": 450,
-    "quantity": 225
+    "quantity": 225,
+    "pieceWeight": null
   },
   {
     "name": "millilitres",
@@ -37,7 +41,8 @@
     "unit": "ml",
     "amount": 400,
     "packageAmount": null,
-    "quantity": 400
+    "quantity": 400,
+    "pieceWeight": null
   },
   {
     "name": "tablespoon liquid",
@@ -45,7 +50,8 @@
     "unit": "el",
     "amount": 1,
     "packageAmount": null,
-    "quantity": 15
+    "quantity": 15,
+    "pieceWeight": null
   },
   {
     "name": "milk carton",
@@ -53,7 +59,8 @@
     "unit": "packung",
     "amount": 1,
     "packageAmount": 1000,
-    "quantity": 1000
+    "quantity": 1000,
+    "pieceWeight": null
   },
   {
     "name": "pieces",
@@ -61,7 +68,8 @@
     "unit": "stueck",
     "amount": 2,
     "packageAmount": null,
-    "quantity": 2
+    "quantity": 2,
+    "pieceWeight": null
   },
   {
     "name": "pack of bars",
@@ -69,6 +77,43 @@
     "unit": "packung",
     "amount": 1,
     "packageAmount": 6,
-    "quantity": 6
+    "quantity": 6,
+    "pieceWeight": null
+  },
+  {
+    "name": "two bread rolls",
+    "basis": "per_100g",
+    "unit": "stueck",
+    "amount": 2,
+    "packageAmount": null,
+    "pieceWeight": 60,
+    "quantity": 120
+  },
+  {
+    "name": "half an egg",
+    "basis": "per_100g",
+    "unit": "stueck",
+    "amount": 0.5,
+    "packageAmount": null,
+    "pieceWeight": 58,
+    "quantity": 29
+  },
+  {
+    "name": "grams despite piece weight",
+    "basis": "per_100g",
+    "unit": "g",
+    "amount": 80,
+    "packageAmount": null,
+    "pieceWeight": 60,
+    "quantity": 80
+  },
+  {
+    "name": "pieces ignore a piece weight on a per-piece basis",
+    "basis": "per_unit",
+    "unit": "stueck",
+    "amount": 3,
+    "packageAmount": null,
+    "pieceWeight": 40,
+    "quantity": 3
   }
 ]

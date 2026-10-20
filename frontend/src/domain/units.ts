@@ -10,6 +10,17 @@ export const TL = 5;
 /** Order of the unit switcher (screen 06): g · ml · EL · TL · Packung (Stück only for per-piece foods). */
 export const SWITCHER_UNITS: readonly Unit[] = ['g', 'ml', 'el', 'tl', 'packung'];
 
+/** Switcher for a food: per piece Stück · Packung; with a piece weight base unit · Stück · EL · TL · Packung (D-170). */
+export function switcherUnits(basis: Basis, pieceWeight: number | null): Unit[] {
+  if (basis === 'per_unit') {
+    return ['stueck', 'packung'];
+  }
+  if (pieceWeight !== null && pieceWeight > 0) {
+    return [basis === 'per_100ml' ? 'ml' : 'g', 'stueck', 'el', 'tl', 'packung'];
+  }
+  return [...SWITCHER_UNITS];
+}
+
 /** Units of foods (portions only exist for dishes). */
 const ALLOWED: Record<Basis, readonly Unit[]> = {
   per_100g: ['g', 'el', 'tl', 'packung'],
@@ -17,12 +28,33 @@ const ALLOWED: Record<Basis, readonly Unit[]> = {
   per_unit: ['stueck', 'packung'],
 };
 
-export function allowedUnits(basis: Basis, packageAmount: number | null): Unit[] {
-  return ALLOWED[basis].filter((u) => u !== 'packung' || (packageAmount !== null && packageAmount > 0));
+/** Stück on a g/ml basis needs a piece weight (D-170). */
+function hasPieces(basis: Basis, pieceWeight: number | null): pieceWeight is number {
+  return basis !== 'per_unit' && pieceWeight !== null && pieceWeight > 0;
+}
+
+export function allowedUnits(
+  basis: Basis,
+  packageAmount: number | null,
+  pieceWeight: number | null = null,
+): Unit[] {
+  const units = ALLOWED[basis].filter(
+    (u) => u !== 'packung' || (packageAmount !== null && packageAmount > 0),
+  );
+  return hasPieces(basis, pieceWeight) ? [units[0] ?? 'g', 'stueck', ...units.slice(1)] : units;
 }
 
 /** Entered amount → basis quantity (g, ml or pieces). */
-export function toQuantity(basis: Basis, unit: Unit, amount: number, packageAmount: number | null): number {
+export function toQuantity(
+  basis: Basis,
+  unit: Unit,
+  amount: number,
+  packageAmount: number | null,
+  pieceWeight: number | null = null,
+): number {
+  if (unit === 'stueck' && hasPieces(basis, pieceWeight)) {
+    return amount * pieceWeight;
+  }
   if (!ALLOWED[basis].includes(unit)) {
     throw new RangeError(`Unit ${unit} does not fit ${basis}`);
   }
