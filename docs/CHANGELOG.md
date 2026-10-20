@@ -1,7 +1,11 @@
 # Changelog
 
-## 2026-10-20 – Supplements, Fertiggerichte, Treffer-Tabs, Zahlen markieren
-- Migration `014_supplements_meals`: neue Kategorien „Supplements“ und „Fertiggerichte & Restaurant“. Das Start-Proteinpulver liegt jetzt in Supplements (nur wenn es noch in „Getränke“ stand). Online-Treffer für Nahrungsergänzung/Proteinpulver bzw. Fertiggerichte/Pizza landen automatisch dort. Sonst bleiben alle Daten und Einstellungen unverändert.
+## 2026-10-20 – Version 1.1.0: Changelog im Menü, Portionen bei neuen Produkten
+- App-Version 1.1.0 (vorher 1.0.0, intern 0.1.0); Menü › App › Changelog zeigt die Neuerungen je Version.
+- Neue Produkte aus Barcode-Scan und Online-Suche starten mit der Portionsgröße von Open Food Facts; ohne Portion mit „1 Packung“ bei Packungen bis 250 g/ml, sonst 100 g/ml. Ab dem zweiten Mal gilt wie bisher die zuletzt genutzte Menge.
+
+## 2026-10-20 – Supplements, Fertigessen, Treffer-Tabs, Zahlen markieren
+- Migration `014_supplements_meals`: neue Kategorien „Supplements“ und „Fertigessen“. Das Start-Proteinpulver liegt jetzt in Supplements (nur wenn es noch in „Getränke“ stand). Online-Treffer für Nahrungsergänzung/Proteinpulver bzw. Fertiggerichte/Pizza landen automatisch dort. Sonst bleiben alle Daten und Einstellungen unverändert.
 - Suche bei „Hinzufügen“: Tabs „Bibliothek · Online · Richtwerte“ mit Trefferzahl. Richtwerte wie Milch waren vorher ganz unten unter den Online-Treffern versteckt, und oben stand „Noch nichts gespeichert“.
 - Antippen der Menge (Mengen-Sheet) oder eines Nährwerts (Produkt-Formular) markiert die Zahl, Tippen ersetzt sie.
 

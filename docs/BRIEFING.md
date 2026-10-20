@@ -102,7 +102,7 @@ Oben auf „Heute“: „Hey, [Display-Name].“ (fett, Textfarbe), direkt dahin
 - Unter der Zahl steht die Umrechnung, z. B. „2 EL“ → „= 30 g · 1 EL = 15 g“. Schnellwahl-Chips passen sich der Einheit an (z. B. 1 / 2 / 3 EL).
 - Zwischen g und ml wird nicht umgerechnet.
 - Der Nährwert-Schnappschuss wird immer aus der **umgerechneten Menge in g bzw. ml** (bei Basis Stück: Stückzahl) berechnet; Menge und Einheit wie eingegeben werden mitgespeichert.
-- **Letzte verwendete Menge** eines Lebensmittels ist vorausgefüllt.
+- **Letzte verwendete Menge** eines Lebensmittels ist vorausgefüllt. Beim ersten Mal: 1 Stück (Stück-Basis), sonst die Portion laut Open Food Facts, sonst „1 Packung“ bis 250 g/ml, sonst 100 g/ml (D-168).
 - Jeder Eintrag speichert einen **Nährwert-Schnappschuss**. Spätere Änderungen am Produkt verändern vergangene Einträge nicht.
 - Nachtragen für **vergangene** Tage ist möglich (Datum wechseln), Einträge für zukünftige Tage nicht. Checkpoints rechnen mit der eingetragenen Uhrzeit.
 - Wischen löscht **nach Bestätigungsdialog**, Tap bearbeitet.
@@ -111,7 +111,7 @@ Oben auf „Heute“: „Hey, [Display-Name].“ (fett, Textfarbe), direkt dahin
 
 **Typen:** Markenprodukt (meist mit Barcode), Richtwert (unverpackt, Standard-Nährwerte ohne Etikett), Zutat (nur im Meal-Prep-Editor sichtbar, nie im Schnell-Eintrag). Ein im Meal-Prep-Editor neu gescanntes Produkt wird als Zutat angelegt; der Typ ist später in der Bibliothek änderbar.
 
-**Kategorien:** Snacks & Riegel · Milchprodukte & Quark · Brot & Backwaren · Obst & Gemüse · Getränke & Shakes · Grundnahrungsmittel (vorläufig, D-111) · Öle & Saucen (D-162) · Supplements · Fertiggerichte & Restaurant (D-165)
+**Kategorien:** Snacks & Riegel · Milchprodukte & Quark · Brot & Backwaren · Obst & Gemüse · Getränke & Shakes · Grundnahrungsmittel (vorläufig, D-111) · Öle & Saucen (D-162) · Supplements · Fertigessen (D-165)
 
 **Regeln**
 - Nährwerte **pro 100 g, pro 100 ml oder pro Stück** (genau eine Basis je Produkt), plus optional Packungsgröße in der Einheit der Basis (g, ml oder Stück). Haushaltsmaße werden **nicht** pro Produkt gepflegt (siehe Einträge).
