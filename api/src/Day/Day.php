@@ -53,11 +53,12 @@ final class Day
     /**
      * @return array<string, mixed>
      */
-    public function toPublic(bool $isToday): array
+    public function toPublic(bool $isToday, bool $editable = true): array
     {
         return [
             'date' => $this->date,
             'isToday' => $isToday,
+            'editable' => $editable,
             'dayTypeId' => $this->dayTypeId,
             'dayTypeName' => $this->dayTypeName,
             'isTraining' => $this->isTraining,

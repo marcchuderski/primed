@@ -37,7 +37,7 @@ final class EntryService
      */
     public function forDate(int $userId, string $date): array
     {
-        $this->days->getDay($userId, $date); // validates the date (no future) and fixes the day
+        $this->days->getDay($userId, $date); // validates the date (no future), fixes days in the edit window
         $boundary = $this->settings->get($userId)->dayBoundaryMin;
         $entries = $this->entries->forDate($userId, $date);
         usort($entries, static fn (Entry $a, Entry $b): int => [self::logical($a->timeMin, $boundary), $a->id]
@@ -48,7 +48,7 @@ final class EntryService
 
     public function create(int $userId, string $date, int $timeMin, int $foodId, float $amount, string $unit): Entry
     {
-        $this->days->getDay($userId, $date);
+        $this->days->editableDay($userId, $date);
         self::assertTime($timeMin);
         $food = $this->foods->find($userId, $foodId) ?? throw HttpException::notFound();
         $quantity = Units::toQuantity($food->basis, $unit, $amount, $food->packageAmount, $food->pieceWeight);
@@ -80,7 +80,7 @@ final class EntryService
         if (!$this->settings->get($userId)->shakesEnabled) {
             throw new HttpException(409, 'shakes_disabled', 'Shakes sind in den Einstellungen ausgeschaltet.');
         }
-        $this->days->getDay($userId, $date);
+        $this->days->editableDay($userId, $date);
         self::assertTime($timeMin);
         $shake = $this->shakes->get($userId, $shakeId);
         $id = $this->entries->create(
@@ -104,7 +104,7 @@ final class EntryService
     /** Logs portions of a meal prep dish (0.5 steps, not more than left). */
     public function createDishPortion(int $userId, string $date, int $timeMin, int $dishId, float $portions): Entry
     {
-        $this->days->getDay($userId, $date);
+        $this->days->editableDay($userId, $date);
         self::assertTime($timeMin);
         $result = $this->dishes->portions($userId, $dishId, $portions);
         $id = $this->entries->create(
@@ -131,6 +131,7 @@ final class EntryService
     public function update(int $userId, int $id, ?int $timeMin, ?float $amount, ?string $unit): Entry
     {
         $entry = $this->entries->find($userId, $id) ?? throw HttpException::notFound();
+        $this->days->assertEditable($userId, $entry->date);
         $timeMin ??= $entry->timeMin;
         self::assertTime($timeMin);
         $amount ??= $entry->amount;
@@ -164,7 +165,8 @@ final class EntryService
 
     public function delete(int $userId, int $id): void
     {
-        $this->entries->find($userId, $id) ?? throw HttpException::notFound();
+        $entry = $this->entries->find($userId, $id) ?? throw HttpException::notFound();
+        $this->days->assertEditable($userId, $entry->date);
         $this->entries->delete($userId, $id);
     }
 

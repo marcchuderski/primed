@@ -32,9 +32,12 @@ final class DayController
     {
         $user = $this->c->authenticator()->require($request)->user;
         $date = $params['date'] ?? '';
-        $day = $this->c->days()->getDay($user->id, $date);
+        $days = $this->c->days();
+        $day = $days->getDay($user->id, $date);
 
-        return Response::json(['day' => $day->toPublic($date === $this->c->days()->today($user->id))]);
+        return Response::json([
+            'day' => $day->toPublic($date === $days->today($user->id), $days->isEditable($user->id, $date)),
+        ]);
     }
 
     /**

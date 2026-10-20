@@ -24,6 +24,8 @@ final class DayService
     public const LATEST_TRAINING_MIN = 23 * 60 + 45;
     /** Neutral training time when a training day has no time yet (e.g. switched manually). */
     public const DEFAULT_TRAINING_START = 18 * 60;
+    /** Entries and the day type can be changed for today and this many days back (D-176). */
+    public const EDIT_WINDOW_DAYS = 7;
 
     public function __construct(
         private readonly PDO $pdo,
@@ -42,7 +44,9 @@ final class DayService
     }
 
     /**
-     * Returns the day; today is always recalculated from the current settings, past days are fixed.
+     * Returns the day; today is always recalculated from the current settings, past days are fixed. Days older
+     * than the edit window are only read: without a stored row there is nothing to show (404), and no row is
+     * created from today's template (D-176).
      */
     public function getDay(int $userId, string $date): Day
     {
@@ -52,8 +56,41 @@ final class DayService
         if ($date === $today) {
             return $this->refreshToday($userId);
         }
+        $stored = $this->days->find($userId, $date);
+        if ($stored !== null) {
+            return $stored;
+        }
+        if (!self::inWindow($date, $today)) {
+            throw new HttpException(404, 'not_found', 'Für diesen Tag gibt es keine Daten.');
+        }
 
-        return $this->days->find($userId, $date) ?? $this->storeFromTemplate($userId, $date);
+        return $this->storeFromTemplate($userId, $date);
+    }
+
+    /** Whether entries and the day type of this date may be changed (today and 7 days back, D-176). */
+    public function isEditable(int $userId, string $date): bool
+    {
+        $today = $this->today($userId);
+
+        return LogicalCalendar::isValidDate($date) && $date <= $today && self::inWindow($date, $today);
+    }
+
+    /** 422 outside the edit window; also rejects invalid and future dates. */
+    public function assertEditable(int $userId, string $date): void
+    {
+        $today = $this->today($userId);
+        self::assertNotFuture($date, $today);
+        if (!self::inWindow($date, $today)) {
+            throw Input::invalid(sprintf('Nachtragen geht nur bis %d Tage zurück.', self::EDIT_WINDOW_DAYS));
+        }
+    }
+
+    /** The day for a change (entries, day type): inside the edit window, fixed from the template if needed. */
+    public function editableDay(int $userId, string $date): Day
+    {
+        $this->assertEditable($userId, $date);
+
+        return $this->getDay($userId, $date);
     }
 
     /**
@@ -61,7 +98,7 @@ final class DayService
      */
     public function setDay(int $userId, string $date, int $dayTypeId, ?int $trainingStart, ?int $durationMin): Day
     {
-        self::assertNotFuture($date, $this->today($userId));
+        $this->assertEditable($userId, $date);
         $settings = $this->settings->get($userId);
         $type = $this->requireDayType($userId, $dayTypeId);
         [$trainingStart, $durationMin] = $this->validateTraining($type, $trainingStart, $durationMin, $settings);
@@ -361,6 +398,13 @@ final class DayService
         if ($date > $today) {
             throw Input::invalid('Für zukünftige Tage kannst du noch nichts eintragen.');
         }
+    }
+
+    private static function inWindow(string $date, string $today): bool
+    {
+        $first = (new DateTimeImmutable($today))->modify('-' . self::EDIT_WINDOW_DAYS . ' days')->format('Y-m-d');
+
+        return $date >= $first;
     }
 
     private static function formatTime(int $minutes): string
