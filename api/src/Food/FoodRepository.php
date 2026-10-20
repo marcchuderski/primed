@@ -12,7 +12,7 @@ use Primed\Support\Row;
 final class FoodRepository
 {
     private const COLUMNS = 'id, type, name, brand, barcode, category, basis, kcal, protein, carbs, sugar, fat,
-        package_amount, usage_count, last_amount, last_unit';
+        package_amount, usage_count, last_amount, last_unit, piece_weight';
 
     public function __construct(private readonly PDO $pdo)
     {
@@ -36,14 +36,16 @@ final class FoodRepository
     /**
      * @param array{type: string, name: string, brand: string|null, barcode: string|null, category: string,
      *     basis: string, kcal: float, protein: float, carbs: float, sugar: float, fat: float,
-     *     packageAmount: float|null, source: string, systemKey?: string|null} $food
+     *     packageAmount: float|null, source: string, systemKey?: string|null, pieceWeight?: float|null,
+     *     referenceFoodId?: int|null} $food
      */
     public function create(int $userId, array $food, DateTimeImmutable $now): int
     {
         $this->pdo->prepare(
             'INSERT INTO foods (user_id, type, name, brand, barcode, category, basis, kcal, protein, carbs, sugar, fat,
-                                package_amount, source, system_key, created_at, updated_at)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                                package_amount, piece_weight, source, system_key, reference_food_id, created_at,
+                                updated_at)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
         )->execute([
             $userId,
             $food['type'],
@@ -58,8 +60,10 @@ final class FoodRepository
             $food['sugar'],
             $food['fat'],
             $food['packageAmount'],
+            $food['pieceWeight'] ?? null,
             $food['source'],
             $food['systemKey'] ?? null,
+            $food['referenceFoodId'] ?? null,
             Db::dateTime($now),
             Db::dateTime($now),
         ]);
@@ -229,6 +233,16 @@ final class FoodRepository
         )->execute([$userId]);
     }
 
+    /** Links the start milks to their shared reference values, so the search does not show them twice (D-170). */
+    public function linkReferences(int $userId): void
+    {
+        $this->pdo->prepare(
+            'UPDATE foods f JOIN reference_foods r ON r.name = f.name
+                SET f.reference_food_id = r.id
+              WHERE f.user_id = ? AND f.system_key IS NOT NULL AND f.reference_food_id IS NULL',
+        )->execute([$userId]);
+    }
+
     public function hasAny(int $userId): bool
     {
         $statement = $this->pdo->prepare('SELECT 1 FROM foods WHERE user_id = ? LIMIT 1');
@@ -296,7 +310,88 @@ final class FoodRepository
             Row::int($row, 'usage_count'),
             Row::nullableFloat($row, 'last_amount'),
             Row::nullableString($row, 'last_unit'),
+            Row::nullableFloat($row, 'piece_weight'),
         );
+    }
+
+    /**
+     * Shared reference values matching the query that the user has no visible copy of (D-170), by list order.
+     *
+     * @return list<ReferenceFood>
+     */
+    public function searchReferences(int $userId, string $query, int $limit = 30): array
+    {
+        $like = '%' . addcslashes($query, '%_\\') . '%';
+        $statement = $this->pdo->prepare(
+            "SELECT r.id, r.name, r.category, r.basis, r.kcal, r.protein, r.carbs, r.sugar, r.fat, r.piece_weight
+               FROM reference_foods r
+              WHERE r.name LIKE ? ESCAPE '\\\\'
+                AND NOT EXISTS (SELECT 1 FROM foods f
+                                 WHERE f.user_id = ? AND f.reference_food_id = r.id AND f.deleted_at IS NULL
+                                   AND " . self::visibleMilk('f') . ')
+              ORDER BY r.sort, r.name
+              LIMIT ' . max(1, min(100, $limit)),
+        );
+        $statement->execute([$like, $userId]);
+        $references = [];
+        foreach ($statement->fetchAll() as $row) {
+            if (is_array($row)) {
+                $references[] = ReferenceFood::hydrate($row);
+            }
+        }
+
+        return $references;
+    }
+
+    public function findReference(int $id): ?ReferenceFood
+    {
+        $statement = $this->pdo->prepare(
+            'SELECT id, name, category, basis, kcal, protein, carbs, sugar, fat, piece_weight
+               FROM reference_foods WHERE id = ?',
+        );
+        $statement->execute([$id]);
+        $row = $statement->fetch();
+
+        return is_array($row) ? ReferenceFood::hydrate($row) : null;
+    }
+
+    /**
+     * The user's copy of a reference value, also if deleted.
+     *
+     * @return array{int, bool}|null [id, deleted]
+     */
+    public function copyOf(int $userId, int $referenceId): ?array
+    {
+        $statement = $this->pdo->prepare(
+            'SELECT id, deleted_at IS NOT NULL AS deleted FROM foods WHERE user_id = ? AND reference_food_id = ?',
+        );
+        $statement->execute([$userId, $referenceId]);
+        $row = $statement->fetch();
+
+        return is_array($row) ? [Row::int($row, 'id'), Row::int($row, 'deleted') === 1] : null;
+    }
+
+    /** Brings a deleted copy back with the current reference values (D-170). */
+    public function restoreCopy(int $userId, int $id, ReferenceFood $reference, DateTimeImmutable $now): void
+    {
+        $this->pdo->prepare(
+            "UPDATE foods SET type = 'reference', name = ?, category = ?, basis = ?, kcal = ?, protein = ?, carbs = ?,
+                    sugar = ?, fat = ?, piece_weight = ?, deleted_at = NULL, updated_at = ?
+              WHERE user_id = ? AND id = ?",
+        )->execute([
+            $reference->name,
+            $reference->category,
+            $reference->basis,
+            $reference->kcal,
+            $reference->protein,
+            $reference->carbs,
+            $reference->sugar,
+            $reference->fat,
+            $reference->pieceWeight,
+            Db::dateTime($now),
+            $userId,
+            $id,
+        ]);
     }
 
     /**

@@ -101,6 +101,57 @@ final class FoodService
         return $this->get($userId, $id);
     }
 
+    /**
+     * Shared reference values for the search (D-170); same query rules as the library search.
+     *
+     * @return list<ReferenceFood>
+     */
+    public function references(int $userId, string $query): array
+    {
+        $query = trim($query);
+        if (!mb_check_encoding($query, 'UTF-8') || mb_strlen($query, 'UTF-8') > 60) {
+            throw Input::invalid('Der Suchbegriff ist zu lang.');
+        }
+
+        return $query === '' ? [] : $this->foods->searchReferences($userId, $query);
+    }
+
+    /**
+     * The user's copy of a reference value, created on first use (or restored if deleted, D-170). Idempotent.
+     */
+    public function adoptReference(int $userId, int $referenceId): Food
+    {
+        $reference = $this->foods->findReference($referenceId) ?? throw HttpException::notFound();
+        $now = $this->clock->now();
+        $copy = $this->foods->copyOf($userId, $referenceId);
+        if ($copy !== null) {
+            [$id, $deleted] = $copy;
+            if ($deleted) {
+                $this->foods->restoreCopy($userId, $id, $reference, $now);
+            }
+
+            return $this->get($userId, $id);
+        }
+
+        return $this->get($userId, $this->foods->create($userId, [
+            'type' => 'reference',
+            'name' => $reference->name,
+            'brand' => null,
+            'barcode' => null,
+            'category' => $reference->category,
+            'basis' => $reference->basis,
+            'kcal' => $reference->kcal,
+            'protein' => $reference->protein,
+            'carbs' => $reference->carbs,
+            'sugar' => $reference->sugar,
+            'fat' => $reference->fat,
+            'packageAmount' => null,
+            'pieceWeight' => $reference->pieceWeight,
+            'source' => 'bls',
+            'referenceFoodId' => $reference->id,
+        ], $now));
+    }
+
     public function delete(int $userId, int $id): void
     {
         $this->get($userId, $id);

@@ -12,7 +12,8 @@ use Primed\Support\Row;
 final class EntryRepository
 {
     private const COLUMNS = 'e.id, e.date, e.time_min, e.kind, e.food_id, e.dish_id, e.name_snapshot, e.amount, e.unit,
-        e.quantity, e.kcal, e.protein, e.carbs, e.sugar, e.fat, f.basis, f.package_amount';
+        e.quantity, e.kcal, e.protein, e.carbs, e.sugar, e.fat, f.basis, f.package_amount,
+        f.piece_weight';
     private const FROM = ' FROM entries e LEFT JOIN foods f ON f.id = e.food_id AND f.user_id = e.user_id ';
 
     public function __construct(private readonly PDO $pdo)
@@ -183,6 +184,7 @@ final class EntryRepository
             ],
             Row::nullableString($row, 'basis'),
             Row::nullableFloat($row, 'package_amount'),
+            Row::nullableFloat($row, 'piece_weight'),
         );
     }
 }

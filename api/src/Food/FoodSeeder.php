@@ -63,5 +63,6 @@ final class FoodSeeder
             ], $now);
         }
         $this->foods->linkShakeDefaults($userId);
+        $this->foods->linkReferences($userId);
     }
 }

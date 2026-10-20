@@ -23,6 +23,8 @@ final class Food
         public readonly int $usageCount,
         public readonly ?float $lastAmount,
         public readonly ?string $lastUnit,
+        /** g or ml of one piece on a g/ml basis (D-170). */
+        public readonly ?float $pieceWeight = null,
     ) {
     }
 
@@ -55,6 +57,7 @@ final class Food
             'basis' => $this->basis,
             'nutrients' => $this->perBasis(),
             'packageAmount' => $this->packageAmount,
+            'pieceWeight' => $this->pieceWeight,
             'usageCount' => $this->usageCount,
             'lastAmount' => $this->lastAmount,
             'lastUnit' => $this->lastUnit,

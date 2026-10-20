@@ -136,7 +136,13 @@ final class DishService
         $totals = ['kcal' => 0.0, 'protein' => 0.0, 'carbs' => 0.0, 'sugar' => 0.0, 'fat' => 0.0];
         foreach ($items as $item) {
             $food = $this->foods->findAny($userId, $item['foodId']) ?? throw HttpException::notFound();
-            $quantity = Units::toQuantity($food->basis, $item['unit'], $item['amount'], $food->packageAmount);
+            $quantity = Units::toQuantity(
+                $food->basis,
+                $item['unit'],
+                $item['amount'],
+                $food->packageAmount,
+                $food->pieceWeight,
+            );
             $nutrients = Units::nutrients($food->basis, $food->perBasis(), $quantity);
             $list[] = new DishIngredient(
                 $food->id,

@@ -156,6 +156,8 @@ final class Kernel
         $router->add('PATCH', '/v1/foods/{id}', $foods->update(...));
         $router->add('DELETE', '/v1/foods/{id}', $foods->delete(...));
         $router->add('GET', '/v1/off/search', $foods->searchOnline(...));
+        $router->add('GET', '/v1/references', $foods->references(...));
+        $router->add('POST', '/v1/references/{id}/adopt', $foods->adopt(...));
 
         $entries = new EntryController($c);
         $router->add('GET', '/v1/days/{date}/entries', $entries->index(...));

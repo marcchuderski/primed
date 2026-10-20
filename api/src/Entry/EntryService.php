@@ -51,7 +51,7 @@ final class EntryService
         $this->days->getDay($userId, $date);
         self::assertTime($timeMin);
         $food = $this->foods->find($userId, $foodId) ?? throw HttpException::notFound();
-        $quantity = Units::toQuantity($food->basis, $unit, $amount, $food->packageAmount);
+        $quantity = Units::toQuantity($food->basis, $unit, $amount, $food->packageAmount, $food->pieceWeight);
         $nutrients = Units::nutrients($food->basis, $food->perBasis(), $quantity);
         $now = $this->clock->now();
 
@@ -151,7 +151,7 @@ final class EntryService
             if ($food === null) {
                 throw Input::invalid('Die Einheit kann bei diesem Eintrag nicht mehr geändert werden.');
             }
-            $quantity = Units::toQuantity($food->basis, $unit, $amount, $food->packageAmount);
+            $quantity = Units::toQuantity($food->basis, $unit, $amount, $food->packageAmount, $food->pieceWeight);
         }
 
         $factor = $quantity / $entry->quantity;

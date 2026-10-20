@@ -7,6 +7,7 @@ namespace Primed\Controller;
 use Primed\Container;
 use Primed\Food\Food;
 use Primed\Food\FoodInput;
+use Primed\Food\ReferenceFood;
 use Primed\Http\Input;
 use Primed\Http\Request;
 use Primed\Http\Response;
@@ -122,6 +123,32 @@ final class FoodController
             'products' => array_map(static fn (OffProduct $p): array => $p->toArray(), $products),
             'attribution' => 'Daten: Open Food Facts (ODbL)',
         ]);
+    }
+
+    /**
+     * Shared reference values not yet in the user's library (D-170).
+     *
+     * @param array<string, string> $params
+     */
+    public function references(Request $request, array $params): Response
+    {
+        $user = $this->c->authenticator()->require($request)->user;
+        $references = $this->c->foods()->references($user->id, $request->query['q'] ?? '');
+
+        return Response::json([
+            'references' => array_map(static fn (ReferenceFood $r): array => $r->toPublic(), $references),
+        ]);
+    }
+
+    /**
+     * @param array<string, string> $params
+     */
+    public function adopt(Request $request, array $params): Response
+    {
+        $user = $this->c->authenticator()->require($request)->user;
+        $food = $this->c->foods()->adoptReference($user->id, DayTypeController::id($params));
+
+        return Response::json(['food' => $food->toPublic()]);
     }
 
     /**
