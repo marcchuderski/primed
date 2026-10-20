@@ -10,7 +10,11 @@ export const RELEASES: readonly Release[] = [
   {
     version: '1.3.0',
     date: '2026-10-20',
-    changes: ['Du kannst jetzt besser nachtragen', 'Neuer Startscreen'],
+    changes: [
+      'Du kannst jetzt besser nachtragen: Tipp oben aufs Datum und wähl einen der letzten 7 Tage',
+      'Tage im Verlauf lassen sich antippen und öffnen',
+      'Neuer Startscreen: übersichtlicher, Datum und Tagesart direkt nebeneinander',
+    ],
   },
   {
     version: '1.2.0',
