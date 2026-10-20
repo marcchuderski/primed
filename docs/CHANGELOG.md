@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-10-20 – Fertige Protein-Shakes zu Milchprodukte
+- Supplements sind nur noch Pulver, Gels, Kapseln. Fertige Protein-Shakes und -Drinks (bis 15 g Protein pro 100 g/ml, Tag `protein-shakes` oder „Shake“/„Drink“ im Namen) → Milchprodukte, klare Whey-Drinks („Clear“) → Getränke.
+
 ## 2026-10-20 – Proteinpulver trotz lückenhafter OFF-Daten erkennen
 - Supplements auch bei nicht normalisierten Tags („Nahrungsergänzungsmittel“, „Proteinpulver“ …), ab 60 g Protein pro 100 g (statt Getränke/Milchprodukte/Snacks/Sonstiges) und – nur ohne OFF-Kategorie – über Wörter im Produktnamen.
 
