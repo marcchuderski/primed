@@ -1,4 +1,4 @@
-/** User-facing release notes (menu › Changelog, D-169). Newest first; the first entry is the app version. */
+/** User-facing release notes (menu › Changelog, D-169): short, plain words. Newest first; the first entry is the app version. */
 export interface Release {
   version: string;
   /** ISO date (YYYY-MM-DD). */
@@ -11,13 +11,13 @@ export const RELEASES: readonly Release[] = [
     version: '1.1.0',
     date: '2026-10-20',
     changes: [
-      'Neue Kategorien „Supplements“ und „Fertigessen“. Dein Standard-Proteinpulver liegt jetzt in Supplements.',
-      'Suche bei „Hinzufügen“ mit Tabs: Bibliothek, Online und Richtwerte, jeweils mit Trefferzahl.',
-      'Rund 110 Richtwerte für Unverpacktes (Bäckerei, Obst, Gemüse, Milchprodukte) aus dem Bundeslebensmittelschlüssel. Du findest sie im Tab „Richtwerte“, sie landen erst in deiner Bibliothek, wenn du sie benutzt.',
-      'Brötchen, Obst & Co. kannst du in Stück eintragen, z. B. 1 Brötchen ≈ 60 g. Gramm gehen weiterhin.',
-      'Neue Produkte aus Barcode-Scan und Online-Suche starten mit einer Portion bzw. einer kleinen Packung statt 100 g.',
-      'Tippst du auf eine Zahl, wird sie markiert und du kannst direkt überschreiben.',
-      'Changelog im Menü.',
+      'Neue und verbesserte Kategorienstruktur',
+      'Übersichtlichere Suche mit Tabs',
+      'Über 100 Richtwerte für Bäckerei, Obst, Gemüse und Milchprodukte',
+      'Eintragen in Stück, z. B. 1 Brötchen',
+      'Passendere Startmenge bei neuen Produkten',
+      'Zahlen lassen sich direkt überschreiben',
+      'Changelog im Menü',
     ],
   },
   {
