@@ -11,6 +11,15 @@ export interface Release {
 
 export const RELEASES: readonly Release[] = [
   {
+    version: '1.4.0',
+    date: '2026-10-29',
+    changes: [
+      'Tage nicht mitzählen: in der Tagesauswahl auf ⊘ tippen, z. B. bei Krankheit oder Urlaub',
+      'Halbe Stück: bis 5 Stück in halben Schritten, z. B. ein halbes Brötchen',
+      'Ruhigere Sheets: die Seite dahinter bewegt sich nicht mehr mit',
+    ],
+  },
+  {
     version: '1.3.0',
     date: '2026-10-20',
     changes: [

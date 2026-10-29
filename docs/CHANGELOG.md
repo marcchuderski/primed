@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-29 – Version 1.4.0: Tage nicht mitzählen, halbe Stück, ruhiger Hintergrund
+- Verlauf/Statistik: einzelne Tage per ⊘ in der Tagesauswahl ausschließen (nur heute + 7 Tage, D-180). Migration `018_stats_excluded` (Spalte `days.stats_excluded`), Endpunkt `PUT /v1/days/{date}/stats`, `statsExcluded` in Tag und Verlauf. Woche/Monat zeigen ⊘ „nicht mitgezählt“, Bilanz, Σ, Durchschnitte und Jahresbalken lassen den Tag weg; auf Heute Pill „nicht mitgezählt“ statt Tagesbilanz. Hinweistext der Tagesauswahl kürzer.
+- Mengen-Sheet: „Stück“ bis 5 in 0,5er-Schritten, darüber ganze; Schnellwahl 0,5 / 1 / 2 Stück (D-181).
+- Sheets: die Seite dahinter scrollt nicht mehr mit (D-182).
+
 ## 2026-10-20 – Version 1.3.0: Vergangene Tage ansehen und nachtragen
 - API: Bearbeitungsfenster heute + 7 Tage für Anlegen, Ändern, Löschen von Einträgen und für die Tagesart (sonst 422; vorher keine Untergrenze, Ändern/Löschen ohne Datumsprüfung). `editable` im Tag. Alte Tage werden beim Lesen nicht mehr aus der aktuellen Vorlage angelegt.
 - Heute: neuer Kopf (Begrüßung als Titel, Datum- und Tagesart-Chip), Tagesauswahl (heute + 7 Tage mit kcal und Bewertung), vergangene Tage mit Banner „Du bearbeitest …“, Tagesbilanz statt Checkpoints/Vorschlägen, ältere Tage nur lesbar. Rücksprung auf heute bei Fokus und beim Tab „Heute“.

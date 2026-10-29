@@ -92,6 +92,9 @@ Reihenfolge (Nutzer, 2026-10-17): 7.1 und 7.3 vor Phase 6. Geändert (Nutzer, 20
 | ID | Item | Status |
 |---|---|---|
 | 9.1 | Vergangene Tage ansehen und nachtragen (Tageswechsel, Banner, Tagesbilanz, Verlauf antippbar, Fenster 7 Tage auf dem Server), neuer Kopf auf Heute (D-176–D-178) | fertig |
+| 9.2 | Seite hinter offenen Sheets scrollt nicht mit (D-182) | fertig (auf dem iPhone noch zu prüfen) |
+| 9.3 | Halbe Stückzahlen bis 5 (D-181) | fertig |
+| 9.4 | Tage aus der Statistik nehmen, Schalter in der Tagesauswahl (D-180, Migration 018) | fertig |
 
 ## Später / vielleicht
 

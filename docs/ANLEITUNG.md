@@ -43,6 +43,8 @@ Danach einfach das Primed-Icon antippen. Ohne Internet zeigt die App „Keine Ve
 - **Scannen**: Barcode einer Packung (Kamera-Freigabe nötig). Unbekannte Produkte findet Primed oft online bei Open Food Facts; prüfe die Werte, bevor du speicherst.
 - Menge in g, ml, EL, TL oder Packung, Uhrzeit per Rad.
 - **Nachtragen:** Tipp auf Heute auf das Datum und wähl einen der letzten 7 Tage, oder tipp im Verlauf auf einen Tag. Ein Banner zeigt, welchen Tag du gerade bearbeitest; alles, was du hinzufügst, landet dort. „Zu heute“ bringt dich zurück. Ältere Tage kannst du ansehen, aber nicht mehr ändern.
+- **Tage nicht mitzählen:** In derselben Tagesauswahl nimmt das Symbol ⊘ neben einem Tag ihn aus der Statistik, z. B. bei Krankheit oder Urlaub. Im Verlauf steht er dann mit ⊘ „nicht mitgezählt“ und fließt nicht in Bilanz und Durchschnitte ein. Nochmal tippen zählt ihn wieder mit. Geht wie das Nachtragen nur bis 7 Tage zurück.
+- **Halbe Stück:** Bei „Stück“ zählen − und + bis 5 in halben Schritten, z. B. ein halbes Brötchen.
 - Einen Eintrag antippen = bearbeiten, zur Seite wischen = löschen.
 
 **Zauberstab**

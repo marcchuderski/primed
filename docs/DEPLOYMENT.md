@@ -50,3 +50,4 @@ Wird von Claude Code mit jedem Schritt präzisiert (Befehle, Dateilisten, Migrat
 | 015 | `015_reference_foods.sql` | 2026-10-20 |
 | 016 | `016_categories_v2.sql` | 2026-10-20 |
 | 017 | `017_recategorize_library.sql` | 2026-10-20 |
+| 018 | `018_stats_excluded.sql` | offen (nächstes Release, Version 1.4.0) |

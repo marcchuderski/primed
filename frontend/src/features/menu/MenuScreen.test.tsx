@@ -162,7 +162,7 @@ describe('Menu and settings (7.1)', () => {
     await userEvent.click(link);
     expect(screen.getByRole('heading', { level: 1, name: 'Changelog' })).toBeInTheDocument();
     expect(screen.getByRole('region', { name: `Version ${__APP_VERSION__}` })).toHaveTextContent(
-      '20.10.2026',
+      '29.10.2026',
     );
     expect(screen.getByRole('region', { name: 'Version 1.0.0' })).toHaveTextContent(
       'Erste Version: Tagesziele',
