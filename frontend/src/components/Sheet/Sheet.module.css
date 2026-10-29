@@ -54,6 +54,20 @@
   animation: slide 280ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
+/* Once dragged, the inline transform and opacity take over from the slide-in and fade animations. */
+.sheet.moved,
+.scrim.moved {
+  animation: none;
+}
+
+.sheet.moved {
+  transition: transform 200ms ease-out;
+}
+
+.sheet.dragging {
+  transition: none;
+}
+
 /* Search sheets (with a fixed header): full height from the first frame (screens 04/05). */
 .tall {
   height: calc(100dvh - 64px);
@@ -61,6 +75,20 @@
 
 .onBg {
   background: var(--bg);
+}
+
+/* Handle and title row: dragging here moves the sheet (D-185); no browser panning in this area. */
+.grab {
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: column;
+  gap: 14px;
+  /* Reaches up to the sheet edge, so the drag area above the handle is as tall as it looks. */
+  margin-top: -12px;
+  padding-top: 12px;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .handle {

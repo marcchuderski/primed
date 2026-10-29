@@ -86,6 +86,9 @@ export function ProductSheet({
   });
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Swiping the sheet away asks first once something was changed (D-185).
+  const snapshot = JSON.stringify({ name, type, category, basis, values });
+  const [initialSnapshot] = useState(snapshot);
 
   function step(row: (typeof ROWS)[number], direction: 1 | -1) {
     const current = parse(values[row.field]) ?? 0;
@@ -140,6 +143,7 @@ export function ProductSheet({
       title={food === undefined ? 'Neues Produkt' : 'Produkt bearbeiten'}
       onClose={onClose}
       tone="bg"
+      dirty={snapshot !== initialSnapshot}
     >
       <label className={styles['name']}>
         <span>Name</span>

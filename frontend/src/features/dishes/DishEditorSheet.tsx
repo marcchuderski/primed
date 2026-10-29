@@ -79,6 +79,9 @@ export function DishEditorSheet({
   const [sub, setSub] = useState<Sub>({ kind: 'none' });
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Swiping the sheet away asks first once something was changed (D-185).
+  const snapshot = JSON.stringify({ name, portions, ingredients });
+  const [initialSnapshot] = useState(snapshot);
 
   const totals = dishTotals(ingredients);
   const portion = perPortion(totals, portions);
@@ -145,6 +148,7 @@ export function DishEditorSheet({
         subtitle={mode === 'again' ? 'Nochmal kochen · Werte anpassen' : undefined}
         onClose={onClose}
         tone="bg"
+        dirty={snapshot !== initialSnapshot}
       >
         <label className={styles['name']}>
           <span>Name</span>

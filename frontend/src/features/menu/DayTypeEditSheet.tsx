@@ -49,6 +49,8 @@ export function DayTypeEditSheet({
           isTraining: type.isTraining,
         },
   );
+  // Swiping the sheet away asks first once something was changed (D-185).
+  const [initialDraft] = useState(draft);
   const [busy, setBusy] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -84,6 +86,7 @@ export function DayTypeEditSheet({
       subtitle={locked ? 'Fest im System · nur Sollwerte änderbar' : undefined}
       onClose={onClose}
       tone="bg"
+      dirty={JSON.stringify(draft) !== JSON.stringify(initialDraft)}
     >
       <div className={styles['form']}>
         {!locked && (
