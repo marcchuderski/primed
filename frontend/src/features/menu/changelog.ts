@@ -11,6 +11,14 @@ export interface Release {
 
 export const RELEASES: readonly Release[] = [
   {
+    version: '1.6.0',
+    date: '2026-10-29',
+    changes: [
+      'Spürbares Antippen: Buttons und Karten geben beim Drücken kurz nach',
+      'Weichere Wechsel: Tabs, Menü und Einstellungen blenden einheitlich ein',
+    ],
+  },
+  {
     version: '1.5.0',
     date: '2026-10-29',
     changes: [

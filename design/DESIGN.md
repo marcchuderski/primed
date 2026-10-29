@@ -142,7 +142,8 @@ Bewertet wird nur die **kcal-Bilanz gegen das Tagessoll, Toleranz ±5 %**. Drei 
 
 - **Login:** Ring im Logo-Lockup füllt sich auf ¾ (ca. 1,4 s), danach blenden Überschrift und Formular ein (ab ~0,9 s, 0,5 s). Kein separater Loading-Screen (D-096); während der Session-Prüfung nur Hintergrund.
 - **Sheets:** von unten einfahren, 250–300 ms, ease-out. Scrim blendet mit. Schließen ohne Animation (D-155). Such-Sheets (mit fester Suchzeile) haben von Anfang an volle Höhe (Screens 04/05), damit nichts beim Einfahren wächst.
-- **Tabs/Screens:** kurzer Crossfade (~150 ms).
+- **Bildschirmwechsel (D-187):** überall derselbe Übergang: einblenden und 8 px nach oben gleiten, 240 ms, `--ease-out`. Gilt für Tabs, Menü öffnen/schließen, Einstellungsseiten hin und zurück, Tageswechsel auf „Heute“ und den Wechsel Login ↔ App (dort nur Einblenden).
+- **Tipp-Feedback (D-187):** alle Buttons und Links geben beim Drücken nach (`scale` 0,97, Zeilen und Karten in voller Breite 0,985, 100 ms), da iOS kein Tipp-Highlight zeigt. Werte als Tokens (`--dur-press`, `--dur-screen`, `--press-scale`, `--press-scale-wide`, `--screen-rise`, `--ease-out`) in `tokens.css`.
 - **Laden (D-157):** Screens und Sheets zeigen sofort ihr fertiges Layout. Überschriften und feste Texte stehen gleich da, jeder Wert ist ein flacher Platzhalter-Balken (`--tonal`) in seiner echten Größe, der sanft pulsiert (nur Deckkraft, 1,4 s; bei `prefers-reduced-motion` statisch). Kein Schimmer-Verlauf, kein Springen, wenn die Daten kommen. Sheets mit nachladendem Inhalt (Hinzufügen, Zutat suchen, Proteinpulver, Vorschläge, Archiv) öffnen in voller Höhe; kurze Sheets ohne Laden (Tagesart, Menge, Bestätigungen) behalten ihre Höhe. Das Hinzufügen-Sheet füllt sich auf einmal, wenn alle Abschnitte geladen sind.
 - **Balken:** füllen sich animiert, wenn ein Eintrag hinzukommt.
 - `prefers-reduced-motion` respektieren: dann keine Animationen außer sofortigen Zustandswechseln.

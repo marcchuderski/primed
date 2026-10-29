@@ -96,6 +96,7 @@ Reihenfolge (Nutzer, 2026-10-17): 7.1 und 7.3 vor Phase 6. Geändert (Nutzer, 20
 | 9.3 | Halbe Stückzahlen bis 5 (D-181) | fertig |
 | 9.4 | Tage aus der Statistik nehmen, Schalter in der Tagesauswahl (D-180, Migration 018) | fertig |
 | 9.5 | Apple-HIG-Review (`design/proposals/apple-redesign/`): Aktionsleiste auf Heute, `--text-muted` Light, Sheets per Wischen schließen (D-183–D-185); übrige Vorschläge verworfen (D-186) | fertig (Wischen auf dem iPhone noch zu prüfen) |
+| 9.6 | Micro-Animationen: Tipp-Feedback auf allen Buttons/Links, einheitlicher, spürbarerer Bildschirmwechsel inkl. Menü und Einstellungsseiten, Motion-Tokens (D-187) | fertig (auf dem iPhone noch zu prüfen) |
 
 ## Später / vielleicht
 

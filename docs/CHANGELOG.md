@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-29 – Version 1.6.0: Tipp-Feedback, spürbarer Bildschirmwechsel
+- Tipp-Feedback: Buttons und Links geben beim Drücken nach (`scale`, 100 ms; breite Zeilen und Karten schwächer); leerer `touchstart`-Listener, damit iOS `:active` anwendet (D-187).
+- Bildschirmwechsel: überall derselbe Übergang (einblenden + 8 px nach oben, 240 ms) – Tabs, Menü, Einstellungsseiten hin und zurück, Tageswechsel; Login ↔ App 240 ms Einblenden. Global `.screen-enter` in `base.css`, `AppShell` keyt das Panel zusätzlich nach Tag.
+- Motion-Tokens in `design/tokens.css`: `--ease-out`, `--dur-press`, `--dur-screen`, `--press-scale`, `--press-scale-wide`, `--screen-rise`.
+
 ## 2026-10-29 – Version 1.5.0: Apple-HIG-Review, Aktionsleiste, Sheets wegwischen
 - Review des Frontends gegen die Apple Human Interface Guidelines mit Screen-Vorschlägen in `design/proposals/apple-redesign/`; umgesetzt sind 3 Punkte, der Rest ist verworfen (D-186).
 - Heute: „Vorschläge“ und „Hinzufügen“ in einer festen Leiste unten statt im Kopf von „Einträge“; vergangene Tage „Für … hinzufügen“, ältere Tage ohne Leiste; Skeleton angepasst (D-183).
