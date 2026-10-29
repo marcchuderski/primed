@@ -32,7 +32,10 @@
   color: var(--text);
   text-align: left;
   cursor: pointer;
-  transition: transform 200ms ease-out;
+  transition:
+    transform 200ms ease-out,
+    scale var(--dur-press) var(--ease-out);
+  --press-scale: var(--press-scale-wide);
 }
 
 .dragging {

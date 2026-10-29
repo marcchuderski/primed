@@ -38,6 +38,13 @@
   /* Abstände */
   --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-5: 20px; --space-6: 24px;
   --touch: 44px;
+  /* Bewegung (D-187): Tipp-Feedback und Bildschirmwechsel */
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --dur-press: 100ms;
+  --dur-screen: 240ms;
+  --press-scale: 0.97;        /* Buttons, Chips, Pills, Icon-Buttons */
+  --press-scale-wide: 0.985;  /* Zeilen und Karten in voller Breite */
+  --screen-rise: 8px;
 }
 
 @media (prefers-color-scheme: dark) {

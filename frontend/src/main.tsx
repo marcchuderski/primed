@@ -16,3 +16,6 @@ createRoot(container).render(
 );
 
 registerServiceWorker();
+
+// iOS Safari only applies :active (press feedback, D-187) once the document listens for touches.
+document.addEventListener('touchstart', () => undefined, { passive: true });

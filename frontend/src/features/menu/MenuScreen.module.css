@@ -20,6 +20,8 @@
 }
 
 .profile {
+  /* Wide row: gives way less when pressed (D-187). */
+  --press-scale: var(--press-scale-wide);
   display: flex;
   align-items: center;
   gap: 14px;

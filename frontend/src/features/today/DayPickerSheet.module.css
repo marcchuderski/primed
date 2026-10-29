@@ -54,6 +54,8 @@
 }
 
 .day {
+  /* Wide row: gives way less when pressed (D-187). */
+  --press-scale: var(--press-scale-wide);
   display: grid;
   flex: 1 1 auto;
   min-width: 0;

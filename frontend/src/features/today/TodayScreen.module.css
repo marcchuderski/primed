@@ -284,6 +284,7 @@
 }
 
 .addButton {
+  --press-scale: var(--press-scale-wide);
   flex: 1;
   min-width: 0;
 }

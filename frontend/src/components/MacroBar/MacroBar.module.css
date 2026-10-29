@@ -1,4 +1,6 @@
 .row {
+  /* Wide row: gives way less when pressed (D-187). */
+  --press-scale: var(--press-scale-wide);
   display: flex;
   flex-direction: column;
   gap: 8px;

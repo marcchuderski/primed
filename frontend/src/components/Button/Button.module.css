@@ -9,7 +9,9 @@
   border-radius: var(--r-button);
   font: 600 16px var(--font-text);
   cursor: pointer;
-  transition: opacity 150ms ease-out;
+  transition:
+    opacity 150ms ease-out,
+    scale var(--dur-press) var(--ease-out);
 }
 
 .primary {
@@ -29,6 +31,7 @@
 
 .block {
   width: 100%;
+  --press-scale: var(--press-scale-wide);
 }
 
 .button:disabled {
