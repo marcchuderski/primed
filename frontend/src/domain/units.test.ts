@@ -1,7 +1,9 @@
 import cases from './units.cases.json';
 import {
   allowedUnits,
+  minAmount,
   quickAmounts,
+  stepAmount,
   stepFor,
   switcherUnits,
   toQuantity,
@@ -48,5 +50,41 @@ describe('unit helpers', () => {
     expect(stepFor('g')).toBe(10);
     expect(stepFor('packung')).toBe(0.5);
     expect(quickAmounts('el')).toEqual([1, 2, 3]);
+  });
+});
+
+describe('stepAmount (half pieces up to 5)', () => {
+  it('counts pieces in halves up to 5 and in whole pieces above', () => {
+    const up: number[] = [];
+    let value = 0.5;
+    while (value < 8) {
+      value = stepAmount('stueck', value, 1);
+      up.push(value);
+    }
+    expect(up).toEqual([1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 6, 7, 8]);
+    expect(stepAmount('stueck', 6, -1)).toBe(5);
+    expect(stepAmount('stueck', 5, -1)).toBe(4.5);
+    expect(stepAmount('stueck', 1, -1)).toBe(0.5);
+  });
+
+  it('snaps typed amounts to the grid', () => {
+    expect(stepAmount('stueck', 1.3, 1)).toBe(1.5);
+    expect(stepAmount('stueck', 1.3, -1)).toBe(1);
+    expect(stepAmount('stueck', 5.5, 1)).toBe(6);
+    expect(stepAmount('stueck', 5.5, -1)).toBe(5);
+    expect(stepAmount('stueck', 4.7, 1)).toBe(5);
+  });
+
+  it('keeps the fixed step of other units', () => {
+    expect(stepAmount('g', 100, 1)).toBe(110);
+    expect(stepAmount('el', 1, 1)).toBe(2);
+    expect(stepAmount('packung', 1, -1)).toBe(0.5);
+  });
+
+  it('allows half a piece as the smallest amount', () => {
+    expect(minAmount('stueck')).toBe(0.5);
+    expect(minAmount('el')).toBe(1);
+    expect(minAmount('g')).toBe(10);
+    expect(quickAmounts('stueck')).toEqual([0.5, 1, 2]);
   });
 });

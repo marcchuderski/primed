@@ -10,8 +10,9 @@ import { formatClock, roundUpToQuarterHour, berlinWallMinute, MINUTES_PER_DAY } 
 import type { Macros, Targets } from '../../domain/types.ts';
 import {
   baseUnit,
+  minAmount,
   quickAmounts,
-  stepFor,
+  stepAmount,
   switcherUnits,
   toQuantity,
   unitLabel,
@@ -90,13 +91,14 @@ export function QuantitySheet({
   const base = baseUnit(food.basis);
 
   function setAmount(value: number) {
-    const clamped = Math.min(MAX_AMOUNT, Math.max(stepFor(unit), Math.round(value * 100) / 100));
+    const clamped = Math.min(MAX_AMOUNT, Math.max(minAmount(unit), Math.round(value * 100) / 100));
     setText(formatDecimal(clamped));
   }
 
   function changeUnit(next: Unit) {
     setUnit(next);
-    setText(formatDecimal(quickAmounts(next)[0] ?? 1));
+    // One piece, like the prefill of new foods; other units start at their first chip.
+    setText(formatDecimal(next === 'stueck' ? 1 : (quickAmounts(next)[0] ?? 1)));
   }
 
   async function submit() {
@@ -163,7 +165,7 @@ export function QuantitySheet({
             className={styles['round']}
             aria-label="Weniger"
             onClick={() => {
-              setAmount((amount ?? 0) - stepFor(unit));
+              setAmount(stepAmount(unit, amount ?? 0, -1));
             }}
           >
             <Minus size={20} strokeWidth={2.2} aria-hidden="true" />
@@ -190,7 +192,7 @@ export function QuantitySheet({
             className={`${styles['round'] ?? ''} ${styles['plus'] ?? ''}`}
             aria-label="Mehr"
             onClick={() => {
-              setAmount((amount ?? 0) + stepFor(unit));
+              setAmount(stepAmount(unit, amount ?? 0, 1));
             }}
           >
             <Plus size={20} strokeWidth={2.2} aria-hidden="true" />

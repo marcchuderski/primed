@@ -101,6 +101,28 @@ export function stepFor(unit: Unit): number {
   return unit === 'g' || unit === 'ml' ? 10 : unit === 'packung' || unit === 'portion' ? 0.5 : 1;
 }
 
+/** Pieces go in halves up to this amount (half a roll, a slice of cake), whole pieces above. */
+export const HALF_PIECES_UP_TO = 5;
+
+/** Smallest amount the −/+ buttons reach. */
+export function minAmount(unit: Unit): number {
+  return unit === 'stueck' ? 0.5 : stepFor(unit);
+}
+
+/**
+ * Next amount of the −/+ buttons (direction +1/−1). Pieces snap to halves up to 5 and to whole pieces above
+ * (4,5 → 5 → 6 and back 6 → 5 → 4,5); other units move by their fixed step. Not clamped.
+ */
+export function stepAmount(unit: Unit, amount: number, direction: 1 | -1): number {
+  if (unit !== 'stueck') {
+    return amount + direction * stepFor(unit);
+  }
+  if (direction === 1) {
+    return amount < HALF_PIECES_UP_TO ? Math.floor(amount * 2) / 2 + 0.5 : Math.floor(amount) + 1;
+  }
+  return amount <= HALF_PIECES_UP_TO ? Math.ceil(amount * 2) / 2 - 0.5 : Math.ceil(amount) - 1;
+}
+
 /** Quick-select chips per unit (screen 06). */
 export function quickAmounts(unit: Unit): number[] {
   switch (unit) {
@@ -112,6 +134,8 @@ export function quickAmounts(unit: Unit): number[] {
       return [0.5, 1, 2];
     case 'portion':
       return [0.5, 1, 1.5];
+    case 'stueck':
+      return [0.5, 1, 2];
     default:
       return [1, 2, 3];
   }
