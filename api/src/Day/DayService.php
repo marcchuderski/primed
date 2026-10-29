@@ -103,10 +103,22 @@ final class DayService
         $type = $this->requireDayType($userId, $dayTypeId);
         [$trainingStart, $durationMin] = $this->validateTraining($type, $trainingStart, $durationMin, $settings);
 
-        $day = Day::fromType($date, $type, $settings->proteinDefault, $trainingStart, $durationMin, 'manual');
+        $day = Day::fromType($date, $type, $settings->proteinDefault, $trainingStart, $durationMin, 'manual')
+            ->withStatsExcluded($this->days->find($userId, $date)->statsExcluded ?? false);
         $this->days->save($userId, $day, $this->clock->now());
 
         return $day;
+    }
+
+    /**
+     * Leaves one day out of the history statistics or counts it again (D-180); same window as entries (D-176).
+     */
+    public function setStatsExcluded(int $userId, string $date, bool $excluded): Day
+    {
+        $day = $this->editableDay($userId, $date);
+        $this->days->setStatsExcluded($userId, $date, $excluded, $this->clock->now());
+
+        return $day->withStatsExcluded($excluded);
     }
 
     public function createDayType(int $userId, DayTypeInput $input): DayType
@@ -296,6 +308,7 @@ final class DayService
         } else {
             $day = $this->fromTemplate($userId, $today, $settings);
         }
+        $day = $day->withStatsExcluded($existing->statsExcluded ?? false);
 
         if ($existing === null || !$existing->equals($day)) {
             $this->days->save($userId, $day, $this->clock->now());

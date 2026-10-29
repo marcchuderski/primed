@@ -16,7 +16,7 @@ final class DayRepository
     }
 
     private const COLUMNS = 'date, day_type_id, day_type_name, is_training, training_start, duration_min,
-                    target_kcal, target_protein, target_carbs, target_sugar, source';
+                    target_kcal, target_protein, target_carbs, target_sugar, source, stats_excluded';
 
     public function find(int $userId, string $date): ?Day
     {
@@ -63,10 +63,11 @@ final class DayRepository
             Row::int($row, 'target_carbs'),
             Row::int($row, 'target_sugar'),
             Row::string($row, 'source'),
+            Row::int($row, 'stats_excluded') === 1,
         );
     }
 
-    /** Inserts or replaces the day of the user. */
+    /** Inserts or replaces the day of the user; the statistics flag of an existing row stays as it is. */
     public function save(int $userId, Day $day, DateTimeImmutable $now): void
     {
         $this->pdo->prepare(
@@ -94,6 +95,13 @@ final class DayRepository
             Db::dateTime($now),
             Db::dateTime($now),
         ]);
+    }
+
+    /** Sets the statistics flag of an existing day (D-180). */
+    public function setStatsExcluded(int $userId, string $date, bool $excluded, DateTimeImmutable $now): void
+    {
+        $this->pdo->prepare('UPDATE days SET stats_excluded = ?, updated_at = ? WHERE user_id = ? AND date = ?')
+            ->execute([$excluded ? 1 : 0, Db::dateTime($now), $userId, $date]);
     }
 
     /**

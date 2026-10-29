@@ -66,6 +66,7 @@ final class HistoryController
                         'sugar' => round($t['sugar'], 1),
                     ],
                     'entryCount' => $t['count'],
+                    'statsExcluded' => $public['statsExcluded'],
                 ];
             }, $result['days']),
         ]);

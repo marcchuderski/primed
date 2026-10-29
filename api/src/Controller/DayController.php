@@ -58,4 +58,19 @@ final class DayController
 
         return Response::json(['day' => $day->toPublic($date === $this->c->days()->today($user->id))]);
     }
+
+    /**
+     * Leaves the day out of the history statistics or counts it again (D-180).
+     *
+     * @param array<string, string> $params
+     */
+    public function stats(Request $request, array $params): Response
+    {
+        $user = $this->c->authenticator()->require($request)->user;
+        $date = $params['date'] ?? '';
+        $days = $this->c->days();
+        $day = $days->setStatsExcluded($user->id, $date, Input::fromRequest($request)->bool('excluded', 'Statistik'));
+
+        return Response::json(['day' => $day->toPublic($date === $days->today($user->id))]);
+    }
 }

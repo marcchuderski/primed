@@ -19,7 +19,27 @@ final class Day
         public readonly int $targetSugar,
         /** 'template' (from the week template) or 'manual' (chosen for this day) */
         public readonly string $source,
+        /** Left out of the history statistics (D-180); stored separately, never by save(). */
+        public readonly bool $statsExcluded = false,
     ) {
+    }
+
+    public function withStatsExcluded(bool $excluded): self
+    {
+        return new self(
+            $this->date,
+            $this->dayTypeId,
+            $this->dayTypeName,
+            $this->isTraining,
+            $this->trainingStart,
+            $this->durationMin,
+            $this->targetKcal,
+            $this->targetProtein,
+            $this->targetCarbs,
+            $this->targetSugar,
+            $this->source,
+            $excluded,
+        );
     }
 
     public static function fromType(
@@ -65,6 +85,7 @@ final class Day
             'trainingStart' => $this->trainingStart,
             'durationMin' => $this->durationMin,
             'source' => $this->source,
+            'statsExcluded' => $this->statsExcluded,
             'targets' => [
                 'kcal' => $this->targetKcal,
                 'protein' => $this->targetProtein,

@@ -145,6 +145,7 @@ final class Kernel
         $router->add('GET', '/v1/days/today', $days->today(...));
         $router->add('GET', '/v1/days/{date}', $days->show(...));
         $router->add('PUT', '/v1/days/{date}', $days->update(...));
+        $router->add('PUT', '/v1/days/{date}/stats', $days->stats(...));
         $router->add('GET', '/v1/history', (new HistoryController($c))->index(...));
 
         $foods = new FoodController($c);
