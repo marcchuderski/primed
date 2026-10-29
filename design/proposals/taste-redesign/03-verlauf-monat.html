@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Verlauf Monat · Vorschlag</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="proposal.css">
+</head>
+<body class="board">
+
+<header class="board-head">
+  <h1>03 · Verlauf · Monat</h1>
+  <p>Oktober 2026 bis heute (Di, 20.10.) · KW 42 wie in Screen 02 · der 9. ist nicht mitgezählt (D-180) · <a href="index.html">Übersicht</a></p>
+</header>
+
+<template id="screen">
+<div class="app">
+  <div class="topbar">
+    <nav class="tabs" aria-label="Bereiche">
+      <a href="#">Heute</a><a href="#">Essen</a><a href="#" aria-current="page">Verlauf</a>
+    </nav>
+    <button class="iconbtn" aria-label="Menü"><i data-icon="menu"></i></button>
+  </div>
+
+  <div class="seg" role="group" aria-label="Zeitraum">
+    <button aria-pressed="false">Woche</button><button aria-pressed="true">Monat</button><button aria-pressed="false">Jahr</button>
+  </div>
+
+  <div class="period">
+    <button class="iconbtn tonal" aria-label="Vorheriger Monat"><i data-icon="chevron-left"></i></button>
+    <div class="mid">
+      <h1 class="display h1-page">Oktober 2026</h1>
+      <p>bis heute · 18 Tage gezählt</p>
+    </div>
+    <button class="iconbtn tonal" aria-label="Nächster Monat" disabled style="opacity:.4"><i data-icon="chevron-right"></i></button>
+  </div>
+
+  <section class="card balance" aria-label="Monatsbilanz bis heute">
+    <h2 class="label">Monatsbilanz bis heute</h2>
+    <div class="figures">
+      <div class="figure">
+        <div class="v">−640<span class="u">kcal</span></div>
+        <p class="c">ausgeglichen, −1,6 %</p>
+      </div>
+      <div class="figure right">
+        <div class="v">146<span class="u">g</span></div>
+        <p class="c">Ø Protein von 150</p>
+      </div>
+    </div>
+    <p class="counts num"><span class="k-ok">✓ 13 im Rahmen</span><span class="k-low">↓ 3 unter Soll</span><span class="k-high">↑ 2 über Soll</span><span class="k-ex">⊘ 1 nicht mitgezählt</span></p>
+  </section>
+
+  <div class="cal" aria-label="Kalender Oktober">
+    <span class="wd">Mo</span><span class="wd">Di</span><span class="wd">Mi</span><span class="wd">Do</span><span class="wd">Fr</span><span class="wd">Sa</span><span class="wd">So</span>
+    <span class="c blank"></span><span class="c blank"></span><span class="c blank"></span>
+    <button class="c ok train">1<span class="s">✓</span></button>
+    <button class="c ok">2<span class="s">✓</span></button>
+    <button class="c high train">3<span class="s">↑</span></button>
+    <button class="c ok">4<span class="s">✓</span></button>
+    <button class="c ok">5<span class="s">✓</span></button>
+    <button class="c ok train">6<span class="s">✓</span></button>
+    <button class="c low">7<span class="s">↓</span></button>
+    <button class="c ok train">8<span class="s">✓</span></button>
+    <button class="c ex">9<span class="s">⊘</span></button>
+    <button class="c ok train">10<span class="s">✓</span></button>
+    <button class="c low">11<span class="s">↓</span></button>
+    <button class="c ok">12<span class="s">✓</span></button>
+    <button class="c ok train">13<span class="s">✓</span></button>
+    <button class="c high">14<span class="s">↑</span></button>
+    <button class="c ok train">15<span class="s">✓</span></button>
+    <button class="c low">16<span class="s">↓</span></button>
+    <button class="c ok train">17<span class="s">✓</span></button>
+    <button class="c ok">18<span class="s">✓</span></button>
+    <button class="c ok">19<span class="s">✓</span></button>
+    <button class="c today train">20<span class="s">heute</span></button>
+    <span class="c future">21</span><span class="c future">22</span><span class="c future">23</span><span class="c future">24</span><span class="c future">25</span>
+    <span class="c future">26</span><span class="c future">27</span><span class="c future">28</span><span class="c future">29</span><span class="c future">30</span><span class="c future">31</span>
+  </div>
+
+  <p class="legend"><span><i class="dot"></i>Trainingstag</span><span><i class="tdy"></i>heute, läuft noch</span></p>
+
+  <footer class="footer"><div class="lockup"><i data-logo></i><span>rimed</span></div>v1.4.0</footer>
+</div>
+</template>
+
+<main class="board-body">
+  <div class="phone" data-theme="light"></div>
+  <div class="phone" data-theme="dark"></div>
+  <aside class="notes">
+    <h2>Was sich ändert</h2>
+    <p class="q">Frage des Screens: Wie oft lag ich im Rahmen, und wann nicht? Kalender mit Statusfarbe pro Tag, Trainingsmarkierung, heute, gestrichelte Zukunft (D-136), Felder als Buttons (D-178) und ⊘ (D-180) bleiben.</p>
+    <ol>
+      <li><span class="tag b">B · BRIEFING §11, DESIGN §6</span> <b>Zählung als Zeile statt drei Kacheln.</b> Der Kalender darunter zeigt die Farben schon Tag für Tag. Die Zählung dient zugleich als Legende, die eigene Status-Legende unter dem Kalender entfällt. Die Bilanz-Karte wird rund 90 px kürzer, der Kalender passt auf den ersten Bildschirm.</li>
+      <li><span class="tag b">B · DESIGN §4</span> <b>h1 = Zeitraum</b> („Oktober 2026“) wie in der Woche, ohne zweites „Verlauf“.</li>
+      <li><span class="tag a">A</span> <b>„Nicht mitgezählt“ sichtbar</b>: Feld mit Rahmen und ⊘, eigener Posten in der Zählung (D-180 verlangt die Legende nur bei Bedarf, hier ist er da).</li>
+      <li><span class="tag a">A</span> Gruppenlabel „Monatsbilanz bis heute“ in normaler Schreibweise, 13 px (siehe U1).</li>
+      <li><span class="tag a">A</span> Beispieldaten: −640 kcal hießen im Mockup „leichtes Defizit“. Über 18 gezählte Tage (~40.000 kcal Soll) sind das −1,6 %, also „ausgeglichen“.</li>
+    </ol>
+  </aside>
+</main>
+
+<script src="board.js"></script>
+</body>
+</html>

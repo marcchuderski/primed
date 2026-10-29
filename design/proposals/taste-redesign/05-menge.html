@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Menge · Vorschlag</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="proposal.css">
+</head>
+<body class="board">
+
+<header class="board-head">
+  <h1>05 · Menge (Sheet)</h1>
+  <p>Sheet in voller Länge (scrollt auf dem iPhone, Button am Ende, D-142) · Erdnussbutter, pro 100 g · 2 EL = 30 g · Ausgangslage wie Screen 01, 14:30 · <a href="index.html">Übersicht</a></p>
+</header>
+
+<template id="screen">
+<div class="scrim"></div>
+<div class="sheet" role="dialog" aria-labelledby="t">
+  <div class="grip"></div>
+  <div class="sheet-head">
+    <button class="iconbtn tonal" aria-label="Zurück"><i data-icon="chevron-left"></i></button>
+    <div class="t"><h2 id="t">Erdnussbutter</h2><p>Snacks · pro 100 g</p></div>
+  </div>
+
+  <section class="card qty">
+    <div class="seg" role="group" aria-label="Einheit">
+      <button aria-pressed="false">g</button><button disabled>ml</button><button aria-pressed="true">EL</button><button aria-pressed="false">TL</button><button aria-pressed="false">Packung</button>
+    </div>
+    <div class="amount">
+      <button class="iconbtn tonal" aria-label="Weniger"><i data-icon="minus"></i></button>
+      <div class="mid"><div class="n">2<small>EL</small></div><p class="conv">= 30 g · 1 EL = 15 g</p></div>
+      <button class="iconbtn tonal" aria-label="Mehr"><i data-icon="plus"></i></button>
+    </div>
+    <div class="quick"><button aria-pressed="false">1 EL</button><button aria-pressed="true">2 EL</button><button aria-pressed="false">3 EL</button></div>
+    <div class="macros"><div><b>180</b><span>kcal</span></div><div class="protein"><b>8 g</b><span>Protein</span></div><div><b>4 g</b><span>KH</span></div><div><b>15 g</b><span>Fett</span></div></div>
+  </section>
+
+  <div class="group">
+    <h3 class="label">Uhrzeit</h3>
+    <div class="card wheel" style="padding:6px 16px">
+      <div class="col"><span>13</span><span class="sel">14</span><span>15</span></div>
+      <span class="colon">:</span>
+      <div class="col"><span>15</span><span class="sel">30</span><span>45</span></div>
+      <button class="now">Jetzt</button>
+    </div>
+  </div>
+
+  <section class="card after" aria-label="Danach offen">
+    <div class="head"><h3 class="label">Danach offen</h3><span class="swatch"><i></i>dieser Eintrag</span></div>
+    <div>
+      <div class="line"><span>Kalorien</span><span><b>noch 1.195</b> <span class="muted">kcal</span></span></div>
+      <div class="stack"><span class="e" style="width:47.1%"></span><span class="n" style="width:6.9%"></span></div>
+    </div>
+    <div>
+      <div class="line"><span>Protein</span><span><b class="protein">noch 62</b> <span class="muted">g</span></span></div>
+      <div class="stack"><span class="e" style="width:53.3%"></span><span class="n" style="width:5.3%"></span></div>
+    </div>
+    <p class="finding num" style="font-size:13px"><span class="tick" aria-hidden="true"></span><span><b>Bis 17:00</b> danach noch 415 kcal · <span class="protein" style="font-weight:600">17 g P</span></span></p>
+  </section>
+
+  <button class="btn primary">Hinzufügen · 14:30</button>
+</div>
+</template>
+
+<main class="board-body">
+  <div class="phone" data-theme="light" style="min-height:930px"></div>
+  <div class="phone" data-theme="dark" style="min-height:930px"></div>
+  <aside class="notes">
+    <h2>Was sich ändert</h2>
+    <p class="q">Frage des Sheets: Wie viel trage ich ein, und was bleibt danach? Einheiten-Umschalter, große Zahl mit −/+, Umrechnung, Schnellwahl, Rad im 15-Minuten-Raster, Hauptbutton am Ende (D-073, D-142, D-163) bleiben.</p>
+    <ol>
+      <li><span class="tag b">B · DESIGN §4</span> <b>„Uhrzeit“ und „Danach offen“</b> in normaler Schreibweise, 13 px, statt Versalien mit Sperrung.</li>
+      <li><span class="tag b">B · BRIEFING §7</span> <b>„Danach offen“ auf <code>--surface</code></b> statt tonal: dort erreichen gedämpfte Schrift und <code>--accent-text</code> nur 4,1–4,2 : 1. Die Karte bleibt getrennt, wie im Briefing verlangt.</li>
+      <li><span class="tag b">B · BRIEFING §7</span> <b>Checkpoint-Zeile im Sheet</b>: „Bis 17:00 danach noch 415 kcal · 17 g P“. Gleiche Zeile wie auf Heute, nur an Trainingstagen vor dem Checkpoint.</li>
+      <li><span class="tag a">A</span> <b>Gestapelter Balken mit 2 px Fuge</b> zwischen Gegessenem und diesem Eintrag. Die Legende ist die Markierung selbst, verkleinert.</li>
+      <li><span class="tag a">A</span> <b>„ml“ sichtbar deaktiviert</b> bei Basis pro 100 g, wie in BRIEFING §5 beschrieben (im Mockup sah es aktiv aus).</li>
+      <li><span class="tag a">A</span> Gewählter Schnellwahl-Chip mit Akzent-Rahmen und Textfarbe statt orangefarbener Schrift auf Orange-Tönung (Kontrast).</li>
+    </ol>
+  </aside>
+</main>
+
+<script src="board.js"></script>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Verlauf Woche · Vorschlag</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="proposal.css">
+</head>
+<body class="board">
+
+<header class="board-head">
+  <h1>02 · Verlauf · Woche</h1>
+  <p>KW 42, 12.–18. Oktober · Summen aus den sieben Tagen gerechnet · <a href="index.html">Übersicht</a></p>
+</header>
+
+<template id="screen">
+<div class="app">
+  <div class="topbar">
+    <nav class="tabs" aria-label="Bereiche">
+      <a href="#">Heute</a><a href="#">Essen</a><a href="#" aria-current="page">Verlauf</a>
+    </nav>
+    <button class="iconbtn" aria-label="Menü"><i data-icon="menu"></i></button>
+  </div>
+
+  <div class="seg" role="group" aria-label="Zeitraum">
+    <button aria-pressed="true">Woche</button><button aria-pressed="false">Monat</button><button aria-pressed="false">Jahr</button>
+  </div>
+
+  <div class="period">
+    <button class="iconbtn tonal" aria-label="Vorherige Woche"><i data-icon="chevron-left"></i></button>
+    <div class="mid">
+      <h1 class="display h1-page">KW 42</h1>
+      <p>12.–18. Oktober</p>
+    </div>
+    <button class="iconbtn tonal" aria-label="Nächste Woche"><i data-icon="chevron-right"></i></button>
+  </div>
+
+  <section class="card balance" aria-label="Wochenbilanz">
+    <h2 class="label">Wochenbilanz</h2>
+    <div class="figures">
+      <div class="figure">
+        <div class="v">−290<span class="u">kcal</span></div>
+        <p class="c">ausgeglichen, −1,8 %</p>
+      </div>
+      <div class="figure right">
+        <div class="v">147<span class="u">g</span></div>
+        <p class="c">Ø Protein von 150</p>
+      </div>
+    </div>
+    <div class="weekstrip" aria-label="Bewertung je Tag">
+      <span class="d ok">Mo<b>✓</b></span>
+      <span class="d ok">Di<b>✓</b></span>
+      <span class="d high">Mi<b>↑</b></span>
+      <span class="d ok">Do<b>✓</b></span>
+      <span class="d low">Fr<b>↓</b></span>
+      <span class="d ok">Sa<b>✓</b></span>
+      <span class="d ok">So<b>✓</b></span>
+    </div>
+    <p class="counts num"><span class="k-ok">✓ 5 im Rahmen</span><span class="k-low">↓ 1 unter Soll</span><span class="k-high">↑ 1 über Soll</span></p>
+  </section>
+
+  <div class="tablewrap">
+    <table class="week">
+      <thead>
+        <tr>
+          <th class="corner"><span class="sr-only">Merkmal</span></th>
+          <th><button class="dayhead" style="border:none">Mo 12.<small>Ruhe ›</small></button></th>
+          <th><button class="dayhead" style="border:none">Di 13.<small>Basket. ›</small></button></th>
+          <th><button class="dayhead" style="border:none">Mi 14.<small>Ruhe ›</small></button></th>
+          <th><button class="dayhead" style="border:none">Do 15.<small>Basket. ›</small></button></th>
+          <th><button class="dayhead" style="border:none">Fr 16.<small>Ruhe ›</small></button></th>
+          <th><button class="dayhead" style="border:none">Sa 17.<small>Spiel ›</small></button></th>
+          <th><button class="dayhead" style="border:none">So 18.<small>Ruhe ›</small></button></th>
+          <th class="sum">Σ Woche</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">kcal</th>
+          <td>1.960<span class="sub k-ok" style="color:var(--status-ok-fg)"><span class="sym">✓</span>−2 %</span></td>
+          <td>2.540<span class="sub" style="color:var(--status-ok-fg)"><span class="sym">✓</span>−2 %</span></td>
+          <td>2.180<span class="sub" style="color:var(--status-high-fg)"><span class="sym">↑</span>+9 %</span></td>
+          <td>2.610<span class="sub" style="color:var(--status-ok-fg)"><span class="sym">✓</span>±0 %</span></td>
+          <td>1.720<span class="sub" style="color:var(--status-low-fg)"><span class="sym">↓</span>−14 %</span></td>
+          <td>2.760<span class="sub" style="color:var(--status-ok-fg)"><span class="sym">✓</span>−1 %</span></td>
+          <td>1.940<span class="sub" style="color:var(--status-ok-fg)"><span class="sym">✓</span>−3 %</span></td>
+          <td class="sum">15.710<span class="sub">−1,8 %</span></td>
+        </tr>
+        <tr>
+          <th scope="row">Protein</th>
+          <td class="protein">148<span class="sub">/ 150</span></td>
+          <td class="protein">152<span class="sub">/ 150</span></td>
+          <td class="protein">131<span class="sub">/ 150</span></td>
+          <td class="protein">155<span class="sub">/ 150</span></td>
+          <td class="protein">139<span class="sub">/ 150</span></td>
+          <td class="protein">160<span class="sub">/ 150</span></td>
+          <td class="protein">143<span class="sub">/ 150</span></td>
+          <td class="sum protein">1.028<span class="sub">/ 1.050</span></td>
+        </tr>
+        <tr>
+          <th scope="row">KH</th>
+          <td>195<span class="sub">/ 200</span></td>
+          <td>340<span class="sub">/ 350</span></td>
+          <td>215<span class="sub">/ 200</span></td>
+          <td>362<span class="sub">/ 350</span></td>
+          <td>160<span class="sub">/ 200</span></td>
+          <td>390<span class="sub">/ 400</span></td>
+          <td>190<span class="sub">/ 200</span></td>
+          <td class="sum">1.852<span class="sub">/ 1.900</span></td>
+        </tr>
+        <tr>
+          <th scope="row">Fett</th>
+          <td>58</td><td>70</td><td>78</td><td>66</td><td>55</td><td>72</td><td>61</td><td class="sum">460</td>
+        </tr>
+        <tr>
+          <th scope="row">Zucker</th>
+          <td>40</td><td>55</td><td>62</td><td>48</td><td>30</td><td>58</td><td>44</td><td class="sum">337</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <footer class="footer"><div class="lockup"><i data-logo></i><span>rimed</span></div>v1.4.0</footer>
+</div>
+</template>
+
+<main class="board-body">
+  <div class="phone" data-theme="light"></div>
+  <div class="phone" data-theme="dark"></div>
+  <aside class="notes">
+    <h2>Was sich ändert</h2>
+    <p class="q">Frage des Screens: Wie lief die Woche gegen das Soll? Bewertung (D-009), Einordnung (D-044), Σ-Spalte (D-010), Spaltenköpfe als Kacheln mit › (D-178) bleiben.</p>
+    <ol>
+      <li><span class="tag b">B · BRIEFING §11, DESIGN §6</span> <b>Wochen-Streifen statt drei Kacheln.</b> Sieben Felder Mo–So in Statusfarbe mit Symbol, darunter die Zählung in einer Zeile. Er zeigt neben der Anzahl auch, <i>wann</i> etwas daneben lag, ohne dass man in der Tabelle seitlich scrollt. Briefing und DESIGN schreiben „drei getrennte Kacheln“ vor.</li>
+      <li><span class="tag b">B · BRIEFING §11</span> <b>Zeile „kcal-Rahmen“ entfällt.</b> Symbol und Abweichung stehen in Statusfarbe direkt unter dem kcal-Wert. Das spart eine Zeile, und jede Bewertung steht neben ihrer Zahl.</li>
+      <li><span class="tag b">B · DESIGN §4</span> <b>Kein doppelter Titel.</b> Der Tab sagt schon „Verlauf“. Die h1 ist jetzt der Zeitraum („KW 42“, 26 px) zwischen den Pfeilen, eine Zeile weniger.</li>
+      <li><span class="tag a">A</span> <b>Tabelle mit fester erster Spalte</b>, alle Zahlen rechtsbündig mit gleich breiten Ziffern, nichts unter 12 px (vorher 49 % des Texts unter 13 px). Statussymbole ohne getönte Kreise.</li>
+      <li><span class="tag a">A</span> <b>Segment:</b> inaktive Labels in Textfarbe statt <code>--text-muted</code> (4,2 : 1 auf tonal), aktives Segment ohne Schatten.</li>
+      <li><span class="tag a">A</span> Beispieldaten korrigiert: Im Mockup hießen −210 kcal „leichtes Defizit“. Bei rund 16.000 kcal Wochensoll sind das etwa −1,3 %, nach D-044 also „ausgeglichen“. Hier passt alles zusammen: 15.710 von 16.000 kcal.</li>
+    </ol>
+  </aside>
+</main>
+
+<script src="board.js"></script>
+</body>
+</html>

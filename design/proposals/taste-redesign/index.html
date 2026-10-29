@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Taste-Redesign · Übersicht</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="proposal.css">
+<style>
+  .grid { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+  .grid a { display: block; padding: 18px 20px; border-radius: 16px; background: var(--board-panel); color: inherit; text-decoration: none; }
+  .grid a:hover, .grid a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .grid b { display: block; font-family: var(--font-display); font-weight: 800; font-size: 20px; letter-spacing: -0.02em; margin-bottom: 4px; }
+  .grid span { color: var(--board-muted); font-size: 14px; }
+  .key { max-width: 1280px; margin: 24px auto 0; display: flex; flex-wrap: wrap; gap: 8px 20px; color: var(--board-muted); font-size: 14px; }
+</style>
+</head>
+<body class="board">
+
+<header class="board-head">
+  <h1>Taste-Redesign</h1>
+  <p>Vorschläge nach den App-Regeln des Taste-Skills, mit Palette und Schriften von Primed. Review, Befunde und Konflikte stehen in <code>REVIEW.md</code> im selben Ordner.</p>
+</header>
+
+<nav class="grid" aria-label="Screens">
+  <a href="01-heute.html"><b>01 · Heute</b><span>Checkpoint als Zeile, Einträge als Liste</span></a>
+  <a href="02-verlauf-woche.html"><b>02 · Verlauf · Woche</b><span>Wochen-Streifen, Tabelle mit fester Spalte</span></a>
+  <a href="03-verlauf-monat.html"><b>03 · Verlauf · Monat</b><span>Zählung statt Kacheln, „nicht mitgezählt“</span></a>
+  <a href="04-essen-gerichte.html"><b>04 · Essen · Gerichte</b><span>ohne doppelten Titel, halbe Portion ohne Verlauf</span></a>
+  <a href="05-menge.html"><b>05 · Menge</b><span>Labels, Kontrast, Checkpoint im Sheet</span></a>
+  <a href="06-menue.html"><b>06 · Menü</b><span>Labels, tonaler Avatar</span></a>
+</nav>
+
+<p class="key">
+  <span><span class="tag a">A</span> konfliktfrei</span>
+  <span><span class="tag b">B</span> weicht von DESIGN.md / BRIEFING ab, braucht Freigabe</span>
+  <span><span class="tag c">C</span> widerspricht einer Entscheidung, nicht eingebaut (nur in REVIEW.md)</span>
+</p>
+
+</body>
+</html>

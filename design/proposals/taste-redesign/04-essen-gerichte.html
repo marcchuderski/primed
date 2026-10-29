@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Essen Gerichte · Vorschlag</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="proposal.css">
+</head>
+<body class="board">
+
+<header class="board-head">
+  <h1>04 · Essen · Gerichte</h1>
+  <p>Die Bolognese von heute (Screen 01) steht hier bei 3 von 4 · Werte pro Portion · <a href="index.html">Übersicht</a></p>
+</header>
+
+<template id="screen">
+<div class="app">
+  <div class="topbar">
+    <nav class="tabs" aria-label="Bereiche">
+      <a href="#">Heute</a><a href="#" aria-current="page">Essen</a><a href="#">Verlauf</a>
+    </nav>
+    <button class="iconbtn" aria-label="Menü"><i data-icon="menu"></i></button>
+  </div>
+
+  <h1 class="sr-only">Essen</h1>
+
+  <div class="seg" role="group" aria-label="Bereich">
+    <button aria-pressed="true">Gerichte</button><button aria-pressed="false">Bibliothek</button>
+  </div>
+
+  <button class="btn"><i data-icon="chef-hat"></i>Neues Gericht kochen</button>
+
+  <section class="card dish" aria-label="Bolognese">
+    <div class="dish-head">
+      <div><p class="name">Bolognese</p><p class="when">gekocht So, 18.10. · pro Portion</p></div>
+      <div class="portions"><b>3 von 4</b><div class="dots" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div></div>
+    </div>
+    <div class="macros"><div><b>640</b><span>kcal</span></div><div class="protein"><b>42 g</b><span>Protein</span></div><div><b>78 g</b><span>KH</span></div><div><b>16 g</b><span>Fett</span></div></div>
+  </section>
+
+  <section class="card dish" aria-label="Hähnchen-Curry">
+    <div class="dish-head">
+      <div><p class="name">Hähnchen-Curry</p><p class="when">gekocht So, 18.10. · pro Portion</p></div>
+      <div class="portions"><b>2 von 3</b><div class="dots" aria-hidden="true"><i class="on"></i><i class="on"></i><i></i></div></div>
+    </div>
+    <div class="macros"><div><b>590</b><span>kcal</span></div><div class="protein"><b>45 g</b><span>Protein</span></div><div><b>62 g</b><span>KH</span></div><div><b>14 g</b><span>Fett</span></div></div>
+  </section>
+
+  <section class="card dish" aria-label="Chili sin Carne">
+    <div class="dish-head">
+      <div><p class="name">Chili sin Carne</p><p class="when">gekocht Mi, 14.10. · pro Portion</p></div>
+      <div class="portions"><b>1,5 von 4</b><div class="dots" aria-hidden="true"><i class="on"></i><i class="half"></i><i></i><i></i></div></div>
+    </div>
+    <div class="macros"><div><b>520</b><span>kcal</span></div><div class="protein"><b>28 g</b><span>Protein</span></div><div><b>71 g</b><span>KH</span></div><div><b>11 g</b><span>Fett</span></div></div>
+  </section>
+
+  <div class="list">
+    <a class="row" href="#"><div class="main"><span class="title">Archiv</span><span class="meta">6 vergangene Gerichte · Nochmal kochen</span></div><span class="chev"><i data-icon="chevron-right"></i></span></a>
+  </div>
+
+  <footer class="footer"><div class="lockup"><i data-logo></i><span>rimed</span></div>v1.4.0</footer>
+</div>
+</template>
+
+<main class="board-body">
+  <div class="phone" data-theme="light"></div>
+  <div class="phone" data-theme="dark"></div>
+  <aside class="notes">
+    <h2>Was sich ändert</h2>
+    <p class="q">Frage des Screens: Was habe ich noch vorgekocht, und wie viel? Portions-Punkte, „x von y“, Archiv mit „Nochmal kochen“ (D-118, D-120) bleiben.</p>
+    <ol>
+      <li><span class="tag b">B · DESIGN §4</span> <b>Kein sichtbares „Essen“ als h1.</b> Der aktive Tab nennt den Bereich schon. Die h1 bleibt für Screenreader. Gewonnen: rund 60 px, die dritte Gericht-Karte rückt auf den ersten Bildschirm.</li>
+      <li><span class="tag b">B · Screen 10</span> <b>„Neues Gericht kochen“ als tonaler Button</b> statt gestricheltem Rahmen. Gestrichelt bedeutet in der App „leer / Zukunft“ (Kalender, D-136). Ein Button, den man täglich nutzt, ist kein leerer Platzhalter.</li>
+      <li><span class="tag a">A</span> <b>Halbe Portion ohne Verlauf</b>: zwei flache Hälften statt <code>linear-gradient</code> (Linter-Fund, Regel „Keine Verläufe“).</li>
+      <li><span class="tag a">A</span> <b>Archiv-Zeile auf <code>--surface</code></b> statt tonal (gedämpfte Schrift erreicht auf tonal nur 4,2 : 1) und mit Inhalt: Anzahl und „Nochmal kochen“ als Hinweis.</li>
+    </ol>
+  </aside>
+</main>
+
+<script src="board.js"></script>
+</body>
+</html>

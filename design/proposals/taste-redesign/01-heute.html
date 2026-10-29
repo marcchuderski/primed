@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Heute · Vorschlag</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="proposal.css">
+</head>
+<body class="board">
+
+<header class="board-head">
+  <h1>01 · Heute</h1>
+  <p>Trainingstag Di, 20.10., 14:30 · Basketball 20:00 · Checkpoint 17:00 · <a href="index.html">Übersicht</a></p>
+</header>
+
+<template id="screen">
+<div class="app">
+  <div class="topbar">
+    <nav class="tabs" aria-label="Bereiche">
+      <a href="#" aria-current="page">Heute</a><a href="#">Essen</a><a href="#">Verlauf</a>
+    </nav>
+    <button class="iconbtn" aria-label="Menü"><i data-icon="menu"></i></button>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <h1 class="display h1-greet">Hey, Marc.</h1>
+    <p class="muted" style="font-size:16px">Noch 2½ Stunden bis zu deinem Pre-Workout.</p>
+  </div>
+
+  <div class="chips">
+    <button class="chip">Di, 20.10. <i data-icon="chevron-down"></i></button>
+    <button class="chip tonal"><span class="lead-icon"><i data-icon="dumbbell"></i></span>Basketball · 20:00 <i data-icon="chevron-down"></i></button>
+  </div>
+
+  <section class="card bars" aria-label="Makros heute" style="position:relative">
+    <div>
+      <div class="bar-head"><span class="name">Kalorien</span><span class="val"><b>1.225</b> <span class="muted">/ 2.600</span></span></div>
+      <div class="track"><div class="fill" style="width:47.1%"></div><span class="mark" style="left:70%"></span></div>
+    </div>
+    <div>
+      <div class="bar-head"><span class="name protein">Protein</span><span class="val"><b>80</b> <span class="muted">/ 150 g</span></span></div>
+      <div class="track p"><div class="fill" style="width:53.3%"></div><span class="mark" style="left:70%"></span></div>
+    </div>
+    <div>
+      <div class="bar-head"><span class="name">Kohlenhydrate</span><span class="val"><b>173</b> <span class="muted">/ 350 g</span></span></div>
+      <div class="track"><div class="fill" style="width:49.4%"></div><span class="mark" style="left:70%"></span></div>
+    </div>
+    <div class="minor">
+      <div>
+        <div class="bar-head"><span class="name">Fett</span><span class="val">20 / ~67 g</span></div>
+        <div class="track"><div class="fill" style="width:29.9%"></div></div>
+      </div>
+      <div>
+        <div class="bar-head"><span class="name">Zucker</span><span class="val">37 / ~50 g</span></div>
+        <div class="track"><div class="fill" style="width:74%"></div></div>
+      </div>
+    </div>
+    <p class="finding num"><span class="tick" aria-hidden="true"></span><span><b>Bis 17:00</b> noch 595 kcal · <span class="protein" style="font-weight:600">25 g P</span> · 72 g KH</span></p>
+
+    <div class="popup num" data-only="dark" style="left:70px;top:58px;width:280px" role="tooltip">
+      <span class="t">Bis 17:00 · Pre-Workout</span>
+      <span>1.225 von 1.820 kcal · <b>noch 595</b></span>
+      <span class="s">Gesamt heute: 2.600 kcal</span>
+    </div>
+  </section>
+
+  <section style="display:flex;flex-direction:column;gap:12px">
+    <div class="section-head">
+      <h2 class="display h2">Einträge</h2>
+      <div class="actions">
+        <button class="iconbtn" aria-label="Vorschläge"><i data-icon="wand-sparkles"></i></button>
+        <button class="iconbtn primary" aria-label="Hinzufügen"><i data-icon="plus"></i></button>
+      </div>
+    </div>
+    <div class="list">
+      <div class="row"><div class="main"><span class="title">Banane · 1 Stück</span><span class="meta">115 kcal · <span class="protein">1 g P</span> · 24 g KH</span></div><span class="time">14:15</span></div>
+      <div class="row"><div class="main"><span class="title">Bolognese · 1 Portion</span><span class="meta">640 kcal · <span class="protein">42 g P</span> · 78 g KH</span></div><span class="time">13:00</span></div>
+      <div class="row"><div class="main"><span class="title">REWE Quarkcreme · 200 g</span><span class="meta">134 kcal · <span class="protein">25 g P</span> · 6 g KH</span></div><span class="time">10:30</span></div>
+      <div class="row"><div class="main"><span class="title">Weizenbrötchen · 2 Stück</span><span class="meta">336 kcal · <span class="protein">12 g P</span> · 65 g KH</span></div><span class="time">08:15</span></div>
+    </div>
+  </section>
+
+  <footer class="footer"><div class="lockup"><i data-logo></i><span>rimed</span></div>v1.4.0</footer>
+</div>
+</template>
+
+<main class="board-body">
+  <div class="phone" data-theme="light"></div>
+  <div class="phone" data-theme="dark"></div>
+  <aside class="notes">
+    <h2>Was sich ändert</h2>
+    <p class="q">Frage des Screens: Was fehlt noch bis zum Training und bis heute Abend? Kopf, Chips, Tabs, Balken und Marker bleiben wie beschlossen (D-024, D-025, D-178).</p>
+    <ol>
+      <li><span class="tag b">B · DESIGN §6</span> <b>Checkpoint als Zeile statt als Legende.</b> „Ziel bis Training · Balken antippen für Details“ wird zu „Bis 17:00 noch 595 kcal · 25 g P · 72 g KH“. Das wichtigste Ergebnis des Tages steht ohne Tippen da. Das Pop-up bleibt (rechts im Dunkel-Beispiel), D-025 gilt weiter.</li>
+      <li><span class="tag b">B · DESIGN §6</span> <b>Einträge als eine Liste mit Trennlinien</b> statt einzelner Karten mit 10 px Abstand: weniger Kästen, dichter, gleiches Wischen und Tippen. DESIGN §5 sieht 18 px Radius pro Eintrag vor.</li>
+      <li><span class="tag b">B · DESIGN §4</span> <b>Pop-up-Titel in normaler Schreibweise</b> („Bis 17:00 · Pre-Workout“) statt 12 px Versalien mit Sperrung. Gilt für alle Gruppenlabels (siehe Review U1).</li>
+      <li><span class="tag a">A</span> <b>Kontrast im Pop-up:</b> „noch 595“ steht jetzt in Textfarbe statt in <code>--accent-text</code>. Auf der tonalen Fläche erreicht <code>--accent-text</code> nur 4,1 : 1.</li>
+      <li><span class="tag a">A</span> Tagesart-Chip mit dem Lucide-Icon <code>Dumbbell</code> (wie D-103, nicht der Ball aus dem Mockup).</li>
+    </ol>
+  </aside>
+</main>
+
+<script src="board.js"></script>
+</body>
+</html>

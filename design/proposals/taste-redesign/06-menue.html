@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Menü · Vorschlag</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="proposal.css">
+</head>
+<body class="board">
+
+<header class="board-head">
+  <h1>06 · Menü</h1>
+  <p>Reihenfolge der Einstellungen nach D-138/D-141, Changelog nach D-169 · <a href="index.html">Übersicht</a></p>
+</header>
+
+<template id="screen">
+<div class="app">
+  <div class="topbar">
+    <h1 class="display" style="font-size:30px;letter-spacing:-0.03em">Menü</h1>
+    <button class="iconbtn" aria-label="Schließen"><i data-icon="x"></i></button>
+  </div>
+
+  <div class="list">
+    <a class="row profile" href="#" style="min-height:76px">
+      <span class="avatar" aria-hidden="true">M</span>
+      <div class="main"><span class="title">Marc</span><span class="meta">@marcch · Profil bearbeiten</span></div>
+      <span class="chev"><i data-icon="chevron-right"></i></span>
+    </a>
+  </div>
+
+  <div class="group">
+    <h2 class="label">Darstellung</h2>
+    <div class="seg" role="group" aria-label="Darstellung">
+      <button aria-pressed="true">System</button><button aria-pressed="false">Hell</button><button aria-pressed="false">Dunkel</button>
+    </div>
+    <p class="help">System folgt der Einstellung deines Geräts.</p>
+  </div>
+
+  <div class="group">
+    <h2 class="label">Einstellungen</h2>
+    <div class="list">
+      <a class="row" href="#"><div class="main"><span class="title">Tagesarten &amp; Sollwerte</span><span class="meta">5 Tagesarten · kcal, Protein, KH</span></div><span class="chev"><i data-icon="chevron-right"></i></span></a>
+      <a class="row" href="#"><div class="main"><span class="title">Wochenvorlage</span><span class="meta">Di + Do Basketball 20:00</span></div><span class="chev"><i data-icon="chevron-right"></i></span></a>
+      <a class="row" href="#"><div class="main"><span class="title">Checkpoints</span><span class="meta">Bis 3 h vor Training: 70 %</span></div><span class="chev"><i data-icon="chevron-right"></i></span></a>
+      <a class="row" href="#"><div class="main"><span class="title">Bewertung</span><span class="meta">Toleranz ±5 % im Verlauf</span></div><span class="chev"><i data-icon="chevron-right"></i></span></a>
+      <a class="row" href="#"><div class="main"><span class="title">Shakes</span><span class="meta">Milch 1,5 % · Milch 3,5 % · Wasser · 30 g Pulver</span></div><span class="chev"><i data-icon="chevron-right"></i></span></a>
+    </div>
+  </div>
+
+  <div class="group">
+    <h2 class="label">App</h2>
+    <div class="list">
+      <a class="row" href="#"><div class="main"><span class="title">Changelog</span><span class="meta">Version 1.4.0 vom 29.10.</span></div><span class="chev"><i data-icon="chevron-right"></i></span></a>
+    </div>
+  </div>
+
+  <button class="btn">Abmelden</button>
+  <a class="textlink" href="#">Überall abmelden</a>
+
+  <footer class="footer"><div class="lockup"><i data-logo></i><span>rimed</span></div>v1.4.0</footer>
+</div>
+</template>
+
+<main class="board-body">
+  <div class="phone" data-theme="light"></div>
+  <div class="phone" data-theme="dark"></div>
+  <aside class="notes">
+    <h2>Was sich ändert</h2>
+    <p class="q">Struktur, Reihenfolge, Zusammenfassungen und „Überall abmelden“ als Textlink (D-064) bleiben. Konto löschen bleibt im Profil (D-128).</p>
+    <ol>
+      <li><span class="tag b">B · DESIGN §4</span> <b>Gruppenlabels</b> „Darstellung“, „Einstellungen“, „App“ in normaler Schreibweise, 13 px.</li>
+      <li><span class="tag b">B · Screen 16</span> <b>Avatar tonal</b> mit Initiale in Textfarbe statt orangefarbener Fläche. Orange ist für Protein, Hauptaktion und Training reserviert (DESIGN §3), ein Profilbild ist nichts davon.</li>
+      <li><span class="tag a">A</span> Segment „System · Hell · Dunkel“ ohne Schatten am aktiven Feld, inaktive Labels in Textfarbe (Kontrast).</li>
+    </ol>
+  </aside>
+</main>
+
+<script src="board.js"></script>
+</body>
+</html>
