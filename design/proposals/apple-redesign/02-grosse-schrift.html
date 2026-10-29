@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apple-Redesign · 02 Große Schrift</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="proposal.css">
+<style>
+  /* Heute at iOS text size "xxxLarge" (body 17 → 23 pt, factor ≈ 1.35). */
+  .xl .hello { font-size: 40px; }
+  .xl .greeting { font-size: 21px; }
+  .xl .chips { flex-wrap: wrap; }
+  .xl .chip { height: auto; min-height: 44px; padding: 8px 14px; font-size: 19px; white-space: normal; }
+  .xl .bar .head { flex-direction: column; align-items: flex-start; gap: 0; font-size: 20px; }
+  .xl .bar.s .head { font-size: 17px; }
+  .xl .small2 { grid-template-columns: 1fr; }
+  .xl .legend { font-size: 16px; }
+  .xl .sectionTitle { font-size: 30px; }
+  .xl .entry .row { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .xl .entry .t { font-size: 20px; }
+  .xl .entry .m, .xl .entry .time { font-size: 17px; }
+  .xl .btn { font-size: 20px; min-height: 58px; }
+  .xl .topnav .tab { font-size: 20px; }
+  .xl .topnav nav { gap: 18px; }
+</style>
+</head>
+<body class="page">
+<header>
+  <a class="back" href="index.html">← Übersicht</a>
+  <h1>02 · Große Schrift (Dynamic Type)</h1>
+  <span class="badge trade">Trade-off · Design ↔ Barrierefreiheit · deine Entscheidung</span>
+  <p class="lead">„Heute“ bei der iOS-Textgröße „xxxLarge“ (Fließtext 23 statt 17 pt). Heute ignoriert die App die Textgröße des iPhones komplett, weil alle Größen in festen px stehen.</p>
+  <label class="toggle"><input type="checkbox" id="notesToggle" checked> Markierungen zeigen</label>
+</header>
+
+<template id="screen">
+  <div class="statusbar"><span>9:41</span><span class="island"></span><span>●●●</span></div>
+  <div class="shell xl" style="gap:20px">
+    <div class="topnav">
+      <nav><span class="tab on">Heute</span><span class="tab">Essen</span><span class="tab">Verlauf</span></nav>
+      <span class="iconBtn"><svg class="i" width="22" height="22" stroke-width="2.2"><use href="#menu"/></svg></span>
+    </div>
+    <div style="position:relative">
+      <h1 class="hello">Hey, Marc.</h1>
+      <p class="greeting">Noch 2 Stunden bis zu deinem Pre-Workout.</p>
+    </div>
+    <div class="chips" style="position:relative">
+      <span class="chip date">Di, 20.10. <svg class="i" width="16" height="16" stroke-width="2.4"><use href="#chevron-down"/></svg></span>
+      <span class="chip"><svg class="i ic" width="20" height="20" stroke-width="2.4"><use href="#dumbbell"/></svg> Normal Basketball · 20:00 <svg class="i" width="16" height="16" stroke-width="2.4"><use href="#chevron-down"/></svg></span>
+      <span class="n" style="right:-6px;top:-12px">1</span>
+    </div>
+    <div class="card" style="position:relative">
+      <span class="n" style="right:12px;top:12px">2</span>
+      <div class="bar"><div class="head"><b>Kalorien</b><span class="num"><strong>1.092</strong> <span class="tgt">/ 2.600</span></span></div>
+        <div class="track"><div class="fill" style="width:42%"></div><div class="marker" style="left:70%"></div></div></div>
+      <div class="bar p"><div class="head"><b>Protein</b><span class="num"><strong>95</strong> <span class="tgt">/ 150 g</span></span></div>
+        <div class="track"><div class="fill" style="width:63%"></div><div class="marker" style="left:70%"></div></div></div>
+      <div class="bar"><div class="head"><b>Kohlenhydrate</b><span class="num"><strong>128</strong> <span class="tgt">/ 350 g</span></span></div>
+        <div class="track"><div class="fill" style="width:37%"></div><div class="marker" style="left:70%"></div></div></div>
+    </div>
+  </div>
+  <div class="actionbar xl">
+    <span class="btn tonal"><svg class="i" width="22" height="22" stroke-width="2"><use href="#wand"/></svg></span>
+    <span class="btn primary"><svg class="i" width="22" height="22" stroke-width="2.4"><use href="#plus"/></svg>Hinzufügen</span>
+    <span class="n" style="left:14px;top:-10px">3</span>
+  </div>
+  <span class="homeind"></span>
+</template>
+
+<div class="frames" data-screen="screen"></div>
+
+<section class="notes">
+  <h2>Was sich ändert, wenn die App der Textgröße folgt</h2>
+  <ol>
+    <li><strong>Chips brechen um, statt abzuschneiden.</strong> Datum und Tagesart passen nicht mehr in eine Zeile. Der Tagesart-Name wird nicht mehr mit „…“ gekürzt.
+      <blockquote>„Keep text truncation to a minimum as font size increases.“</blockquote>
+      <div class="src">typography.md › Supporting Dynamic Type</div></li>
+    <li><strong>Balken: Zahl unter das Label.</strong> Ab großer Schrift stehen Label und Wert untereinander, Fett und Zucker einspaltig.
+      <blockquote>„horizontally adjacent views may need to stack vertically to provide more space for text“</blockquote>
+      <div class="src">layout.md › Adaptability</div></li>
+    <li><strong>„Vorschläge“ wird zum reinen Icon-Button</strong> (mit <code>aria-label</code>), damit „Hinzufügen“ lesbar bleibt.</li>
+  </ol>
+
+  <h2>Optionen</h2>
+  <table>
+    <tr><th>Option</th><th>Pro</th><th>Contra</th></tr>
+    <tr><td><strong>A · Voll mitgehen</strong><br>Basis-Schriftgröße aus der iOS-Einstellung (<code>font: -apple-system-body</code> auf <code>&lt;html&gt;</code>), alle px-Werte für Schrift in <code>rem</code></td><td>Entspricht den HIG. Wer am iPhone große Schrift eingestellt hat, kann Primed lesen.</td><td>Viele Screens brauchen ein Umbruch-Layout (Woche, Mengen-Sheet, Einheiten-Segment mit „Packung“, D-163). Die kompakte 390-px-Optik geht bei großen Stufen verloren. Mehr Aufwand.</td></tr>
+    <tr><td><strong>B · Mitgehen mit Obergrenze</strong> (Empfehlung)<br>wie A, Faktor gedeckelt bei ≈ 1,3 (<code>clamp()</code>)</td><td>Hilft den meisten, die nur etwas größer stellen. Layout-Anpassungen bleiben überschaubar (Chips, Balken-Köpfe, Einträge).</td><td>Die Bedienungshilfen-Größen (AX1–AX5) werden nicht voll unterstützt.</td></tr>
+    <tr><td><strong>C · So lassen</strong></td><td>Kein Aufwand, Optik bleibt exakt.</td><td>Die Systemeinstellung wird ignoriert, nur Safari-Zoom bleibt. HIG: „Apps that don’t respond to this setting can be difficult or impossible to use“ (layout.md).</td></tr>
+  </table>
+  <p class="src">Hinweis: D-149 hat den A11y-Check gestrichen, die Grundregeln aus DESIGN.md §10 gelten aber weiter. Eine Entscheidung zur Textgröße gibt es noch nicht, die Frage ist offen. Ob <code>-apple-system-body</code> in der installierten PWA greift, muss vor der Umsetzung auf dem iPhone geprüft werden.</p>
+</section>
+<script src="mock.js"></script>
+</body>
+</html>

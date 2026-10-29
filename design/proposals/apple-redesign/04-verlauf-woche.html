@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apple-Redesign · 04 Verlauf Woche</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="proposal.css">
+</head>
+<body class="page">
+<header>
+  <a class="back" href="index.html">← Übersicht</a>
+  <h1>04 · Verlauf · Woche</h1>
+  <span class="badge ok">Konfliktfrei</span>
+  <p class="lead">Aufbau wie Screen 13 und D-178. Geändert: Mindestschriftgrößen in der Tabelle, Statusmarken und die fixierte erste Spalte.</p>
+  <label class="toggle"><input type="checkbox" id="notesToggle" checked> Markierungen zeigen</label>
+</header>
+
+<template id="screen">
+  <div class="statusbar"><span>9:41</span><span class="island"></span><span>●●●</span></div>
+  <div class="shell" style="padding-bottom:40px">
+    <div class="topnav">
+      <nav><span class="tab">Heute</span><span class="tab">Essen</span><span class="tab on">Verlauf</span></nav>
+      <span class="iconBtn"><svg class="i" width="20" height="20" stroke-width="2.2"><use href="#menu"/></svg></span>
+    </div>
+    <div class="seg3"><span class="on">Woche</span><span>Monat</span><span>Jahr</span></div>
+    <div style="display:flex;justify-content:space-between;align-items:baseline">
+      <h2 class="sectionTitle">KW 42</h2><span style="color:var(--text-muted);font-size:15px">12.–18. Oktober</span>
+    </div>
+    <div class="card" style="gap:14px">
+      <div class="label">Wochenbilanz</div>
+      <div style="display:flex;justify-content:space-between;align-items:flex-end">
+        <div><div class="num" style="font:800 36px/1 var(--font-display)">−210</div><div style="font-size:13px;color:var(--text-muted)">kcal · leichtes Defizit</div></div>
+        <div style="text-align:right"><div class="num" style="font:800 36px/1 var(--font-display);color:var(--accent-text)">145 g</div><div style="font-size:13px;color:var(--text-muted)">Ø Protein / 150</div></div>
+      </div>
+    </div>
+    <div class="tableWrap" style="position:relative">
+      <span class="n" style="left:8px;top:8px">1</span>
+      <table class="week">
+        <tr><th></th>
+          <th><span class="dayTile">Mo<br><span class="num">12.</span></span></th>
+          <th><span class="dayTile">Di<br><span class="num">13.</span></span></th>
+          <th><span class="dayTile">Mi<br><span class="num">14.</span></span></th>
+          <th><span class="dayTile">Do<br><span class="num">15.</span></span></th>
+          <th><span class="dayTile">Fr<br><span class="num">16.</span></span></th>
+        </tr>
+        <tr><td>Rahmen</td>
+          <td><span class="mark ok">✓</span></td><td><span class="mark ok">✓</span></td><td><span class="mark high">↑</span></td><td><span class="mark ok">✓</span></td><td><span class="mark low">↓</span></td></tr>
+        <tr><td>kcal</td>
+          <td>1.960<small>−2 %</small></td><td>2.540<small>−2 %</small></td><td>2.180<small>+9 %</small></td><td>2.610<small>±0 %</small></td><td>2.050<small>−11 %</small></td></tr>
+        <tr><td>Protein</td>
+          <td>148<small>/ 150</small></td><td>152<small>/ 150</small></td><td>131<small>/ 150</small></td><td>155<small>/ 150</small></td><td>122<small>/ 150</small></td></tr>
+        <tr><td>KH</td>
+          <td>195<small>/ 200</small></td><td>340<small>/ 350</small></td><td>215<small>/ 200</small></td><td>362<small>/ 350</small></td><td>230<small>/ 250</small></td></tr>
+      </table>
+      <span class="n" style="left:150px;top:96px">2</span>
+    </div>
+  </div>
+</template>
+
+<div class="frames" data-screen="screen"></div>
+
+<section class="notes">
+  <h2>Änderungen</h2>
+  <ol>
+    <li><strong>Erste Spalte bleibt beim horizontalen Scrollen stehen</strong> (<code>position: sticky</code>). So sieht man immer, ob die Zeile kcal oder KH zeigt. Die Tageskacheln bleiben Buttons mit mindestens 44 pt (D-178).
+      <blockquote>„Align elements to make them easier to scan, and use indentation to convey hierarchy.“</blockquote>
+      <div class="src">layout.md › Visual hierarchy · Decisions: D-010 (Σ-Spalte) und D-178 bleiben</div></li>
+    <li><strong>Keine Schrift unter 12 px.</strong> Heute stehen in History.module.css 10 px (kleine Statusmarke, Zellmarke) und 11 px („läuft“, Nebenzeile in Zellen). 10 px liegt unter dem iOS-Minimum von 11 pt. Neu: Nebenzeilen 12 px, Statusmarken 24 px mit 13 px Symbol, „läuft“ 12 px. Die Tabelle wird dadurch etwas breiter, sie scrollt aber ohnehin.
+      <blockquote>„iOS, iPadOS | 17 pt | 11 pt“ (Standard | Minimum)</blockquote>
+      <div class="src">typography.md › Ensuring legibility · Decisions: keine berührt</div></li>
+  </ol>
+</section>
+<script src="mock.js"></script>
+</body>
+</html>

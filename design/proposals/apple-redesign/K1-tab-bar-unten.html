@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apple-Redesign · K1 Tab-Bar unten</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="proposal.css">
+</head>
+<body class="page">
+<header>
+  <a class="back" href="index.html">← Übersicht</a>
+  <h1>K1 · Tab-Bar unten</h1>
+  <span class="badge conflict">Konflikt · D-024, DESIGN.md §6, BRIEFING §14</span>
+  <p class="lead">Nur zur Einordnung, keine Empfehlung zum Umsetzen. So würde Primed mit der iOS-Standardnavigation aussehen. Du hast dich bewusst für Text-Tabs oben und gegen eine Bottom-Navigation entschieden.</p>
+  <label class="toggle"><input type="checkbox" id="notesToggle" checked> Markierungen zeigen</label>
+</header>
+
+<template id="screen">
+  <div class="statusbar"><span>9:41</span><span class="island"></span><span>●●●</span></div>
+  <div class="shell">
+    <div style="position:relative">
+      <h1 class="hello">Hey, Marc.</h1>
+      <p class="greeting">Noch 2 Stunden bis zu deinem Pre-Workout.</p>
+    </div>
+    <div class="chips">
+      <span class="chip date">Di, 20.10. <svg class="i" width="14" height="14" stroke-width="2.4"><use href="#chevron-down"/></svg></span>
+      <span class="chip"><svg class="i ic" width="16" height="16" stroke-width="2.4"><use href="#dumbbell"/></svg> Normal Basketball · 20:00 <svg class="i" width="14" height="14" stroke-width="2.4"><use href="#chevron-down"/></svg></span>
+    </div>
+    <div class="card">
+      <div class="bar"><div class="head"><b>Kalorien</b><span class="num"><strong>1.092</strong> <span class="tgt">/ 2.600</span></span></div>
+        <div class="track"><div class="fill" style="width:42%"></div><div class="marker" style="left:70%"></div></div></div>
+      <div class="bar p"><div class="head"><b>Protein</b><span class="num"><strong>95</strong> <span class="tgt">/ 150 g</span></span></div>
+        <div class="track"><div class="fill" style="width:63%"></div><div class="marker" style="left:70%"></div></div></div>
+      <div class="bar"><div class="head"><b>Kohlenhydrate</b><span class="num"><strong>128</strong> <span class="tgt">/ 350 g</span></span></div>
+        <div class="track"><div class="fill" style="width:37%"></div><div class="marker" style="left:70%"></div></div></div>
+    </div>
+    <section style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;justify-content:space-between;align-items:center;position:relative">
+        <h2 class="sectionTitle">Einträge</h2>
+        <div style="display:flex;gap:8px">
+          <span class="iconBtn"><svg class="i" width="20" height="20" stroke-width="2"><use href="#wand"/></svg></span>
+          <span class="iconBtn" style="background:var(--accent);color:var(--on-accent);border:none"><svg class="i" width="20" height="20" stroke-width="2.4"><use href="#plus"/></svg></span>
+        </div>
+        <span class="n" style="right:-8px;top:-12px">2</span>
+      </div>
+      <ul class="list">
+        <li class="entry"><div class="row"><span><div class="t">Skyr Natur · 250 g</div><div class="m num">158 kcal · <b>28 g P</b> · 10 g KH · 1 g F</div></span><span class="time num">13:30</span></div></li>
+        <li class="entry"><div class="row"><span><div class="t">Bolognese · 1 Portion</div><div class="m num">612 kcal · <b>42 g P</b> · 68 g KH · 16 g F</div></span><span class="time num">12:15</span></div></li>
+      </ul>
+    </section>
+  </div>
+  <div class="tabbar">
+    <span class="t on"><svg class="i" width="24" height="24" stroke-width="2.2"><use href="#house"/></svg>Heute</span>
+    <span class="t"><svg class="i" width="24" height="24" stroke-width="2"><use href="#utensils"/></svg>Essen</span>
+    <span class="t"><svg class="i" width="24" height="24" stroke-width="2"><use href="#chart"/></svg>Verlauf</span>
+    <span class="t"><svg class="i" width="24" height="24" stroke-width="2"><use href="#user"/></svg>Ich</span>
+    <span class="n" style="left:50%;top:-12px">1</span>
+  </div>
+  <span class="homeind"></span>
+</template>
+
+<div class="frames" data-screen="screen"></div>
+
+<section class="notes">
+  <h2>Einordnung</h2>
+  <ol>
+    <li><strong>Vier Tabs unten mit Icon und Label, „Menü“ wird der Tab „Ich“.</strong> Flächig in <code>--surface</code>, ohne Glas (DESIGN.md §3). Bei iOS ist das die Standardnavigation. Heute öffnet „Menü“ einen Vollbildbereich, der die Tabs ausblendet.
+      <blockquote>„Make sure the tab bar is visible when people navigate to different sections of your app. If you hide the tab bar, people can forget which area of the app they’re in.“</blockquote>
+      <div class="src">tab-bars.md › Best practices</div></li>
+    <li><strong>Die Aktionen bleiben im Inhalt</strong>, weil der untere Rand jetzt der Navigation gehört. Die Aktionsleiste aus Vorschlag 01 und die feste Leiste im Essen-Tab (D-144) lassen sich mit einer Tab-Bar schlecht kombinieren.</li>
+  </ol>
+  <h2>Abwägung</h2>
+  <table>
+    <tr><th>Pro</th><th>Contra</th></tr>
+    <tr><td>Daumenreichweite für den Bereichswechsel. Vertrautes iOS-Muster. Menü bzw. Einstellungen werden ein gleichwertiger Bereich mit sichtbarer Navigation.</td><td>Widerspricht D-024, DESIGN.md §6 und BRIEFING §14. Der Bildschirm unten gehört nicht mehr den Aktionen (Vorschlag 01 und D-144 kollidieren). Die ruhige Kopfzeile mit Text-Tabs ist ein Teil der Primed-Identität.</td></tr>
+  </table>
+  <p><strong>Empfehlung:</strong> Bei D-024 bleiben. Die HIG-Absicht (wichtige Bedienelemente in Daumenreichweite) erfüllt Vorschlag 01 mit der Aktionsleiste, ohne die Entscheidung anzufassen. Die Text-Tabs oben sind nicht falsch, nur weniger iOS-typisch. Vollständig, gut sichtbar und nie ausgeblendet sind sie schon (tab-bars.md: „Don’t disable or hide tab bar buttons“).</p>
+</section>
+<script src="mock.js"></script>
+</body>
+</html>

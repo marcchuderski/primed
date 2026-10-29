@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apple-Redesign · 03 Mengen-Sheet</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="proposal.css">
+</head>
+<body class="page">
+<header>
+  <a class="back" href="index.html">← Übersicht</a>
+  <h1>03 · Mengen-Sheet</h1>
+  <span class="badge ok">Konfliktfrei · berührt D-155 (Gerätetest)</span>
+  <p class="lead">Die Optik bleibt kompakt wie in D-163. Geändert werden nur die Trefferflächen und das Verhalten des Griffs. Das gilt für alle Sheets.</p>
+  <label class="toggle"><input type="checkbox" id="notesToggle" checked> Markierungen und Trefferflächen zeigen</label>
+</header>
+
+<template id="screen">
+  <div class="statusbar"><span>9:41</span><span class="island"></span><span>●●●</span></div>
+  <div class="shell" style="opacity:.9">
+    <div class="topnav"><nav><span class="tab on">Heute</span><span class="tab">Essen</span><span class="tab">Verlauf</span></nav></div>
+    <h1 class="hello">Hey, Marc.</h1>
+  </div>
+  <div class="scrim"></div>
+  <div class="sheet">
+    <div style="position:relative;align-self:stretch;display:flex;justify-content:center;height:5px">
+      <span class="grabber"></span>
+      <span class="n" style="left:calc(50% + 30px);top:-9px">1</span>
+    </div>
+    <div class="sheetHead">
+      <div><h2 class="sheetTitle">Skyr Natur</h2><div class="sheetSub">Milbona · pro 100 g</div></div>
+      <span class="closeBtn"><svg class="i" width="20" height="20" stroke-width="2.4"><use href="#x"/></svg></span>
+    </div>
+    <div class="qcard">
+      <div style="position:relative">
+        <div class="segment"><span class="on hit">g</span><span class="off">ml</span><span class="hit">EL</span><span class="hit">TL</span><span class="hit">Packung</span></div>
+        <span class="n" style="right:-10px;top:-12px">2</span>
+      </div>
+      <div class="amount">
+        <span class="round">−</span>
+        <span class="bignum num">250<small>g</small></span>
+        <span class="round">+</span>
+      </div>
+      <div class="conv num">½ Packung · 1 Packung = 500 g</div>
+      <div class="qchips" style="position:relative">
+        <span class="qchip hit">150 g</span><span class="qchip hit">250 g</span><span class="qchip hit">Packung</span>
+      </div>
+      <div class="conv num" style="color:var(--text)">158 kcal · <b style="color:var(--accent-text)">28 g P</b> · 10 g KH · 1 g F</div>
+    </div>
+    <div class="timeRow">
+      <span class="label">Uhrzeit</span>
+      <span class="nowBtn hit">Jetzt<span class="n" style="right:-10px;top:-12px">3</span></span>
+    </div>
+    <div class="wheel num">
+      <div><span class="dim">12</span><span>13</span><span class="dim">14</span></div>
+      <div><span class="dim">15</span><span>30</span><span class="dim">45</span></div>
+    </div>
+    <span class="btn primary" style="width:100%">Hinzufügen · 13:30</span>
+  </div>
+</template>
+
+<div class="frames" data-screen="screen"></div>
+
+<section class="notes">
+  <h2>Änderungen</h2>
+  <ol>
+    <li><strong>Der Griff funktioniert: Sheet nach unten wischen schließt es.</strong> Heute ist der Griff nur Dekoration, das Sheet lässt sich nur über „Schließen“ oder Escape zumachen. Neu: Ziehen an Griff, Titelzeile oder (ganz oben gescrollt) am Inhalt bewegt das Sheet mit. Ab etwa 30 % der Höhe oder einem schnellen Wisch schließt es. Gibt es ungespeicherte Änderungen (Produkt-, Gericht-Editor), fragt es nach („Änderungen verwerfen?“).
+      <blockquote>„Support swiping to dismiss a sheet. People expect to swipe vertically to dismiss a sheet instead of tapping a dismiss button.“ · „Include a grabber in a resizable sheet.“</blockquote>
+      <div class="src">sheets.md › Best practices · <strong>Berührt D-155</strong>: Schließen bleibt ohne zusätzliche Animation (das Sheet ist beim Loslassen schon fast unten). Weil iOS-Sheets im <code>&lt;dialog&gt;</code> schon geruckelt haben (D-155, D-161), vor dem Ausrollen auf dem iPhone testen.</div></li>
+    <li><strong>Einheiten-Segment und Schnellwahl: 44 pt Trefferfläche.</strong> Optisch bleibt es bei 34 px (D-163, „Packung“ passt weiter). Die Trefferfläche reicht über das Track-Padding und den Abstand hinaus. Die gestrichelten Rahmen zeigen die neue Fläche.
+      <div class="src">accessibility.md › Mobility · Decisions: D-163 bleibt</div></li>
+    <li><strong>„Jetzt“: 44 pt statt 32 px Trefferfläche</strong>, gleiche Optik.
+      <div class="src">accessibility.md › Mobility</div></li>
+  </ol>
+  <h2>Geprüft, bleibt</h2>
+  <p>Hauptbutton am Ende des Inhalts (D-142): Native iOS-Sheets legen „Fertig“ oft in die Kopfzeile. Unten ist er aber in Daumenreichweite, das passt zu designing-for-ios.md. Ein Sheet zur Zeit im Hinzufügen-Ablauf: entspricht sheets.md („Display only one sheet at a time“). Fokus auf dem Dialog statt auf „Schließen“ (D-161): gut für VoiceOver.</p>
+</section>
+<script src="mock.js"></script>
+</body>
+</html>

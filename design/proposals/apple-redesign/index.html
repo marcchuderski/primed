@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apple-Redesign</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="proposal.css">
+<style>
+  .list2 { max-width: 760px; margin: 24px auto; display: grid; gap: 12px; padding: 0; list-style: none; }
+  .list2 a { display: block; padding: 16px 18px; border-radius: 18px; background: var(--note-bg); color: var(--page-text); text-decoration: none; }
+  .list2 strong { font: 800 18px 'Bricolage Grotesque', sans-serif; display: block; margin: 6px 0 2px; }
+  .list2 span.d { font-size: 14px; color: var(--page-muted); }
+  header { max-width: 760px !important; }
+</style>
+</head>
+<body class="page">
+<header>
+  <h1>Apple-Redesign</h1>
+  <p class="lead">HIG-Review des Frontends (Version 1.4.0) mit Screen-Vorschlägen. Noch nichts umgesetzt. Die ausführliche Bewertung mit Quellen, Kontrastwerten und offenen Entscheidungen steht in <code>README.md</code> in diesem Ordner.</p>
+</header>
+<ul class="list2">
+  <li><a href="01-heute.html"><span class="badge ok">Konfliktfrei</span><strong>01 · Heute</strong><span class="d">Trefferflächen 44 pt, Icon-Kontrast, Wischen gibt „Löschen“ frei, Aktionsleiste unten (Freigabe nötig)</span></a></li>
+  <li><a href="02-grosse-schrift.html"><span class="badge trade">Trade-off</span><strong>02 · Große Schrift</strong><span class="d">Heute bei iOS-Textgröße xxxLarge, Optionen A/B/C</span></a></li>
+  <li><a href="03-menge-sheet.html"><span class="badge ok">Konfliktfrei</span><strong>03 · Mengen-Sheet</strong><span class="d">Sheet wegwischen, Trefferflächen bei gleicher Optik (berührt D-155)</span></a></li>
+  <li><a href="04-verlauf-woche.html"><span class="badge ok">Konfliktfrei</span><strong>04 · Verlauf · Woche</strong><span class="d">Mindestschrift 12 px, fixierte erste Spalte</span></a></li>
+  <li><a href="K1-tab-bar-unten.html"><span class="badge conflict">Konflikt D-024</span><strong>K1 · Tab-Bar unten</strong><span class="d">Nur zur Einordnung, Empfehlung: Entscheidung bleibt</span></a></li>
+  <li><a href="K2-loeschen-rueckgaengig.html"><span class="badge conflict">Konflikt D-052</span><strong>K2 · Löschen mit Rückgängig</strong><span class="d">Nur zur Einordnung, Empfehlung: Entscheidung bleibt</span></a></li>
+</ul>
+<script src="mock.js"></script>
+</body>
+</html>
