@@ -44,6 +44,13 @@ a {
   outline-offset: 2px;
 }
 
+/* An open sheet locks the page behind it (Sheet.tsx); no rubber-banding either. */
+html.scroll-locked,
+html.scroll-locked body {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
 .num {
   font-variant-numeric: tabular-nums;
 }

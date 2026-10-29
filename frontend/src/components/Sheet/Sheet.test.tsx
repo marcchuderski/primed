@@ -44,4 +44,29 @@ describe('Sheet (iOS open jump, D-161)', () => {
     fireEvent.scroll(body);
     expect(screen.queryByRole('button', { name: 'Nach unten scrollen' })).not.toBeInTheDocument();
   });
+
+  it('locks the page behind while any sheet is open, also with stacked sheets', () => {
+    const root = document.documentElement;
+    const first = render(
+      <Sheet open title="Hinzufügen" onClose={() => undefined}>
+        <p>Suche</p>
+      </Sheet>,
+    );
+    expect(root).toHaveClass('scroll-locked');
+
+    const second = render(
+      <Sheet open title="Banane" onClose={() => undefined}>
+        <p>Menge</p>
+      </Sheet>,
+    );
+    second.unmount();
+    expect(root).toHaveClass('scroll-locked');
+
+    first.rerender(
+      <Sheet open={false} title="Hinzufügen" onClose={() => undefined}>
+        <p>Suche</p>
+      </Sheet>,
+    );
+    expect(root).not.toHaveClass('scroll-locked');
+  });
 });

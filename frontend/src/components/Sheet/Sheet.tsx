@@ -41,6 +41,7 @@ export function Sheet({
   const bodyRef = useRef<HTMLDivElement>(null);
   const titleId = useId();
   const moreBelow = useMoreBelow(bodyRef, open);
+  useScrollLock(open);
 
   // Layout effect: the dialog is open before children's effects run (e.g. wheels measuring scroll).
   useLayoutEffect(() => {
@@ -122,6 +123,30 @@ export function Sheet({
       )}
     </dialog>
   );
+}
+
+/** Number of open sheets; stacked sheets (e.g. Hinzufügen → Menge) share one lock. */
+let openSheets = 0;
+
+/**
+ * Keeps the page behind still while a sheet is open: iOS scrolled it on drags over scrim, handle and title,
+ * which overscroll-behavior on the body does not cover. A class on <html> instead of a fixed body, so the
+ * scroll position and sticky elements stay where they are.
+ */
+function useScrollLock(open: boolean): void {
+  useLayoutEffect(() => {
+    if (!open) {
+      return;
+    }
+    openSheets += 1;
+    document.documentElement.classList.add('scroll-locked');
+    return () => {
+      openSheets -= 1;
+      if (openSheets === 0) {
+        document.documentElement.classList.remove('scroll-locked');
+      }
+    };
+  }, [open]);
 }
 
 /**
