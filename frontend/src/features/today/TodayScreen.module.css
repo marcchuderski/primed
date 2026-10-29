@@ -263,12 +263,6 @@
   gap: 10px;
 }
 
-.sectionHead {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
 .sectionTitle {
   font-family: var(--font-display);
   font-weight: 800;
@@ -276,33 +270,22 @@
   letter-spacing: -0.02em;
 }
 
-.actions {
+/* Fixed main actions (D-183): stick to the bottom of the screen while the page scrolls, like the Essen tab. */
+.actionBar {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
   display: flex;
-  gap: 8px;
+  gap: 10px;
+  margin: 0 -22px;
+  padding: 12px 22px calc(12px + env(safe-area-inset-bottom));
+  background: var(--bg);
+  box-shadow: 0 -1px 0 var(--divider);
 }
 
-.iconButton {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--touch);
-  height: var(--touch);
-  border-radius: var(--r-pill);
-  border: 1px solid var(--input-border);
-  background: var(--surface);
-  color: var(--text);
-  cursor: pointer;
-}
-
-.iconButton:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
-}
-
-.add {
-  border: none;
-  background: var(--accent);
-  color: var(--on-accent);
+.addButton {
+  flex: 1;
+  min-width: 0;
 }
 
 .list {

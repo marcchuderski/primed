@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { useEffect, useId, useState } from 'react';
 import { fetchDay, fetchSettings, fetchToday, type Day, type Settings } from '../../api/days.ts';
+import { Button } from '../../components/Button/Button.tsx';
 import { Footer } from '../../components/Footer/Footer.tsx';
 import { MacroBar } from '../../components/MacroBar/MacroBar.tsx';
 import { Bone, Loading, SkeletonRows } from '../../components/Skeleton/Skeleton.tsx';
@@ -229,39 +230,9 @@ export function TodayScreen({
       <MacroCard day={day} checkpoint={checkpoint} entries={entries} eaten={eaten} rating={rating} />
 
       <section className={styles['section']} aria-labelledby="today-entries">
-        <div className={styles['sectionHead']}>
-          <h2 id="today-entries" className={styles['sectionTitle']}>
-            Einträge
-          </h2>
-          <div className={styles['actions']}>
-            {isToday && (
-              <button
-                type="button"
-                className={styles['iconButton']}
-                aria-label="Vorschläge"
-                aria-haspopup="dialog"
-                onClick={() => {
-                  setSuggesting(true);
-                }}
-              >
-                <WandSparkles size={20} strokeWidth={2} aria-hidden="true" />
-              </button>
-            )}
-            {editable && (
-              <button
-                type="button"
-                className={`${styles['iconButton'] ?? ''} ${styles['add'] ?? ''}`}
-                aria-label={isToday ? 'Hinzufügen' : `Für ${formatShortDay(day.date)} hinzufügen`}
-                aria-haspopup="dialog"
-                onClick={() => {
-                  setAdding(true);
-                }}
-              >
-                <Plus size={20} strokeWidth={2.4} aria-hidden="true" />
-              </button>
-            )}
-          </div>
-        </div>
+        <h2 id="today-entries" className={styles['sectionTitle']}>
+          Einträge
+        </h2>
         {data.entries.length === 0 ? (
           <p className={styles['empty']}>Noch nichts eingetragen.</p>
         ) : (
@@ -277,6 +248,34 @@ export function TodayScreen({
           </ul>
         )}
       </section>
+
+      {/* Main actions within thumb reach, like the fixed bar in the Essen tab (D-183). */}
+      {editable && (
+        <div className={styles['actionBar']}>
+          {isToday && (
+            <Button
+              variant="tonal"
+              aria-haspopup="dialog"
+              onClick={() => {
+                setSuggesting(true);
+              }}
+            >
+              <WandSparkles size={20} strokeWidth={2} aria-hidden="true" />
+              Vorschläge
+            </Button>
+          )}
+          <Button
+            className={styles['addButton']}
+            aria-haspopup="dialog"
+            onClick={() => {
+              setAdding(true);
+            }}
+          >
+            <Plus size={20} strokeWidth={2.4} aria-hidden="true" />
+            {isToday ? 'Hinzufügen' : `Für ${formatShortDay(day.date)} hinzufügen`}
+          </Button>
+        </div>
+      )}
 
       <Footer />
 
@@ -660,15 +659,13 @@ function TodaySkeleton() {
         </span>
       </div>
       <section className={styles['section']}>
-        <div className={styles['sectionHead']}>
-          <h2 className={styles['sectionTitle']}>Einträge</h2>
-          <div className={styles['actions']}>
-            <Bone width={48} height={48} radius="pill" />
-            <Bone width={48} height={48} radius="pill" />
-          </div>
-        </div>
+        <h2 className={styles['sectionTitle']}>Einträge</h2>
         <SkeletonRows count={3} />
       </section>
+      <div className={styles['actionBar']}>
+        <Bone width={140} height={52} />
+        <Bone height={52} />
+      </div>
     </Loading>
   );
 }
