@@ -22,10 +22,26 @@ const day = (date: string, kcal: number, protein: number, over: Partial<HistoryD
   targets: { kcal: 2000, protein: 150, carbs: 200, sugar: 50 },
   eaten: { kcal, protein, carbs: 0, fat: 0, sugar: 0 },
   entryCount: kcal > 0 ? 3 : 0,
+  statsExcluded: false,
   ...over,
 });
 
 describe('history (6.1)', () => {
+  it('leaves excluded days out of status, sums and averages (D-180)', () => {
+    const excluded = day('2026-10-18', 4000, 60, { statsExcluded: true });
+    expect(dayStatus(excluded, 5)).toBe('excluded');
+    expect(dayStatus(day('2026-10-17', 0, 0, { statsExcluded: true }), 5)).toBe('excluded');
+    expect(dayStatus(day('2026-10-20', 900, 50, { isToday: true, statsExcluded: true }), 5)).toBe('running');
+
+    const s = summarize([day('2026-10-19', 2000, 150), excluded], 5);
+    expect(s.days).toBe(1);
+    expect(s.eaten.kcal).toBe(2000);
+    expect(s.balanceKcal).toBe(0);
+    expect(s.avgProtein).toBe(150);
+    expect(s.high).toBe(0);
+    expect(summarize([excluded], 5).deviationPct).toBeNull();
+  });
+
   it('rates days: running today, "/" without entries, otherwise kcal vs. target', () => {
     expect(dayStatus(day('2026-10-20', 1200, 90, { isToday: true }), 5)).toBe('running');
     expect(dayStatus(day('2026-10-19', 0, 0), 5)).toBe('empty');

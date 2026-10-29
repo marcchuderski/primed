@@ -152,6 +152,36 @@ describe('past days (D-176, D-178)', () => {
     await userEvent.click(await screen.findByRole('button', { name: /Heute · Di, 20\.10\./ }));
     expect(onDateChange).toHaveBeenLastCalledWith(null);
   });
+
+  it('leaves a day out of the statistics from the day picker (D-180)', async () => {
+    const today = pastDay({ date: '2026-10-20', isToday: true });
+    mockApi(today, []);
+    const base = fetchMock.getMockImplementation();
+    fetchMock.mockImplementation((input, init) => {
+      if (urlOf(input).endsWith('/days/2026-10-20/stats')) {
+        const body = JSON.parse(init?.body as string) as { excluded: boolean };
+        return respond({ day: { ...today, statsExcluded: body.excluded } });
+      }
+      return base === undefined ? respond({}) : base(input, init);
+    });
+    render(<TodayScreen displayName="Marc" />);
+
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Dienstag, 20.10., anderen Tag wählen' }),
+    );
+    const sheet = screen.getByRole('dialog', { name: 'Tag wählen' });
+    const toggle = await within(sheet).findByRole('button', { name: 'Di, 20.10. nicht mitzählen' });
+    expect(toggle).toHaveAttribute('aria-pressed', 'false');
+
+    await userEvent.click(toggle);
+    expect(toggle).toHaveAttribute('aria-pressed', 'true');
+    expect(within(sheet).getByText(/Ruhetag · nicht mitgezählt/)).toBeInTheDocument();
+    const call = fetchMock.mock.calls.find(([input]) => urlOf(input).endsWith('/stats'));
+    expect(call?.[1]?.method).toBe('PUT');
+
+    await userEvent.click(within(sheet).getByRole('button', { name: 'Schließen' }));
+    expect(screen.getByText('nicht mitgezählt')).toBeInTheDocument();
+  });
 });
 
 describe('useViewDay', () => {

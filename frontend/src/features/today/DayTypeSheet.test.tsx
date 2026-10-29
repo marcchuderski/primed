@@ -16,6 +16,7 @@ const day: Day = {
   trainingStart: 1200,
   durationMin: 90,
   source: 'template',
+  statsExcluded: false,
   targets: { kcal: 2600, protein: 150, carbs: 350, sugar: 50 },
 };
 

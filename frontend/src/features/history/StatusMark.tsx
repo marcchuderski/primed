@@ -1,8 +1,8 @@
-import { Check } from 'lucide-react';
+import { Check, CircleSlash2 } from 'lucide-react';
 import { STATUS_LABEL, type DayStatus } from '../../domain/history.ts';
 import styles from './History.module.css';
 
-/** Round status mark (screen 13): ✓ / ↓ / ↑, "/" without entries, "läuft" for today. */
+/** Round status mark (screen 13): ✓ / ↓ / ↑, "/" without entries, "läuft" for today, ⊘ not counted (D-180). */
 export function StatusMark({ status, size = 28 }: { status: DayStatus; size?: 20 | 28 }) {
   if (status === 'empty') {
     return (
@@ -22,6 +22,8 @@ export function StatusMark({ status, size = 28 }: { status: DayStatus; size?: 20
     >
       {status === 'ok' ? (
         <Check size={size === 20 ? 12 : 16} strokeWidth={3} aria-hidden="true" />
+      ) : status === 'excluded' ? (
+        <CircleSlash2 size={size === 20 ? 14 : 18} strokeWidth={2.4} aria-hidden="true" />
       ) : (
         <span aria-hidden="true">{status === 'low' ? '↓' : '↑'}</span>
       )}
@@ -29,7 +31,16 @@ export function StatusMark({ status, size = 28 }: { status: DayStatus; size?: 20
   );
 }
 
-export function Legend({ tolerancePct, training = false }: { tolerancePct: number; training?: boolean }) {
+export function Legend({
+  tolerancePct,
+  training = false,
+  excluded = false,
+}: {
+  tolerancePct: number;
+  training?: boolean;
+  /** Shown only when a day in view is left out (D-180). */
+  excluded?: boolean;
+}) {
   return (
     <div className={styles['legend']}>
       <span>
@@ -41,6 +52,11 @@ export function Legend({ tolerancePct, training = false }: { tolerancePct: numbe
       <span>
         <StatusMark status="high" size={20} /> über Soll
       </span>
+      {excluded && (
+        <span>
+          <StatusMark status="excluded" size={20} /> nicht mitgezählt
+        </span>
+      )}
       {training && (
         <span>
           <span className={styles['trainingDot']} aria-hidden="true" /> Trainingstag

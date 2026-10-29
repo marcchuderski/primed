@@ -43,6 +43,7 @@ function parseDay(v: unknown): HistoryDay {
       sugar: num(e['sugar']),
     },
     entryCount: num(d['entryCount']),
+    statsExcluded: d['statsExcluded'] === true,
   };
 }
 

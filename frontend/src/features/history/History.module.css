@@ -179,6 +179,12 @@
   color: var(--status-high-fg);
 }
 
+/* Left out of the statistics (D-180): neutral, values stay readable but quiet. */
+.excluded {
+  background: var(--tonal);
+  color: var(--text-muted);
+}
+
 .emptyNote {
   color: var(--text-muted);
   font-size: 14px;

@@ -11,10 +11,12 @@ export interface HistoryDay {
   targets: Targets;
   eaten: Macros;
   entryCount: number;
+  /** Left out of ratings, sums and averages (D-180). */
+  statsExcluded: boolean;
 }
 
-/** "/" for days without entries, "läuft" for today (BRIEFING §11). */
-export type DayStatus = KcalRating | 'empty' | 'running';
+/** "/" for days without entries, "läuft" for today (BRIEFING §11), ⊘ for days left out (D-180). */
+export type DayStatus = KcalRating | 'empty' | 'running' | 'excluded';
 
 /** Screen-reader and legend texts per status. */
 export const STATUS_LABEL: Record<DayStatus, string> = {
@@ -23,11 +25,15 @@ export const STATUS_LABEL: Record<DayStatus, string> = {
   high: 'über Soll',
   empty: 'keine Einträge',
   running: 'läuft',
+  excluded: 'nicht mitgezählt',
 };
 
 export function dayStatus(day: HistoryDay, tolerancePct: number): DayStatus {
   if (day.isToday) {
     return 'running';
+  }
+  if (day.statsExcluded) {
+    return 'excluded';
   }
   if (day.entryCount === 0) {
     return 'empty';
@@ -35,9 +41,9 @@ export function dayStatus(day: HistoryDay, tolerancePct: number): DayStatus {
   return rateKcal(day.eaten.kcal, day.targets.kcal, tolerancePct);
 }
 
-/** Only finished days with entries count towards ratings, sums and averages. */
+/** Only finished days with entries that are not left out count towards ratings, sums and averages. */
 export function counts(day: HistoryDay): boolean {
-  return !day.isToday && day.entryCount > 0;
+  return !day.isToday && day.entryCount > 0 && !day.statsExcluded;
 }
 
 export type BalanceLabel =

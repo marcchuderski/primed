@@ -13,6 +13,8 @@ export interface Day {
   durationMin: number | null;
   source: 'template' | 'manual';
   targets: Targets;
+  /** Left out of the history statistics (D-180). */
+  statsExcluded: boolean;
 }
 
 export interface Settings {
@@ -167,6 +169,7 @@ export function parseDay(value: unknown): Day {
       carbs: num(t['carbs']),
       sugar: num(t['sugar']),
     },
+    statsExcluded: d['statsExcluded'] === undefined ? false : bool(d['statsExcluded']),
   };
 }
 
@@ -250,6 +253,12 @@ export async function updateDay(
     trainingStart,
     durationMin,
   });
+  return parseDay(record(data)['day']);
+}
+
+/** Leaves the day out of the history statistics or counts it again (D-180); edit window only. */
+export async function setStatsExcluded(date: string, excluded: boolean): Promise<Day> {
+  const data = await apiRequest('PUT', `/days/${encodeURIComponent(date)}/stats`, { excluded });
   return parseDay(record(data)['day']);
 }
 

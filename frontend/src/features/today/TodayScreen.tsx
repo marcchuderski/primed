@@ -1,4 +1,14 @@
-import { Check, ChevronDown, Dumbbell, History, Lock, Moon, Plus, WandSparkles } from 'lucide-react';
+import {
+  Check,
+  ChevronDown,
+  CircleSlash2,
+  Dumbbell,
+  History,
+  Lock,
+  Moon,
+  Plus,
+  WandSparkles,
+} from 'lucide-react';
 import { useEffect, useId, useState } from 'react';
 import { fetchDay, fetchSettings, fetchToday, type Day, type Settings } from '../../api/days.ts';
 import { Footer } from '../../components/Footer/Footer.tsx';
@@ -397,6 +407,9 @@ export function TodayScreen({
             setDayPickerOpen(false);
             onDateChange(picked === dayKey ? null : picked);
           }}
+          onExcludedChange={(saved) => {
+            setData((current) => (current?.day.date === saved.date ? { ...current, day: saved } : current));
+          }}
         />
       )}
 
@@ -496,24 +509,35 @@ function MacroCard({
 
   return (
     <div className={styles['card']}>
-      {rating !== null && (
+      {day.statsExcluded ? (
+        // Left out of the statistics (D-180), also on the running day; replaces the rating.
         <div className={styles['ratingHead']}>
           <span className={styles['ratingLabel']}>Tagesbilanz</span>
-          <span className={`${styles['rating'] ?? ''} ${styles[rating.status] ?? ''}`}>
-            {rating.status === 'ok' ? (
-              <Check size={14} strokeWidth={3} aria-hidden="true" />
-            ) : (
-              <span aria-hidden="true">{rating.status === 'low' ? '↓' : '↑'}</span>
-            )}
-            {RATING_LABEL[rating.status]}
-            {rating.deviation !== null && (
-              <span className={styles['ratingPct']}>
-                {rating.deviation > 0 ? '+' : rating.deviation < 0 ? '−' : '±'}
-                {Math.abs(rating.deviation)} %
-              </span>
-            )}
+          <span className={`${styles['rating'] ?? ''} ${styles['excluded'] ?? ''}`}>
+            <CircleSlash2 size={14} strokeWidth={2.6} aria-hidden="true" />
+            nicht mitgezählt
           </span>
         </div>
+      ) : (
+        rating !== null && (
+          <div className={styles['ratingHead']}>
+            <span className={styles['ratingLabel']}>Tagesbilanz</span>
+            <span className={`${styles['rating'] ?? ''} ${styles[rating.status] ?? ''}`}>
+              {rating.status === 'ok' ? (
+                <Check size={14} strokeWidth={3} aria-hidden="true" />
+              ) : (
+                <span aria-hidden="true">{rating.status === 'low' ? '↓' : '↑'}</span>
+              )}
+              {RATING_LABEL[rating.status]}
+              {rating.deviation !== null && (
+                <span className={styles['ratingPct']}>
+                  {rating.deviation > 0 ? '+' : rating.deviation < 0 ? '−' : '±'}
+                  {Math.abs(rating.deviation)} %
+                </span>
+              )}
+            </span>
+          </div>
+        )
       )}
       {bars.map((bar) => (
         <div key={bar.key} className={styles['barWrap']} data-macro-bar>

@@ -40,7 +40,8 @@ export function WeekView({
         </td>
       );
     }
-    return <td>{render(day)}</td>;
+    // Left-out days keep their values, shown quietly (D-180).
+    return <td className={day.statsExcluded ? styles['muted'] : undefined}>{render(day)}</td>;
   };
 
   const sumStatus =
@@ -48,7 +49,7 @@ export function WeekView({
 
   return (
     <>
-      <Legend tolerancePct={tolerancePct} />
+      <Legend tolerancePct={tolerancePct} excluded={cols.some(({ day }) => day?.statsExcluded === true)} />
       <div className={styles['tableWrap']} tabIndex={0} role="region" aria-label="Wochentabelle">
         <table className={styles['table']}>
           <thead>

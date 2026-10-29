@@ -169,6 +169,11 @@
   color: var(--status-high-fg);
 }
 
+.rating.excluded {
+  background: var(--tonal);
+  color: var(--text-muted);
+}
+
 .card {
   display: flex;
   flex-direction: column;

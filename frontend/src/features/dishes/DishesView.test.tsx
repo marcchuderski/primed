@@ -173,6 +173,7 @@ describe('Dishes UI', () => {
       trainingStart: null,
       durationMin: null,
       source: 'template',
+      statsExcluded: false,
       targets: { kcal: 2000, protein: 150, carbs: 200, sugar: 50 },
     };
     const onAdded = vi.fn();

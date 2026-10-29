@@ -13,6 +13,7 @@ const day: Day = {
   trainingStart: null,
   durationMin: null,
   source: 'template',
+  statsExcluded: false,
   targets: { kcal: 2000, protein: 150, carbs: 200, sugar: 50 },
 };
 const zero = { kcal: 0, protein: 0, carbs: 0, fat: 0, sugar: 0 };

@@ -74,7 +74,11 @@ export function MonthView({
           );
         })}
       </div>
-      <Legend tolerancePct={tolerancePct} training />
+      <Legend
+        tolerancePct={tolerancePct}
+        training
+        excluded={dates.some((date) => days.get(date)?.statsExcluded === true)}
+      />
     </>
   );
 }
