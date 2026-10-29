@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-29 – Version 1.5.0: Apple-HIG-Review, Aktionsleiste, Sheets wegwischen
+- Review des Frontends gegen die Apple Human Interface Guidelines mit Screen-Vorschlägen in `design/proposals/apple-redesign/`; umgesetzt sind 3 Punkte, der Rest ist verworfen (D-186).
+- Heute: „Vorschläge“ und „Hinzufügen“ in einer festen Leiste unten statt im Kopf von „Einträge“; vergangene Tage „Für … hinzufügen“, ältere Tage ohne Leiste; Skeleton angepasst (D-183).
+- Sheets: nach unten wischen an Griff oder Titel schließt (30 % oder schneller Wisch, sonst zurückfedern); Produkt-, Gericht- und Tagesart-Editor fragen bei ungespeicherten Änderungen „Änderungen verwerfen?“ (`Sheet` Prop `dirty`, D-185).
+- Token `--text-muted` Light `#63574B` (4,67 : 1 auf `--tonal`, D-184).
+
 ## 2026-10-29 – Version 1.4.0: Tage nicht mitzählen, halbe Stück, ruhiger Hintergrund
 - Verlauf/Statistik: einzelne Tage per ⊘ in der Tagesauswahl ausschließen (nur heute + 7 Tage, D-180). Migration `018_stats_excluded` (Spalte `days.stats_excluded`), Endpunkt `PUT /v1/days/{date}/stats`, `statsExcluded` in Tag und Verlauf. Woche/Monat zeigen ⊘ „nicht mitgezählt“, Bilanz, Σ, Durchschnitte und Jahresbalken lassen den Tag weg; auf Heute Pill „nicht mitgezählt“ statt Tagesbilanz. Hinweistext der Tagesauswahl kürzer.
 - Mengen-Sheet: „Stück“ bis 5 in 0,5er-Schritten, darüber ganze; Schnellwahl 0,5 / 1 / 2 Stück (D-181).

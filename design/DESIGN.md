@@ -39,7 +39,7 @@ Zwei Themes: **Light „Sand & Glut“** und **Dark „Night Court“**.
 | `--surface` | `#F5EEE4` | `#1F2227` | Karten, Listen, Sheets |
 | `--tonal` | `#DED1BF` | `#2B2F36` | Chips, sekundäre Buttons, Segment-Track |
 | `--text` | `#2E2721` | `#E8E3DB` | Schrift |
-| `--text-muted` | `#6A5E52` | `#9F9A92` | Sekundärtext, Labels |
+| `--text-muted` | `#63574B` | `#9F9A92` | Sekundärtext, Labels (Light ≥ 4,5 : 1 auch auf `--tonal`, D-184) |
 | `--accent` | `#F2622E` | `#F27A4B` | Protein-Balken, Primär-Buttons, Plus, Marker |
 | `--accent-text` | `#A8410F` | `#F59A73` | Protein-Zahlen als Schrift |
 | `--on-accent` | `#2E2721` | `#17191D` | Schrift auf Akzentfläche (nie Weiß) |
@@ -102,6 +102,8 @@ Bewertet wird nur die **kcal-Bilanz gegen das Tagessoll, Toleranz ±5 %**. Drei 
 
 **Kopf „Heute“ (H1, D-178):** „Hey, [Name].“ als Screen-Titel (Bricolage 34 px), darunter der situative Satz (Inter 16 px, `--text-muted`, Regeln in `docs/BRIEFING.md` §4a). Darunter **eine Zeile mit zwei Chips**: Datum-Chip („Di, 20.10.“ + ˅, Rahmen `--input-border` auf `--surface`, öffnet die Tagesauswahl) und Tagesart-Chip (tonal, lange Namen mit „…“). Mockups: `design/proposals/vergangene-tage/` (H1 = `h1-kopf-begruessung`).
 
+**Aktionsleiste „Heute“ (D-183):** „Vorschläge“ (tonal, Zauberstab) und „Hinzufügen“ (Primär, „+“, füllt die Breite) stehen in einer festen Leiste am unteren Rand (wie im Essen-Tab, `--bg` mit Trennlinie, ohne Blur/Verlauf), nicht mehr im Kopf von „Einträge“. Vergangener Tag im Bearbeitungsfenster: nur „Für Mo, 19.10. hinzufügen“; ältere Tage: keine Leiste. Mockup: `design/proposals/apple-redesign/01-heute.html` (umgesetzt ist nur die Leiste).
+
 **Vergangener Tag (b2/e, D-178):** gleiche Chip-Zeile wie heute, ohne Begrüßung; darüber ein **Banner**: im Bearbeitungsfenster „Du bearbeitest Mo, 19.10.“ (Verlaufs-Icon, `--accent-track`/`--accent-text`), älter „Nur ansehen · Nachtragen geht bis 7 Tage zurück.“ (Schloss, tonal); rechts „Zu heute“. In der Balken-Karte oben „Tagesbilanz“ mit Status-Pill („✓ im Rahmen −2 %“, Statusfarben §3, ohne Interpunkt). Keine Checkpoints, Trainings-Marker, Vorschläge; ältere Tage ohne „+“, Einträge nur Anzeige, Tagesart-Chip deaktiviert (Rahmen statt Fläche, ohne ˅).
 
 **Tagesauswahl (a2b, D-178):** Sheet (`tone="bg"`) mit Hinweis und heute + 7 Tagen als Karten (`--surface`, 18 px Radius, 8 px Abstand): „Heute · Di, 20.10.“ / „Gestern · …“, Tagesart, kcal und Status-Markierung; der angezeigte Tag mit Akzent-Rahmen.
@@ -112,7 +114,7 @@ Bewertet wird nur die **kcal-Bilanz gegen das Tagessoll, Toleranz ±5 %**. Drei 
 
 **Listeneintrag:** Titel + Menge, darunter Makrozeile (Protein in `--accent-text`), Uhrzeit rechts. Wischen löscht, Tap bearbeitet. Keine Mahlzeiten-Slots.
 
-**Bottom-Sheets** für Hinzufügen, Suche, Menge, Tagesart, Vorschläge: Griff oben, Titel links (22 px, darf umbrechen), Schließen rechts oben bündig mit der ersten Titelzeile, Primärbutton unten. Folgt unter dem sichtbaren Bereich noch Inhalt, schwebt unten mittig ein runder Pfeil (↓), der ans Ende scrollt und dort verschwindet (D-163). Nur der Inhalt scrollt, Griff und Titel bleiben stehen. In Such-Sheets (Hinzufügen, Zutat suchen, Proteinpulver) bleiben auch Suchzeile und Schnellzugriffe (Scannen, Produkt anlegen) fest; in allen anderen Sheets steht der Hauptbutton am Ende des Inhalts (D-142).
+**Bottom-Sheets** für Hinzufügen, Suche, Menge, Tagesart, Vorschläge: Griff oben, Titel links (22 px, darf umbrechen), Schließen rechts oben bündig mit der ersten Titelzeile, Primärbutton unten. Folgt unter dem sichtbaren Bereich noch Inhalt, schwebt unten mittig ein runder Pfeil (↓), der ans Ende scrollt und dort verschwindet (D-163). Nur der Inhalt scrollt, Griff und Titel bleiben stehen. **Nach unten wischen** an Griff oder Titelzeile schließt das Sheet (ab 30 % der Höhe oder schnellem Wisch, sonst federt es zurück; Schließen ohne Animation, D-155); Editoren mit ungespeicherten Änderungen (Produkt, Gericht, Tagesart) fragen vorher „Änderungen verwerfen?“ (D-185). In Such-Sheets (Hinzufügen, Zutat suchen, Proteinpulver) bleiben auch Suchzeile und Schnellzugriffe (Scannen, Produkt anlegen) fest; in allen anderen Sheets steht der Hauptbutton am Ende des Inhalts (D-142).
 
 **Eingaben**
 - Mengen (kompakt, D-163: Zahl 52 px, −/+ 44 px): Einheiten-Segment **g · ml · EL · TL · Packung** über der Zahl (13 px, ohne Innenabstand, damit „Packung“ passt); nur zur Produkt-Basis passende Einheiten sind aktiv (100 g: g/EL/TL/Packung · 100 ml: ml/EL/TL/Packung · Stück: Stück/Packung). Große Zahl mit −/+, darunter die Umrechnung („2 EL = 30 g · 1 EL = 15 g“), Schnellwahl-Chips passend zur Einheit (z. B. 1 / 2 / 3 EL), letzte Menge vorausgefüllt. Gleiches Muster für Meal-Prep-Zutaten (Screen 17).

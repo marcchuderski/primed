@@ -95,6 +95,7 @@ Reihenfolge (Nutzer, 2026-10-17): 7.1 und 7.3 vor Phase 6. Geändert (Nutzer, 20
 | 9.2 | Seite hinter offenen Sheets scrollt nicht mit (D-182) | fertig (auf dem iPhone noch zu prüfen) |
 | 9.3 | Halbe Stückzahlen bis 5 (D-181) | fertig |
 | 9.4 | Tage aus der Statistik nehmen, Schalter in der Tagesauswahl (D-180, Migration 018) | fertig |
+| 9.5 | Apple-HIG-Review (`design/proposals/apple-redesign/`): Aktionsleiste auf Heute, `--text-muted` Light, Sheets per Wischen schließen (D-183–D-185); übrige Vorschläge verworfen (D-186) | fertig (Wischen auf dem iPhone noch zu prüfen) |
 
 ## Später / vielleicht
 
@@ -107,4 +108,4 @@ Reihenfolge (Nutzer, 2026-10-17): 7.1 und 7.3 vor Phase 6. Geändert (Nutzer, 20
 
 ## Verworfen
 
-Foto der Nährwerttabelle · Foto mehrerer Packungen · Export · Mahlzeiten-Slots · gespeicherte Kombis · separate Trainingsarten · Bottom-Navigation · Ampel-Bewertung (siehe `DECISIONS.md`)
+Foto der Nährwerttabelle · Foto mehrerer Packungen · Export · Mahlzeiten-Slots · gespeicherte Kombis · separate Trainingsarten · Bottom-Navigation · Ampel-Bewertung · übrige Vorschläge aus dem Apple-HIG-Review: Dynamic Type, 44-pt-Trefferflächen, Icon-/Marker-Kontrast, Wisch-Knopf „Löschen“, Kontrast-erhöhen-Modus, Zurück-Geste im Menü, Mindestschrift 12 px im Verlauf, Tab-Bar unten, Löschen mit Rückgängig, Darstellung ohne eigene Einstellung (D-186) (siehe `DECISIONS.md`)

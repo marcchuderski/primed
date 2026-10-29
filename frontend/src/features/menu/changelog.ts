@@ -11,6 +11,15 @@ export interface Release {
 
 export const RELEASES: readonly Release[] = [
   {
+    version: '1.5.0',
+    date: '2026-10-29',
+    changes: [
+      'Hinzufügen und Vorschläge: jetzt unten am Bildschirmrand, gut mit dem Daumen erreichbar',
+      'Sheets wegwischen: am Griff oder Titel nach unten ziehen, um zu schließen',
+      'Besser lesbar: grauer Text im hellen Design etwas kräftiger',
+    ],
+  },
+  {
     version: '1.4.0',
     date: '2026-10-29',
     changes: [
