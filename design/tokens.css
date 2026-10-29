@@ -12,7 +12,7 @@
   --scrim: #B9AE9F;         /* Hintergrund hinter Bottom-Sheets */
   /* Text */
   --text: #2E2721;
-  --text-muted: #6A5E52;
+  --text-muted: #63574B;   /* 4.67:1 on --tonal (was #6A5E52, D-184) */
   /* Akzent (nur Protein, Hauptaktionen, Trainings-Marker) */
   --accent: #F2622E;
   --accent-text: #A8410F;   /* Akzent als Schriftfarbe auf hellen Flächen */
