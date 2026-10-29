@@ -1,5 +1,5 @@
 import { ChevronRight, X } from 'lucide-react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import type { User } from '../../api/auth.ts';
 import {
   fetchDayTypes,
@@ -93,12 +93,15 @@ export function MenuScreen({ user, onClose }: { user: User; onClose: () => void 
     load();
   };
 
-  if (page === 'changelog') {
-    return <ChangelogPage onBack={back} />;
-  }
-  if (page !== null && data !== null) {
+  function renderPage(id: Page): ReactNode {
+    if (id === 'changelog') {
+      return <ChangelogPage onBack={back} />;
+    }
+    if (data === null) {
+      return null;
+    }
     const props = { settings: data.settings, onBack: back };
-    switch (page) {
+    switch (id) {
       case 'profile':
         return <ProfilePage user={user} onBack={back} />;
       case 'dayTypes':
@@ -112,6 +115,15 @@ export function MenuScreen({ user, onClose }: { user: User; onClose: () => void 
       case 'rating':
         return <RatingPage {...props} />;
     }
+  }
+  const subPage = page === null ? null : renderPage(page);
+  if (subPage !== null) {
+    // Same enter animation as every other screen change (D-187).
+    return (
+      <div key={page} className="screen-enter">
+        {subPage}
+      </div>
+    );
   }
 
   // Names are fixed, so the list stands at once; only the summaries wait for the data (D-157).
@@ -140,7 +152,8 @@ export function MenuScreen({ user, onClose }: { user: User; onClose: () => void 
   ];
 
   return (
-    <div className={styles['screen']}>
+    // Opening the menu and coming back from a settings page enter like every other screen (D-187).
+    <div className={`${styles['screen'] ?? ''} screen-enter`}>
       <div className={styles['head']}>
         <h1 className={styles['title']}>Menü</h1>
         <button type="button" className={common['close']} aria-label="Menü schließen" onClick={onClose}>

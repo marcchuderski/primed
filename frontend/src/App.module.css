@@ -1,5 +1,5 @@
 .fade {
-  animation: fade 150ms ease-out both;
+  animation: fade var(--dur-screen) var(--ease-out) both;
 }
 
 @keyframes fade {

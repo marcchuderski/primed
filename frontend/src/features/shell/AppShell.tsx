@@ -53,7 +53,8 @@ export function AppShell({ user }: { user: User }) {
           setMenuOpen(true);
         }}
       />
-      <div key={tab} className={styles['panel']}>
+      {/* Keyed by tab and, on "Heute", by day: every screen change plays the same enter animation (D-187). */}
+      <div key={tab === 'heute' ? `heute-${viewDate ?? 'today'}` : tab} className="screen-enter">
         {tab === 'heute' && (
           // A new day remounts the screen, so no open sheet keeps logging into the previous day.
           <TodayScreen
